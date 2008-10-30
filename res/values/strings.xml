@@ -3,4 +3,9 @@
     <string name="hello">Hello World, TimeTracker</string>
     <string name="app_name">TimeTracker</string>
 <string name="start">Start</string>
+<string name="task_name">Task name</string>
+<string name="task_name_ok">Add task</string>
+<string name="task_name_cancel">Cancel</string>
+<string name="task_name_required">The task name is required</string>
+<string name="start_time_required">The start time is required</string>
 </resources>

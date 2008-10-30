@@ -4,9 +4,6 @@ import java.util.HashMap;
 
 import org.ser.timetracker.Projects.Project;
 
-import com.example.android.notepad.NotePad;
-import com.example.android.notepad.NotePad.Notes;
-
 import android.content.ContentProvider;
 import android.content.ContentValues;
 import android.content.Context;
@@ -17,7 +14,6 @@ import android.database.sqlite.SQLiteOpenHelper;
 import android.database.sqlite.SQLiteQueryBuilder;
 import android.net.Uri;
 import android.text.TextUtils;
-import android.util.Log;
 
 public class ProjectsProvider extends ContentProvider {
     
@@ -62,19 +58,15 @@ public class ProjectsProvider extends ContentProvider {
             String[] selectionArgs, String sortOrder) {
         SQLiteQueryBuilder qb = new SQLiteQueryBuilder();
 
-        switch (uriMatcher.match(uri)) {
-        case Uris.AllProjects.ordinal():
+        int match = uriMatcher.match(uri);
+        if (match == Uris.AllProjects.ordinal()) {
             qb.setTables(PROJECTS_TABLE_NAME);
             qb.setProjectionMap(projectionMap);
-            break;
-
-        case Uris.ProjectId.ordinal():
+        } else if (match == Uris.ProjectId.ordinal()) {
             qb.setTables(PROJECTS_TABLE_NAME);
             qb.setProjectionMap(projectionMap);
             qb.appendWhere(Project._ID + "=" + uri.getPathSegments().get(1));
-            break;
-
-        default:
+        } else {
             throw new IllegalArgumentException("Unknown URI " + uri);
         }
 
@@ -92,20 +84,16 @@ public class ProjectsProvider extends ContentProvider {
             String[] selectionArgs) {
         SQLiteDatabase db = dbHelper.getWritableDatabase();
         int count;
-        switch (uriMatcher.match(uri)) {
-        case Uris.AllProjects.ordinal():
+        int match = uriMatcher.match(uri);
+        if (match == Uris.AllProjects.ordinal()) {
             count = db.update(PROJECTS_TABLE_NAME, values, selection, selectionArgs);
-            break;
-
-        case Uris.ProjectId.ordinal():
+        } else if (match == Uris.ProjectId.ordinal()) {
             String projectId = uri.getPathSegments().get(1);
             count = db.update(PROJECTS_TABLE_NAME, values, Project._ID + "=" 
                     + projectId 
-                    + (!TextUtils.isEmpty(select) ? " AND (" + selection + ')' : ""), 
+                    + (!TextUtils.isEmpty(selection) ? " AND (" + selection + ')' : ""), 
                     selectionArgs);
-            break;
-
-        default:
+        } else {
             throw new IllegalArgumentException("Unknown URI " + uri);
         }
 
