@@ -1,0 +1,177 @@
+--- !ditz.rubyforge.org,2008-03-06/project 
+name: TimeTracker
+version: "0.1"
+issues: 
+- !ditz.rubyforge.org,2008-03-06/issue 
+  title: Cache the Task objects, to avoid going to the DB
+  desc: ""
+  type: :feature
+  component: TimeTracker
+  release: "1.0"
+  reporter: Sean Russell <ser@ser1.net>
+  status: :paused
+  disposition: 
+  creation_time: 2008-11-20 08:30:43.968573 -05:00
+  references: []
+
+  id: 2a6233195f12ea933f4c0968228e9c81b153116c
+  log_events: 
+  - - 2008-11-20 08:30:48.172673 -05:00
+    - Sean Russell <ser@ser1.net>
+    - created
+    - ""
+  - - 2008-11-20 20:12:40.740979 -05:00
+    - Sean Russell <ser@ser1.net>
+    - changed status from unstarted to in_progress
+    - ""
+  - - 2008-11-20 20:13:02.049069 -05:00
+    - Sean Russell <ser@ser1.net>
+    - changed status from in_progress to paused
+    - ""
+- !ditz.rubyforge.org,2008-03-06/issue 
+  title: Collapse ranges on loading from DB
+  desc: Rather than keeping a list of ranges per task, collapse the ranges to improve memory use.
+  type: :feature
+  component: TimeTracker
+  release: "1.0"
+  reporter: Sean Russell <ser@ser1.net>
+  status: :closed
+  disposition: :fixed
+  creation_time: 2008-11-20 08:32:24.767498 -05:00
+  references: []
+
+  id: 4b57aa071fede842ae8bab76bd673f5e212b9e87
+  log_events: 
+  - - 2008-11-20 08:32:59.296569 -05:00
+    - Sean Russell <ser@ser1.net>
+    - created
+    - This will be tricky when the ability to select the displayed range is added.
+  - - 2008-11-20 20:16:37.631808 -05:00
+    - Sean Russell <ser@ser1.net>
+    - assigned to release 1.0 from unassigned
+    - ""
+  - - 2008-11-20 21:40:58.487243 -05:00
+    - Sean Russell <ser@ser1.net>
+    - closed issue with disposition fixed
+    - ""
+- !ditz.rubyforge.org,2008-03-06/issue 
+  title: Add ability to edit task name
+  desc: ""
+  type: :feature
+  component: TimeTracker
+  release: "1.0"
+  reporter: Sean Russell <ser@ser1.net>
+  status: :unstarted
+  disposition: 
+  creation_time: 2008-11-20 21:38:29.678384 -05:00
+  references: []
+
+  id: 4458641eb27f930cfed3dbed072ff04c59ccf645
+  log_events: 
+  - - 2008-11-20 21:38:30.765074 -05:00
+    - Sean Russell <ser@ser1.net>
+    - created
+    - ""
+- !ditz.rubyforge.org,2008-03-06/issue 
+  title: Add ability to generate reports
+  desc: ""
+  type: :feature
+  component: TimeTracker
+  release: 
+  reporter: Sean Russell <ser@ser1.net>
+  status: :unstarted
+  disposition: 
+  creation_time: 2008-11-20 21:38:50.339672 -05:00
+  references: []
+
+  id: 2e1183ec01c6e5f0a9ac2f107b89102ae2ab3be3
+  log_events: 
+  - - 2008-11-20 21:38:51.414713 -05:00
+    - Sean Russell <ser@ser1.net>
+    - created
+    - ""
+- !ditz.rubyforge.org,2008-03-06/issue 
+  title: Add ability to edit / add times
+  desc: ""
+  type: :feature
+  component: TimeTracker
+  release: 
+  reporter: Sean Russell <ser@ser1.net>
+  status: :unstarted
+  disposition: 
+  creation_time: 2008-11-20 21:39:06.290150 -05:00
+  references: []
+
+  id: 7d0e1e0b73f9feb1166d4ae94e0179cf9766454f
+  log_events: 
+  - - 2008-11-20 21:39:07.273747 -05:00
+    - Sean Russell <ser@ser1.net>
+    - created
+    - ""
+- !ditz.rubyforge.org,2008-03-06/issue 
+  title: Add ability to remove tasks
+  desc: ""
+  type: :feature
+  component: TimeTracker
+  release: 
+  reporter: Sean Russell <ser@ser1.net>
+  status: :unstarted
+  disposition: 
+  creation_time: 2008-11-20 21:39:20.982771 -05:00
+  references: []
+
+  id: 18cbb5e3fbf3381374ff1d7bc4a4e8ff62c7ea2e
+  log_events: 
+  - - 2008-11-20 21:39:22.171564 -05:00
+    - Sean Russell <ser@ser1.net>
+    - created
+    - ""
+- !ditz.rubyforge.org,2008-03-06/issue 
+  title: Reduce time steps to 1 minute
+  desc: ""
+  type: :feature
+  component: TimeTracker
+  release: 
+  reporter: Sean Russell <ser@ser1.net>
+  status: :unstarted
+  disposition: 
+  creation_time: 2008-11-20 21:39:42.520944 -05:00
+  references: []
+
+  id: 38bd515505da09af0ff7779e5002674813c7bec7
+  log_events: 
+  - - 2008-11-20 21:39:43.323382 -05:00
+    - Sean Russell <ser@ser1.net>
+    - created
+    - ""
+- !ditz.rubyforge.org,2008-03-06/issue 
+  title: Add highlighting to running task
+  desc: ""
+  type: :feature
+  component: TimeTracker
+  release: 
+  reporter: Sean Russell <ser@ser1.net>
+  status: :unstarted
+  disposition: 
+  creation_time: 2008-11-20 21:40:14.852303 -05:00
+  references: []
+
+  id: 1b24014f6350577ef53875970a7edaf91a347366
+  log_events: 
+  - - 2008-11-20 21:40:15.870376 -05:00
+    - Sean Russell <ser@ser1.net>
+    - created
+    - ""
+components: 
+- !ditz.rubyforge.org,2008-03-06/component 
+  name: TimeTracker
+releases: 
+- !ditz.rubyforge.org,2008-03-06/release 
+  name: "1.0"
+  status: :unreleased
+  release_time: 
+  log_events: 
+  - - 2008-11-20 08:35:10.814270 -05:00
+    - Sean Russell <ser@ser1.net>
+    - created
+    - Implements the ability to create and time tasks.

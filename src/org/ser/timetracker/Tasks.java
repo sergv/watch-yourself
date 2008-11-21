@@ -12,19 +12,22 @@ package org.ser.timetracker;
  * [_] Projects
  */
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Date;
 import java.util.TimerTask;
+
+import org.ser.timetracker.Task.Priority;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.ListActivity;
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.content.Intent;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteOpenHelper;
 import android.os.Bundle;
 import android.os.Handler;
-import android.text.Editable;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -81,7 +84,7 @@ public class Tasks extends ListActivity {
                 public void onClick(DialogInterface dialog, int whichButton) {
                     EditText textView = (EditText)textEntryView.findViewById(R.id.task_name_edit);
                     String name = textView.getText().toString();
-                    adapter.addTask(name);
+                    adapter.addTask(name, Task.Priority.Medium);
                     adapter.notifyDataSetChanged();
                     Tasks.this.getListView().invalidate();
                 }
@@ -158,26 +161,95 @@ public class Tasks extends ListActivity {
         }
     }
 
+    // TODO: Need to cache the Task objects, so that we don't keep
+    // creating new ones from the DB.  Also, rather than create a bunch
+    // of ranges, collapse them after reading from DB.
     private class TaskAdapter extends BaseAdapter {
-        private List<Task> tasks;
-        private int nextId = 0;
+        private static final String END = "end";
+        private static final String START = "start";
+        private static final String TASK_ID = "_task_id";
+        private final String[] RANGE_COLUMNS = { START, END };
+        private static final String PRIORITY = "priority";
+        private static final String NAME = "name";
+        private final String[] TASK_COLUMNS = new String[] { NAME, PRIORITY };
+        private DBHelper dbHelper;
+        private static final String TIMETRACKER_DB_NAME = "timetracker.db";
+        private static final int DBVERSION = 2;
+        public static final String TASK_TABLE = "tasks";
+        public static final String RANGES_TABLE = "ranges";
         
         public TaskAdapter( Context c ) {
             savedContext = c;
-            tasks = new ArrayList<Task>();
+            dbHelper = new DBHelper(c);
         }
         
-        protected void addTask(String taskName) {
-            tasks.add( new Task(taskName, nextId) );
-            nextId += 1;
+        protected void addTask(String taskName, Priority priority) {
+            SQLiteDatabase db = dbHelper.getWritableDatabase();
+            ContentValues values = new ContentValues();
+            values.put(NAME, taskName);
+            values.put(PRIORITY, priority.ordinal());
+            db.insert(TASK_TABLE, NAME, values);
+        }
+        
+        protected void updateTask( Task t ) {
+            SQLiteDatabase db = dbHelper.getWritableDatabase();
+            ContentValues values = new ContentValues();
+            values.put(NAME, t.getTaskName());
+            values.put(PRIORITY, t.getPriority().ordinal());
+            String id = String.valueOf(t.getId());
+            String[] vals = { id };
+            db.update(TASK_TABLE, values, "ROWID = ?", vals);
+            
+            if (t.getStartTime() != null) {
+                values.clear();
+                long startTime = t.getStartTime().getTime();
+                values.put(START, startTime);
+                vals = new String[] { id, String.valueOf(startTime) };
+                if (t.getEndTime() != null) {
+                    values.put(END, t.getEndTime().getTime());
+                }
+                if (db.update(RANGES_TABLE, values, TASK_ID+" = ? AND "+START+" = ?", vals) == 0) {
+                    values.put(TASK_ID, t.getId());
+                    values.put(END, (String)null);
+                    db.insert(RANGES_TABLE, END, values);
+                }
+            }
         }
         
         public int getCount() {
-            return tasks.size();
+            SQLiteDatabase db = dbHelper.getReadableDatabase();
+            Cursor c = db.rawQuery("select count(ROWID) from "+TASK_TABLE, null);
+            int count = 0;
+            if (c.moveToFirst()) {
+                count = c.getInt(0);
+            }
+            c.close();
+            return count;
         }
 
         public Object getItem(int position) {
-            return tasks.get(position);
+            position++;
+            SQLiteDatabase db = dbHelper.getReadableDatabase();
+            String[] pos = { String.valueOf(position) };
+            Cursor c = db.query(TASK_TABLE, TASK_COLUMNS, "ROWID = ?", pos, null, null, null);
+
+            Task t = null;
+            if (c.moveToFirst()) {
+                t = new Task(c.getString(0), position);
+                t.setPriority(Task.Priority.values()[ c.getInt(1) ]);
+                Cursor r = db.rawQuery("SELECT SUM(end) - SUM(start) AS total FROM "+RANGES_TABLE+" WHERE "+TASK_ID+" = ? AND end NOTNULL" , pos );
+                if (r.moveToFirst()) {
+                    t.setCollapsed(r.getLong(0));
+                }
+                r.close();
+                r = db.query(RANGES_TABLE, RANGE_COLUMNS, TASK_ID+" = ? AND end ISNULL", pos, null, null, null);
+                if (r.moveToFirst()) {
+                    t.setStartTime(new Date(r.getLong(0)));
+                }
+                r.close();
+            }
+            c.close();
+            return t;
         }
 
         public long getItemId(int position) {
@@ -185,17 +257,48 @@ public class Tasks extends ListActivity {
         }
 
         public View getView(int position, View convertView, ViewGroup parent) {
-            TaskView view;
+            TaskView view = null;
             if (convertView == null) {
-                view = new TaskView(savedContext,tasks.get(position));
+                Object item = getItem(position);
+                if (item != null) view = new TaskView(savedContext,(Task)item);
             } else {
                 view = (TaskView) convertView;
-                view.setTask( tasks.get(position) );
+                Object item = getItem(position);
+                if (item != null) view.setTask( (Task)item );
             }
             return view;
         }
         
         private Context savedContext;
+        
+        
+        private class DBHelper extends SQLiteOpenHelper {
+            public DBHelper(Context context) {
+                super( context, TIMETRACKER_DB_NAME, null, DBVERSION );
+            }
+
+            @Override
+            public void onCreate(SQLiteDatabase db) {
+                db.execSQL("CREATE TABLE "+TASK_TABLE+" ("
+                        + "name TEXT COLLATE LOCALIZED NOT NULL,"
+                        + "priority INTEGER"
+                        + ");");
+                db.execSQL("CREATE TABLE "+RANGES_TABLE+"("
+                        + "_task_id INTEGER NOT NULL,"
+                        + "start INTEGER NOT NULL,"
+                        + "end INTEGER"
+                        + ");");
+            }
+
+            @Override
+            public void onUpgrade(SQLiteDatabase arg0, int arg1, int arg2) {
+                /*
+                arg0.execSQL("DROP TABLE IF EXISTS "+TASK_TABLE);
+                arg0.execSQL("DROP TABLE IF EXISTS "+RANGES_TABLE);
+                onCreate(arg0);
+                */
+            }
+        }
     }
     
     @Override
@@ -204,14 +307,20 @@ public class Tasks extends ListActivity {
         // Disable previous
         if (currentlySelected != null) {
             currentlySelected.stop();
+            currentlySelected.collapse();
+            adapter.updateTask(currentlySelected);
         }
         // Enable current
         Object item = getListView().getItemAtPosition(position);
         if (item != null) {
             Task selected = (Task)item;
-            if (currentlySelected == selected) return;
+            if (selected.equals(currentlySelected)) {
+                currentlySelected = null;
+                return;
+            }
             currentlySelected = selected;
             currentlySelected.start();
+            adapter.updateTask(selected);
         }
     }
 
