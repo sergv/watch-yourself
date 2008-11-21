@@ -1,4 +1,4 @@
-package org.ser.timetracker;
+package net.ser1.timetracker;
 
 /**
  * TODO:
@@ -15,7 +15,7 @@ package org.ser.timetracker;
 import java.util.Date;
 import java.util.TimerTask;
 
-import org.ser.timetracker.Task.Priority;
+import net.ser1.timetracker.Task.Priority;
 
 import android.app.AlertDialog;
 import android.app.Dialog;

@@ -1,4 +1,4 @@
-package org.ser.timetracker;
+package net.ser1.timetracker;
 
 import java.util.ArrayList;
 import java.util.Date;

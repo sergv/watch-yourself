@@ -1,4 +1,4 @@
-package org.ser.timetracker;
+package net.ser1.timetracker;
 
 import android.app.Activity;
 import android.content.Intent;
