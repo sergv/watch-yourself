@@ -131,7 +131,7 @@ issues:
   desc: Add a class-level 'step'
   type: :feature
   component: TimeTracker
-  release: 
+  release: "1.0"
   reporter: Sean Russell <ser@ser1.net>
   status: :unstarted
   disposition: 
@@ -148,12 +148,16 @@ issues:
     - Sean Russell <ser@ser1.net>
     - changed description
     - ""
+  - - 2008-11-20 22:07:17.800085 -05:00
+    - Sean Russell <ser@ser1.net>
+    - assigned to release 1.0 from unassigned
+    - ""
 - !ditz.rubyforge.org,2008-03-06/issue 
   title: Add highlighting to running task
   desc: ""
   type: :feature
   component: TimeTracker
-  release: 
+  release: "1.0"
   reporter: Sean Russell <ser@ser1.net>
   status: :unstarted
   disposition: 
@@ -165,6 +169,10 @@ issues:
   - - 2008-11-20 21:40:15.870376 -05:00
     - Sean Russell <ser@ser1.net>
     - created
+    - ""
+  - - 2008-11-20 22:07:27.799285 -05:00
+    - Sean Russell <ser@ser1.net>
+    - assigned to release 1.0 from unassigned
     - ""
 - !ditz.rubyforge.org,2008-03-06/issue 
   title: Doesn't pick up running task on re-entry
@@ -187,6 +195,24 @@ issues:
   - - 2008-11-20 22:05:45.571792 -05:00
     - Sean Russell <ser@ser1.net>
     - closed issue with disposition fixed
+    - ""
+- !ditz.rubyforge.org,2008-03-06/issue 
+  title: Find icons for application and menu items
+  desc: ""
+  type: :feature
+  component: TimeTracker
+  release: 
+  reporter: Sean Russell <ser@ser1.net>
+  status: :unstarted
+  disposition: 
+  creation_time: 2008-11-20 22:06:45.088150 -05:00
+  references: []
+
+  id: 5de76bd6f7c7e1d4ce71900a9574637b1a2d1be9
+  log_events: 
+  - - 2008-11-20 22:06:45.861041 -05:00
+    - Sean Russell <ser@ser1.net>
+    - created
     - ""
 components: 
 - !ditz.rubyforge.org,2008-03-06/component 

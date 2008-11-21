@@ -168,7 +168,7 @@ public class Tasks extends ListActivity {
     private class TaskAdapter extends BaseAdapter {
         private static final String END = "end";
         private static final String START = "start";
-        private static final String TASK_ID = "_task_id";
+        private static final String TASK_ID = "task_id";
         private final String[] RANGE_COLUMNS = { START, END };
         private static final String PRIORITY = "priority";
         private static final String NAME = "name";
@@ -186,9 +186,9 @@ public class Tasks extends ListActivity {
         
         public Task findCurrentlyActive() {
             SQLiteDatabase db = dbHelper.getReadableDatabase();
-            Cursor c = db.rawQuery("SELECT r._task_id,t.name,t.priority,r.start "
+            Cursor c = db.rawQuery("SELECT r.task_id,t.name,t.priority,r.start "
                     +" FROM "+TASK_TABLE+" t, "+RANGES_TABLE+" r "
-                    + "WHERE t.rowid == r._task_id AND r.end ISNULL", null);
+                    + "WHERE t.rowid == r.task_id AND r.end ISNULL", null);
 
             Task t = null;
             if (c.moveToFirst()) {
@@ -308,7 +308,7 @@ public class Tasks extends ListActivity {
                         + "priority INTEGER"
                         + ");");
                 db.execSQL("CREATE TABLE "+RANGES_TABLE+"("
-                        + "_task_id INTEGER NOT NULL,"
+                        + "task_id INTEGER NOT NULL,"
                         + "start INTEGER NOT NULL,"
                         + "end INTEGER"
                         + ");");
