@@ -51,6 +51,7 @@ public class Tasks extends ListActivity {
         super.onCreate(savedInstanceState);
         adapter = new TaskAdapter(this);
         setListAdapter(adapter);
+        currentlySelected = adapter.findCurrentlyActive();
         timer = new Handler();
         timer.postDelayed(new TimerTask() {
             @Override
@@ -183,6 +184,29 @@ public class Tasks extends ListActivity {
             dbHelper = new DBHelper(c);
         }
         
+        public Task findCurrentlyActive() {
+            SQLiteDatabase db = dbHelper.getReadableDatabase();
+            Cursor c = db.rawQuery("SELECT r._task_id,t.name,t.priority,r.start "
+                    +" FROM "+TASK_TABLE+" t, "+RANGES_TABLE+" r "
+                    + "WHERE t.rowid == r._task_id AND r.end ISNULL", null);
+
+            Task t = null;
+            if (c.moveToFirst()) {
+                t = new Task(c.getString(1), c.getInt(0));
+                t.setPriority(Task.Priority.values()[ c.getInt(2) ]);
+                t.setStartTime( new Date( c.getLong(3) ) );
+                Cursor r = db.rawQuery("SELECT SUM(end) - SUM(start) AS total FROM "
+                        +RANGES_TABLE+" WHERE "+TASK_ID+" = ? AND end NOTNULL" , 
+                        new String[] { String.valueOf(t.getId()) } );
+                if (r.moveToFirst()) {
+                    t.setCollapsed(r.getLong(0));
+                }
+                r.close();
+            }
+            c.close();
+            return t;
+        }
+
         protected void addTask(String taskName, Priority priority) {
             SQLiteDatabase db = dbHelper.getWritableDatabase();
             ContentValues values = new ContentValues();
