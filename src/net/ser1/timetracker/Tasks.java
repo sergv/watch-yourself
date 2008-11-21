@@ -1,22 +1,9 @@
 package net.ser1.timetracker;
 
-/**
- * TODO:
- * [x] Mark active task
- * [x] Format time display
- * [_] Load/save time from DB
- * [x] Clicking activates/de-activates time
- * [x] Add tasks
- * [_] Remove tasks
- * [_] Edit tasks
- * [_] Projects
- */
-
 import java.util.Date;
 import java.util.TimerTask;
 
 import net.ser1.timetracker.Task.Priority;
-
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.ListActivity;
@@ -26,6 +13,8 @@ import android.content.DialogInterface;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.graphics.Color;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.LayoutInflater;
@@ -40,6 +29,8 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 public class Tasks extends ListActivity {
+    private static final String TIME_FORMAT = "%02d:%02d:%02d";
+    private static final int REFRESH_MS = 1000;
     private TaskAdapter adapter;
     private Handler timer;
     private Task currentlySelected = null;
@@ -60,10 +51,10 @@ public class Tasks extends ListActivity {
                     adapter.notifyDataSetChanged();
                     Tasks.this.getListView().invalidate();
                 }
-                timer.postDelayed( this, 1000 );
+                timer.postDelayed( this, REFRESH_MS );
             }
             
-        }, 1000 );
+        }, REFRESH_MS );
         
     }
     
@@ -139,6 +130,8 @@ public class Tasks extends ListActivity {
             formatTotal( total, t );
             addView(total, new LinearLayout.LayoutParams(
                     LayoutParams.WRAP_CONTENT, LayoutParams.FILL_PARENT, 0.1f));
+            
+            markupSelectedTask(t);
         }
 
         // TODO: Format the HH:MM:SS
@@ -153,18 +146,28 @@ public class Tasks extends ListActivity {
             long minutes_in_ms = minutes * 60000;
             long seconds = (total2 - hours_in_ms - minutes_in_ms) / 1000;
             StringBuffer rv = new StringBuffer( String.valueOf(hours) );
-            return String.format("%02d:%02d:%02d", hours, minutes, seconds);
+            return String.format(TIME_FORMAT, hours, minutes, seconds);
         }
 
         public void setTask(Task t) {
             taskName.setText(t.getTaskName());
             formatTotal( total, t );
+            markupSelectedTask(t);
+        }
+
+        private void markupSelectedTask(Task t) {
+            if (t.equals(currentlySelected)) {
+                taskName.setTypeface(Typeface.DEFAULT_BOLD);
+                total.setTypeface(Typeface.DEFAULT_BOLD);
+            } else {
+                taskName.setTypeface(Typeface.DEFAULT_BOLD);
+                total.setTypeface(Typeface.DEFAULT_BOLD);
+            }
         }
     }
 
-    // TODO: Need to cache the Task objects, so that we don't keep
-    // creating new ones from the DB.  Also, rather than create a bunch
-    // of ranges, collapse them after reading from DB.
+    
+    
     private class TaskAdapter extends BaseAdapter {
         private static final String END = "end";
         private static final String START = "start";
@@ -340,6 +343,8 @@ public class Tasks extends ListActivity {
             Task selected = (Task)item;
             if (selected.equals(currentlySelected)) {
                 currentlySelected = null;
+                adapter.notifyDataSetChanged();
+                getListView().invalidate();
                 return;
             }
             currentlySelected = selected;
