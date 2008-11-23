@@ -346,6 +346,128 @@ issues:
     - Sean Russell <ser@ser1.net>
     - created
     - ""
+- !ditz.rubyforge.org,2008-03-06/issue 
+  title: Add/edit dialog needs to be in a scroll view
+  desc: Currently, if the device is rotated, you can't see all of the options in the dialog.
+  type: :feature
+  component: TimeTracker
+  release: "1.1"
+  reporter: Sean Russell <ser@ser1.net>
+  status: :unstarted
+  disposition: 
+  creation_time: 2008-11-23 12:53:25.359312 -05:00
+  references: []
+
+  id: 749ddcf0a038bb2968f7d7483a5a56e1c83fbb8a
+  log_events: 
+  - - 2008-11-23 12:53:26.192525 -05:00
+    - Sean Russell <ser@ser1.net>
+    - created
+    - ""
+- !ditz.rubyforge.org,2008-03-06/issue 
+  title: Change app title
+  desc: ""
+  type: :feature
+  component: TimeTracker
+  release: "1.1"
+  reporter: Sean Russell <ser@ser1.net>
+  status: :unstarted
+  disposition: 
+  creation_time: 2008-11-23 12:56:48.569518 -05:00
+  references: []
+
+  id: d443976dbe3b6d7f6a79d22144b746287f5ab63e
+  log_events: 
+  - - 2008-11-23 12:56:49.112199 -05:00
+    - Sean Russell <ser@ser1.net>
+    - created
+    - ""
+- !ditz.rubyforge.org,2008-03-06/issue 
+  title: Less padding to the right of times
+  desc: ""
+  type: :feature
+  component: TimeTracker
+  release: "1.1"
+  reporter: Sean Russell <ser@ser1.net>
+  status: :unstarted
+  disposition: 
+  creation_time: 2008-11-23 12:57:01.520169 -05:00
+  references: []
+
+  id: 5d3876cc7a95ec7bc7caf27e05f1cfcd5e8fa6ad
+  log_events: 
+  - - 2008-11-23 12:57:01.821358 -05:00
+    - Sean Russell <ser@ser1.net>
+    - created
+    - ""
+- !ditz.rubyforge.org,2008-03-06/issue 
+  title: Tell GUI to not word-wrap the times
+  desc: ""
+  type: :feature
+  component: TimeTracker
+  release: "1.1"
+  reporter: Sean Russell <ser@ser1.net>
+  status: :unstarted
+  disposition: 
+  creation_time: 2008-11-23 12:57:18.926303 -05:00
+  references: []
+
+  id: 3a43e1e4b61c16e6ca5e7add989802a692a4648c
+  log_events: 
+  - - 2008-11-23 12:57:19.368071 -05:00
+    - Sean Russell <ser@ser1.net>
+    - created
+    - ""
+- !ditz.rubyforge.org,2008-03-06/issue 
+  title: Remove the priorities
+  desc: Duh.  Just, duh.
+  type: :feature
+  component: TimeTracker
+  release: "1.1"
+  reporter: Sean Russell <ser@ser1.net>
+  status: :closed
+  disposition: :fixed
+  creation_time: 2008-11-23 12:57:40.543061 -05:00
+  references: []
+
+  id: d47ce0e878450aed87ffd082555ebdb514614130
+  log_events: 
+  - - 2008-11-23 12:57:40.957784 -05:00
+    - Sean Russell <ser@ser1.net>
+    - created
+    - ""
+  - - 2008-11-23 13:36:34.584002 -05:00
+    - Sean Russell <ser@ser1.net>
+    - closed issue with disposition fixed
+    - ""
+- !ditz.rubyforge.org,2008-03-06/issue 
+  title: Add ability to filter time display based on date range
+  desc: |-
+    Options should be:
+    * Today
+    * Yesterday
+    * Pay period
+    * Last pay period
+    * Select range
+  type: :feature
+  component: TimeTracker
+  release: "1.2"
+  reporter: Sean Russell <ser@ser1.net>
+  status: :unstarted
+  disposition: 
+  creation_time: 2008-11-23 12:59:18.999811 -05:00
+  references: []
+
+  id: fd2d4d5b4c1c2b4e6e0c94fcd1ff87f821a7bbbd
+  log_events: 
+  - - 2008-11-23 12:59:19.411334 -05:00
+    - Sean Russell <ser@ser1.net>
+    - created
+    - ""
+  - - 2008-11-23 12:59:47.567540 -05:00
+    - Sean Russell <ser@ser1.net>
+    - assigned to release 1.2 from unassigned
+    - ""
 components: 
 - !ditz.rubyforge.org,2008-03-06/component 
   name: TimeTracker

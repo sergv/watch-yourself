@@ -10,10 +10,7 @@ public class Task implements Comparable<Task>{
     private int id;
     private Date startTime = null;
     private Date endTime = null;
-    private Priority priority;
     private long collapsed;
-    
-    enum Priority { Low, Medium, High }
     
     /**
      * Constructs a new task.
@@ -21,13 +18,8 @@ public class Task implements Comparable<Task>{
      * @param id The ID of the task.  Must not be null
      */
     public Task( String name, int id ) {
-        this(name,id,Priority.Medium);
-    }
-    
-    public Task( String name, int id, Priority priority ) {
         taskName = name;
         this.id = id;
-        setPriority(priority);
         collapsed = 0;        
     }
     
@@ -73,14 +65,6 @@ public class Task implements Comparable<Task>{
         }
     }
 
-    public void setPriority(Priority priority) {
-        this.priority = priority;
-    }
-
-    public Priority getPriority() {
-        return priority;
-    }
-    
     public Date getStartTime() {
         return startTime;
     }
@@ -102,6 +86,6 @@ public class Task implements Comparable<Task>{
     }
 
     public int compareTo(Task another) {
-        return priority.compareTo(another.getPriority());
+        return taskName.compareTo(another.getTaskName());
     }
 }

@@ -6,7 +6,6 @@ import java.util.Date;
 import java.util.List;
 import java.util.TimerTask;
 
-import net.ser1.timetracker.Task.Priority;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.ListActivity;
@@ -115,22 +114,7 @@ public class Tasks extends ListActivity  {
                 public void onClick(DialogInterface dialog, int whichButton) {
                     EditText textView = (EditText)textEntryView.findViewById(R.id.task_edit_name_edit);
                     String name = textView.getText().toString();
-                    
-                    RadioGroup group = (RadioGroup)textEntryView.findViewById(R.id.task_priority_group);
-                    Task.Priority p = null;
-                    switch (group.getCheckedRadioButtonId()) {
-                    case R.id.task_priority_low:
-                        p = Task.Priority.Low;
-                        break;
-                    case R.id.task_priority_medium:
-                        p = Task.Priority.Medium;
-                        break;
-                    case R.id.task_priority_high:
-                        p = Task.Priority.High;
-                        break;
-                    }
-
-                    adapter.addTask(name, p);
+                    adapter.addTask(name);
                     adapter.notifyDataSetChanged();
                     Tasks.this.getListView().invalidate();
                 }
@@ -155,23 +139,6 @@ public class Tasks extends ListActivity  {
                     String name = textView.getText().toString();
                     selectedTask.setTaskName(name);
                     
-                    RadioGroup group = (RadioGroup)textEntryView.findViewById(R.id.task_priority_group);
-                    Task.Priority p = null;
-                    switch (group.getCheckedRadioButtonId()) {
-                    case R.id.task_priority_low:
-                        p = Task.Priority.Low;
-                        break;
-                    case R.id.task_priority_medium:
-                        p = Task.Priority.Medium;
-                        break;
-                    case R.id.task_priority_high:
-                        p = Task.Priority.High;
-                        break;
-                    }
-                    if (p != null) {
-                        selectedTask.setPriority(p);
-                    }
-
                     adapter.updateTask(selectedTask);
                         
                     adapter.notifyDataSetChanged();
@@ -213,31 +180,14 @@ public class Tasks extends ListActivity  {
     protected void onPrepareDialog( int id, Dialog d ) {
         TaskMenu action = TaskMenu.values()[id];
         EditText textView;
-        RadioGroup priorityView;
         switch (action) {
         case AddTask:
             textView = (EditText)d.findViewById(R.id.task_edit_name_edit);
             textView.setText("");
-            priorityView = (RadioGroup)d.findViewById(R.id.task_priority_group);
-            priorityView.check(R.id.task_priority_medium);
             break;
         case EditTask:
             textView = (EditText)d.findViewById(R.id.task_edit_name_edit);
             textView.setText(selectedTask.getTaskName());
-            priorityView = (RadioGroup)d.findViewById(R.id.task_priority_group);
-            int pid = -1;
-            switch (selectedTask.getPriority()) {
-            case Low:
-                pid = R.id.task_priority_low;
-                break;
-            case Medium:
-                pid = R.id.task_priority_medium;
-                break;
-            case High:
-                pid = R.id.task_priority_high;
-                break;
-            }
-            priorityView.check(pid);
             break;
         }
     }
@@ -258,14 +208,7 @@ public class Tasks extends ListActivity  {
 
 
 
-    private static final int DKRED = Color.parseColor("#540000");
-    private static final int LTRED = Color.parseColor("#700000");
-    private static final int DKYELLOW = Color.parseColor("#545400");
-    private static final int LTYELLOW = Color.parseColor("#707000");
     private static final int DKGREEN = Color.parseColor("#005400");
-    private static final int LTGREEN = Color.parseColor("#007000");
-    private static final int[] SCOLORS = { LTGREEN,LTYELLOW,LTRED };
-    private static final int[] COLORS = { DKGREEN,DKYELLOW,DKRED };
 
     private class TaskView extends LinearLayout {
         private TextView taskName;
@@ -310,14 +253,12 @@ public class Tasks extends ListActivity  {
         }
 
         private void markupSelectedTask(Task t) {
-            int bg = Color.BLACK;
-            int[] arry;
+            int bg;
             if (t.equals(currentlySelected)) {
-                arry = SCOLORS;
+                bg = DKGREEN;
             } else {
-                arry = COLORS;
+                bg = Color.BLACK;
             }
-            bg = arry[t.getPriority().ordinal()];
             setBackgroundColor(bg);
         }
     }
@@ -329,35 +270,34 @@ public class Tasks extends ListActivity  {
         private static final String START = "start";
         private static final String TASK_ID = "task_id";
         private final String[] RANGE_COLUMNS = { START, END };
-        private static final String PRIORITY = "priority";
         private static final String NAME = "name";
-        private final String[] TASK_COLUMNS = new String[] { "ROWID", NAME, PRIORITY };
+        private final String[] TASK_COLUMNS = new String[] { "ROWID", NAME };
         private DBHelper dbHelper;
         private static final String TIMETRACKER_DB_NAME = "timetracker.db";
-        private static final int DBVERSION = 2;
+        private static final int DBVERSION = 3;
         public static final String TASK_TABLE = "tasks";
         public static final String RANGES_TABLE = "ranges";
+        private static final String TASK_NAME = "name";
         private ArrayList<Task> tasks;
         
         public TaskAdapter( Context c ) {
             savedContext = c;
             dbHelper = new DBHelper(c);
+            dbHelper.getWritableDatabase();
             tasks = new ArrayList<Task>();
             loadTasks();
         }
         
         private void loadTasks() {
             SQLiteDatabase db = dbHelper.getReadableDatabase();
-            Cursor c = db.query(TASK_TABLE, TASK_COLUMNS, null, null, null, null, "priority DESC");
+            Cursor c = db.query(TASK_TABLE, TASK_COLUMNS, null, null, null, null, "name");
 
             Task t = null;
             if (c.moveToFirst()) {
                 do {
                     int tid = c.getInt(0);
                     String[] tids = new String[] { String.valueOf(tid) };
-                    t = new Task(c.getString(1), 
-                            tid, 
-                            Task.Priority.values()[c.getInt(2)]);
+                    t = new Task(c.getString(1), tid );
                     Cursor r = db.rawQuery("SELECT SUM(end) - SUM(start) AS total FROM "
                             + RANGES_TABLE+" WHERE "+TASK_ID+" = ? AND end NOTNULL" , 
                             tids );
@@ -386,13 +326,12 @@ public class Tasks extends ListActivity  {
             return null;
         }
 
-        protected void addTask(String taskName, Priority priority) {
+        protected void addTask(String taskName) {
             SQLiteDatabase db = dbHelper.getWritableDatabase();
             ContentValues values = new ContentValues();
             values.put(NAME, taskName);
-            values.put(PRIORITY, priority.ordinal());
             long id = db.insert(TASK_TABLE, NAME, values);
-            Task t = new Task(taskName, (int)id, priority);
+            Task t = new Task(taskName, (int)id);
             int after;
             for (after = 0; after < tasks.size(); after++) {
                 if (tasks.get(after).compareTo(t) == 1) {
@@ -406,7 +345,6 @@ public class Tasks extends ListActivity  {
             SQLiteDatabase db = dbHelper.getWritableDatabase();
             ContentValues values = new ContentValues();
             values.put(NAME, t.getTaskName());
-            values.put(PRIORITY, t.getPriority().ordinal());
             String id = String.valueOf(t.getId());
             String[] vals = { id };
             db.update(TASK_TABLE, values, "ROWID = ?", vals);
@@ -466,30 +404,36 @@ public class Tasks extends ListActivity  {
         
         
         private class DBHelper extends SQLiteOpenHelper {
+
             public DBHelper(Context context) {
                 super( context, TIMETRACKER_DB_NAME, null, DBVERSION );
             }
 
+            private static final String CREATE_TASK_TABLE = 
+                "CREATE TABLE %s ("
+                + TASK_NAME+" TEXT COLLATE LOCALIZED NOT NULL"
+                + ");";
             @Override
             public void onCreate(SQLiteDatabase db) {
-                db.execSQL("CREATE TABLE "+TASK_TABLE+" ("
-                        + "name TEXT COLLATE LOCALIZED NOT NULL,"
-                        + "priority INTEGER"
-                        + ");");
+                db.execSQL(String.format(CREATE_TASK_TABLE, TASK_TABLE ));
                 db.execSQL("CREATE TABLE "+RANGES_TABLE+"("
-                        + "task_id INTEGER NOT NULL,"
-                        + "start INTEGER NOT NULL,"
-                        + "end INTEGER"
+                        + TASK_ID+" INTEGER NOT NULL,"
+                        + START+" INTEGER NOT NULL,"
+                        + END+" INTEGER"
                         + ");");
             }
 
             @Override
             public void onUpgrade(SQLiteDatabase arg0, int arg1, int arg2) {
-                /*
-                arg0.execSQL("DROP TABLE IF EXISTS "+TASK_TABLE);
-                arg0.execSQL("DROP TABLE IF EXISTS "+RANGES_TABLE);
-                onCreate(arg0);
-                */
+                if (arg1 == 2) {
+                    arg0.execSQL(String.format(CREATE_TASK_TABLE, "temp"));
+                    arg0.execSQL("insert into temp(rowid,"+TASK_NAME+") select rowid,"
+                            +TASK_NAME+" from "+TASK_TABLE+";");
+                    arg0.execSQL("drop table "+TASK_TABLE+";");
+                    arg0.execSQL(String.format(CREATE_TASK_TABLE, TASK_TABLE));
+                    arg0.execSQL("insert into "+TASK_TABLE+"(rowid,"+TASK_NAME+") select rowid,"+TASK_NAME+" from temp;");
+                    arg0.execSQL("drop table temp;");
+                }
             }
         }
     }
