@@ -1,6 +1,8 @@
 package net.ser1.timetracker;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.TimerTask;
 
 import net.ser1.timetracker.Task.Priority;
@@ -14,7 +16,6 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.graphics.Color;
-import android.graphics.Typeface;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.LayoutInflater;
@@ -30,7 +31,7 @@ import android.widget.TextView;
 
 public class Tasks extends ListActivity {
     private static final String TIME_FORMAT = "%02d:%02d:%02d";
-    private static final int REFRESH_MS = 1000;
+    private static final int REFRESH_MS = 1000; // 60000
     private TaskAdapter adapter;
     private Handler timer;
     private Task currentlySelected = null;
@@ -115,11 +116,13 @@ public class Tasks extends ListActivity {
     private class TaskView extends LinearLayout {
         private TextView taskName;
         private TextView total;
+        private int DEFAULT;
         
         public TaskView( Context context, Task t ) {
             super(context);
             setOrientation(LinearLayout.HORIZONTAL);
             setPadding(10,20,10,20);
+            DEFAULT = Color.BLACK;
             
             taskName = new TextView(context);
             taskName.setText(t.getTaskName());
@@ -134,18 +137,19 @@ public class Tasks extends ListActivity {
             markupSelectedTask(t);
         }
 
-        // TODO: Format the HH:MM:SS
         private void formatTotal(TextView total2, Task t ) {
             total2.setText(formatTime(t.getTotal()));
         }
 
+        private static final long MS_H = 3600000;
+        private static final long MS_M = 60000;
+        private static final long MS_S = 1000;
         private String formatTime(long total2) {
-            long hours = total2 / 360000;
-            long hours_in_ms = hours * 360000;
-            long minutes = (total2 - hours_in_ms) / 60000;
-            long minutes_in_ms = minutes * 60000;
-            long seconds = (total2 - hours_in_ms - minutes_in_ms) / 1000;
-            StringBuffer rv = new StringBuffer( String.valueOf(hours) );
+            long hours = total2 / MS_H;
+            long hours_in_ms = hours * MS_H;
+            long minutes = (total2 - hours_in_ms) / MS_M;
+            long minutes_in_ms = minutes * MS_M;
+            long seconds = (total2 - hours_in_ms - minutes_in_ms) / MS_S;
             return String.format(TIME_FORMAT, hours, minutes, seconds);
         }
 
@@ -157,11 +161,9 @@ public class Tasks extends ListActivity {
 
         private void markupSelectedTask(Task t) {
             if (t.equals(currentlySelected)) {
-                taskName.setTypeface(Typeface.DEFAULT_BOLD);
-                total.setTypeface(Typeface.DEFAULT_BOLD);
+                setBackgroundColor(Color.DKGRAY);
             } else {
-                taskName.setTypeface(Typeface.DEFAULT_BOLD);
-                total.setTypeface(Typeface.DEFAULT_BOLD);
+                setBackgroundColor(DEFAULT);
             }
         }
     }
@@ -181,33 +183,53 @@ public class Tasks extends ListActivity {
         private static final int DBVERSION = 2;
         public static final String TASK_TABLE = "tasks";
         public static final String RANGES_TABLE = "ranges";
+        private List<Task> tasks;
         
         public TaskAdapter( Context c ) {
             savedContext = c;
             dbHelper = new DBHelper(c);
+            tasks = new ArrayList<Task>();
+            loadTasks();
         }
         
-        public Task findCurrentlyActive() {
+        private void loadTasks() {
             SQLiteDatabase db = dbHelper.getReadableDatabase();
-            Cursor c = db.rawQuery("SELECT r.task_id,t.name,t.priority,r.start "
-                    +" FROM "+TASK_TABLE+" t, "+RANGES_TABLE+" r "
-                    + "WHERE t.rowid == r.task_id AND r.end ISNULL", null);
+            Cursor c = db.query(TASK_TABLE, TASK_COLUMNS, null, null, null, null, null);
 
             Task t = null;
             if (c.moveToFirst()) {
-                t = new Task(c.getString(1), c.getInt(0));
-                t.setPriority(Task.Priority.values()[ c.getInt(2) ]);
-                t.setStartTime( new Date( c.getLong(3) ) );
-                Cursor r = db.rawQuery("SELECT SUM(end) - SUM(start) AS total FROM "
-                        +RANGES_TABLE+" WHERE "+TASK_ID+" = ? AND end NOTNULL" , 
-                        new String[] { String.valueOf(t.getId()) } );
-                if (r.moveToFirst()) {
-                    t.setCollapsed(r.getLong(0));
-                }
-                r.close();
+                int rowid_idx = c.getColumnIndex("ROWID");
+                do {
+                    int tid = c.getInt(rowid_idx);
+                    String[] tids = new String[] { String.valueOf(tid) };
+                    t = new Task(c.getString(0), 
+                            tid, 
+                            Task.Priority.values()[c.getInt(1)]);
+                    Cursor r = db.rawQuery("SELECT SUM(end) - SUM(start) AS total FROM "
+                            + RANGES_TABLE+" WHERE "+TASK_ID+" = ? AND end NOTNULL" , 
+                            tids );
+                    if (r.moveToFirst()) {
+                        t.setCollapsed(r.getLong(0));
+                    }
+                    r.close();
+                    r = db.query(RANGES_TABLE, RANGE_COLUMNS, 
+                            TASK_ID+" = ? AND end ISNULL", 
+                            tids, null, null, null);
+                    if (r.moveToFirst()) {
+                        t.setStartTime(new Date(r.getLong(0)));
+                    }
+                    r.close();
+                    tasks.add(t);
+                } while (c.moveToNext());
             }
             c.close();
-            return t;
+        }
+        
+        public Task findCurrentlyActive() {
+            for (Task cur : tasks) {
+                if (cur.getEndTime() == null) return cur;
+            }
+            return null;
         }
 
         protected void addTask(String taskName, Priority priority) {
@@ -215,7 +237,9 @@ public class Tasks extends ListActivity {
             ContentValues values = new ContentValues();
             values.put(NAME, taskName);
             values.put(PRIORITY, priority.ordinal());
-            db.insert(TASK_TABLE, NAME, values);
+            long id = db.insert(TASK_TABLE, NAME, values);
+            Task t = new Task(taskName, (int)id, priority);
+            tasks.add( t );
         }
         
         protected void updateTask( Task t ) {
@@ -244,39 +268,11 @@ public class Tasks extends ListActivity {
         }
         
         public int getCount() {
-            SQLiteDatabase db = dbHelper.getReadableDatabase();
-            Cursor c = db.rawQuery("select count(ROWID) from "+TASK_TABLE, null);
-            int count = 0;
-            if (c.moveToFirst()) {
-                count = c.getInt(0);
-            }
-            c.close();
-            return count;
+            return tasks.size();
         }
 
         public Object getItem(int position) {
-            position++;
-            SQLiteDatabase db = dbHelper.getReadableDatabase();
-            String[] pos = { String.valueOf(position) };
-            Cursor c = db.query(TASK_TABLE, TASK_COLUMNS, "ROWID = ?", pos, null, null, null);
-
-            Task t = null;
-            if (c.moveToFirst()) {
-                t = new Task(c.getString(0), position);
-                t.setPriority(Task.Priority.values()[ c.getInt(1) ]);
-                Cursor r = db.rawQuery("SELECT SUM(end) - SUM(start) AS total FROM "+RANGES_TABLE+" WHERE "+TASK_ID+" = ? AND end NOTNULL" , pos );
-                if (r.moveToFirst()) {
-                    t.setCollapsed(r.getLong(0));
-                }
-                r.close();
-                r = db.query(RANGES_TABLE, RANGE_COLUMNS, TASK_ID+" = ? AND end ISNULL", pos, null, null, null);
-                if (r.moveToFirst()) {
-                    t.setStartTime(new Date(r.getLong(0)));
-                }
-                r.close();
-            }
-            c.close();
-            return t;
+            return tasks.get(position);
         }
 
         public long getItemId(int position) {
@@ -334,7 +330,6 @@ public class Tasks extends ListActivity {
         // Disable previous
         if (currentlySelected != null) {
             currentlySelected.stop();
-            currentlySelected.collapse();
             adapter.updateTask(currentlySelected);
         }
         // Enable current
@@ -352,5 +347,4 @@ public class Tasks extends ListActivity {
             adapter.updateTask(selected);
         }
     }
-
 }

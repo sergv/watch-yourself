@@ -8,7 +8,6 @@ import java.util.ListIterator;
 public class Task {
     private String taskName;
     private int id;
-    private ArrayList<TimeRange> times;
     private Date startTime = null;
     private Date endTime = null;
     private Priority priority;
@@ -16,12 +15,20 @@ public class Task {
     
     enum Priority { Low, Medium, High }
     
+    /**
+     * Constructs a new task.
+     * @param name The title of the task.  Must not be null.
+     * @param id The ID of the task.  Must not be null
+     */
     public Task( String name, int id ) {
+        this(name,id,Priority.Medium);
+    }
+    
+    public Task( String name, int id, Priority priority ) {
         taskName = name;
         this.id = id;
-        times = new ArrayList<TimeRange>();
-        setPriority(Priority.Medium);
-        collapsed = 0;
+        setPriority(priority);
+        collapsed = 0;        
     }
     
     public int getId() {
@@ -36,31 +43,12 @@ public class Task {
         this.taskName = taskName;
     }
     
-    public void addTime(TimeRange range) {
-        times.add(range);
-    }
-    
-    public Iterator<TimeRange> getTimes() {
-        return times.iterator();
-    }
-    
     public long getTotal() {
         long sum = 0;
-        for (TimeRange range : times) {
-            sum += range.getTotal();
-        }
         if (startTime != null && endTime == null) {
             sum += new Date().getTime() - startTime.getTime();
         }
         return sum + collapsed;
-    }
-    
-    public void collapse() {
-        for (ListIterator<TimeRange> itter = times.listIterator(); itter.hasNext(); ) {
-            TimeRange range = itter.next();
-            collapsed += range.getTotal();
-            itter.remove();
-        }
     }
     
     public void setCollapsed( long collapsed ) {
@@ -81,7 +69,6 @@ public class Task {
     public void stop() {
         if (endTime == null) {
             endTime = new Date();
-            addTime(new TimeRange( startTime, endTime ));
         }
     }
 
@@ -93,10 +80,6 @@ public class Task {
         return priority;
     }
     
-    public Iterable<TimeRange> times() {
-        return times;
-    }
-
     public Date getStartTime() {
         return startTime;
     }
