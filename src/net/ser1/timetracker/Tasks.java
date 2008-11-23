@@ -29,8 +29,8 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 public class Tasks extends ListActivity {
-    private static final String TIME_FORMAT = "%02d:%02d:%02d";
-    private static final int REFRESH_MS = 1000;
+    private static final String TIME_FORMAT = "%02d:%02d";
+    private static final int REFRESH_MS = 60000;
     private TaskAdapter adapter;
     private Handler timer;
     private Task currentlySelected = null;
@@ -140,8 +140,8 @@ public class Tasks extends ListActivity {
         }
 
         private String formatTime(long total2) {
-            long hours = total2 / 360000;
-            long hours_in_ms = hours * 360000;
+            long hours = total2 / 3600000;
+            long hours_in_ms = hours * 3600000;
             long minutes = (total2 - hours_in_ms) / 60000;
             long minutes_in_ms = minutes * 60000;
             long seconds = (total2 - hours_in_ms - minutes_in_ms) / 1000;
@@ -157,11 +157,9 @@ public class Tasks extends ListActivity {
 
         private void markupSelectedTask(Task t) {
             if (t.equals(currentlySelected)) {
-                taskName.setTypeface(Typeface.DEFAULT_BOLD);
-                total.setTypeface(Typeface.DEFAULT_BOLD);
+                setBackgroundColor(Color.DKGRAY);
             } else {
-                taskName.setTypeface(Typeface.DEFAULT_BOLD);
-                total.setTypeface(Typeface.DEFAULT_BOLD);
+                setBackgroundColor(Color.BLACK);
             }
         }
     }
