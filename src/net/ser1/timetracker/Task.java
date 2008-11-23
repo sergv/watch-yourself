@@ -5,7 +5,7 @@ import java.util.Date;
 import java.util.Iterator;
 import java.util.ListIterator;
 
-public class Task {
+public class Task implements Comparable<Task>{
     private String taskName;
     private int id;
     private Date startTime = null;
@@ -69,6 +69,7 @@ public class Task {
     public void stop() {
         if (endTime == null) {
             endTime = new Date();
+            collapsed += endTime.getTime() - startTime.getTime();
         }
     }
 
@@ -98,5 +99,9 @@ public class Task {
     
     public boolean equals( Task other ) {
         return other != null && other.getId() == id;
+    }
+
+    public int compareTo(Task another) {
+        return priority.compareTo(another.getPriority());
     }
 }

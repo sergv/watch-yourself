@@ -65,8 +65,8 @@ issues:
   component: TimeTracker
   release: "1.0"
   reporter: Sean Russell <ser@ser1.net>
-  status: :unstarted
-  disposition: 
+  status: :closed
+  disposition: :fixed
   creation_time: 2008-11-20 21:38:29.678384 -05:00
   references: []
 
@@ -75,6 +75,10 @@ issues:
   - - 2008-11-20 21:38:30.765074 -05:00
     - Sean Russell <ser@ser1.net>
     - created
+    - ""
+  - - 2008-11-23 12:28:18.252410 -05:00
+    - Sean Russell <ser@ser1.net>
+    - closed issue with disposition fixed
     - ""
 - !ditz.rubyforge.org,2008-03-06/issue 
   title: Add ability to generate reports
@@ -117,10 +121,10 @@ issues:
   desc: ""
   type: :feature
   component: TimeTracker
-  release: 
+  release: "1.0"
   reporter: Sean Russell <ser@ser1.net>
-  status: :unstarted
-  disposition: 
+  status: :closed
+  disposition: :fixed
   creation_time: 2008-11-20 21:39:20.982771 -05:00
   references: []
 
@@ -130,6 +134,14 @@ issues:
     - Sean Russell <ser@ser1.net>
     - created
     - ""
+  - - 2008-11-23 12:28:45.618677 -05:00
+    - Sean Russell <ser@ser1.net>
+    - assigned to release 1.0 from unassigned
+    - ""
+  - - 2008-11-23 12:28:53.852229 -05:00
+    - Sean Russell <ser@ser1.net>
+    - closed issue with disposition fixed
+    - ""
 - !ditz.rubyforge.org,2008-03-06/issue 
   title: Reduce time steps to 1 minute
   desc: Add a class-level 'step'
@@ -137,8 +149,8 @@ issues:
   component: TimeTracker
   release: "1.0"
   reporter: Sean Russell <ser@ser1.net>
-  status: :unstarted
-  disposition: 
+  status: :closed
+  disposition: :fixed
   creation_time: 2008-11-20 21:39:42.520944 -05:00
   references: []
 
@@ -155,6 +167,10 @@ issues:
   - - 2008-11-20 22:07:17.800085 -05:00
     - Sean Russell <ser@ser1.net>
     - assigned to release 1.0 from unassigned
+    - ""
+  - - 2008-11-22 21:46:38.621174 -05:00
+    - Sean Russell <ser@ser1.net>
+    - closed issue with disposition fixed
     - ""
 - !ditz.rubyforge.org,2008-03-06/issue 
   title: Add highlighting to running task
@@ -209,10 +225,10 @@ issues:
   desc: ""
   type: :feature
   component: TimeTracker
-  release: 
+  release: "1.0"
   reporter: Sean Russell <ser@ser1.net>
-  status: :unstarted
-  disposition: 
+  status: :closed
+  disposition: :fixed
   creation_time: 2008-11-20 22:06:45.088150 -05:00
   references: []
 
@@ -221,6 +237,18 @@ issues:
   - - 2008-11-20 22:06:45.861041 -05:00
     - Sean Russell <ser@ser1.net>
     - created
+    - ""
+  - - 2008-11-22 21:45:41.435837 -05:00
+    - Sean Russell <ser@ser1.net>
+    - assigned to release 1.0 from unassigned
+    - ""
+  - - 2008-11-22 22:57:07.080081 -05:00
+    - Sean Russell <ser@ser1.net>
+    - commented
+    - Found icon for adding a new task.  Still need app icon, and to set edit/delete icons.
+  - - 2008-11-23 12:28:30.725624 -05:00
+    - Sean Russell <ser@ser1.net>
+    - closed issue with disposition fixed
     - ""
 - !ditz.rubyforge.org,2008-03-06/issue 
   title: Ignore times < 15s
@@ -237,6 +265,24 @@ issues:
   id: c938b8c47b2dcc95c33a1bb54372208b05aeab15
   log_events: 
   - - 2008-11-22 21:37:12.257477 -05:00
+    - Sean Russell <ser@ser1.net>
+    - created
+    - ""
+- !ditz.rubyforge.org,2008-03-06/issue 
+  title: Add projects
+  desc: ""
+  type: :feature
+  component: TimeTracker
+  release: 
+  reporter: Sean Russell <ser@ser1.net>
+  status: :unstarted
+  disposition: 
+  creation_time: 2008-11-22 21:46:20.079259 -05:00
+  references: []
+
+  id: 796699d26902ca5d634bba454c5177f5d195e17f
+  log_events: 
+  - - 2008-11-22 21:46:20.941591 -05:00
     - Sean Russell <ser@ser1.net>
     - created
     - ""

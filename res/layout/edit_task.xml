@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<RelativeLayout 
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent">
+    
+    <TextView 
+        android:id="@+id/task_edit_name_label"
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
+        android:layout_marginLeft="10dip"
+        android:layout_marginTop="20dip"
+        android:text="@string/task_name"
+        android:gravity="left"
+        android:textAppearance="?android:attr/textAppearanceMedium" />
+    <EditText
+        android:id="@+id/task_edit_name_edit"
+        android:layout_height="wrap_content"
+        android:layout_width="fill_parent"
+        android:layout_marginLeft="10dip"
+        android:layout_marginRight="10dip"
+        android:layout_toRightOf="@id/task_edit_name_label"
+        android:layout_alignBaseline="@id/task_edit_name_label"
+        android:layout_alignParentTop="true"
+        android:scrollHorizontally="true"
+        android:autoText="false"
+        android:capitalize="sentences"
+        android:singleLine="true"
+        android:gravity="fill_horizontal"
+        android:textAppearance="?android:attr/textAppearanceMedium" />
+    
+    <RadioGroup
+        android:id="@+id/task_priority_group"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dip"
+        android:orientation="vertical"
+        android:layout_alignLeft="@id/task_edit_name_edit"
+        android:layout_below="@id/task_edit_name_edit">
+        <RadioButton
+            android:id="@+id/task_priority_low"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/priority_low" />
+        <RadioButton
+            android:id="@+id/task_priority_medium"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/priority_medium" />
+        <RadioButton
+            android:id="@+id/task_priority_high"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/priority_high" />
+    </RadioGroup>
+    <TextView
+        android:id="@+id/task_priority_label"
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
+        android:layout_alignTop="@id/task_priority_group"
+        android:layout_marginTop="10dip"
+        android:layout_alignRight="@id/task_edit_name_label"
+        android:text="@string/task_priority"
+        android:textAppearance="?android:attr/textAppearanceMedium" />
+</RelativeLayout>

@@ -1,6 +1,7 @@
 package net.ser1.timetracker;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.TimerTask;
@@ -18,25 +19,29 @@ import android.database.sqlite.SQLiteOpenHelper;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
+import android.view.ContextMenu;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ContextMenu.ContextMenuInfo;
 import android.widget.BaseAdapter;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.RadioGroup;
+import android.widget.AdapterView.AdapterContextMenuInfo;
 
-public class Tasks extends ListActivity {
+public class Tasks extends ListActivity  {
     private static final String TIME_FORMAT = "%02d:%02d:%02d";
     private static final int REFRESH_MS = 1000; // 60000
     private TaskAdapter adapter;
     private Handler timer;
     private Task currentlySelected = null;
 
-    enum TaskMenu { AddTask }
+    enum TaskMenu { AddTask, EditTask, DeleteTask }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,33 +61,124 @@ public class Tasks extends ListActivity {
             }
             
         }, REFRESH_MS );
-        
+        registerForContextMenu(getListView());
     }
     
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         super.onCreateOptionsMenu(menu);
-        menu.add(0, TaskMenu.AddTask.ordinal(), 0, "Add Task");
+        MenuItem add = menu.add(0, TaskMenu.AddTask.ordinal(), 0, "Add Task");
+        add.setIcon(android.R.drawable.ic_menu_add);
         return true;
     }
+
+    @Override
+    public void onCreateContextMenu(ContextMenu menu, View v,
+            ContextMenuInfo menuInfo) {
+        menu.setHeaderTitle("Task menu");
+        menu.add(0, TaskMenu.EditTask.ordinal(), 0, "Edit Task");
+        menu.add(0, TaskMenu.DeleteTask.ordinal(), 0, "Delete Task");
+    }
+
+    private Task selectedTask;
+    @Override
+    public boolean onContextItemSelected(MenuItem item) {
+        AdapterContextMenuInfo info = (AdapterContextMenuInfo)item.getMenuInfo();
+        selectedTask = (Task)adapter.getItem((int) info.id);
+        
+        showDialog(item.getItemId());
+        return true;
+    }
+
     
     protected Dialog onCreateDialog(int id) {
+        TaskMenu action = TaskMenu.values()[id];
+        switch (action) {
+        case AddTask:
+            return openNewTaskDialog();
+        case EditTask:
+            return openEditTaskDialog();
+        case DeleteTask:
+            return openDeleteTaskDialog();
+        }
+        return null;
+    }
+
+    private Dialog openNewTaskDialog() {
         LayoutInflater factory = LayoutInflater.from(this);
-        final View textEntryView = factory.inflate(R.layout.new_task, null);
+        final View textEntryView = factory.inflate(R.layout.edit_task, null);
         return new AlertDialog.Builder(Tasks.this)
             //.setIcon(R.drawable.alert_dialog_icon)
-            //.setTitle(R.string.task_name)
+            .setTitle(R.string.add_task_title)
             .setView(textEntryView)
-            .setPositiveButton(R.string.task_name_ok, new DialogInterface.OnClickListener() {
+            .setPositiveButton(R.string.add_task_ok, new DialogInterface.OnClickListener() {
                 public void onClick(DialogInterface dialog, int whichButton) {
-                    EditText textView = (EditText)textEntryView.findViewById(R.id.task_name_edit);
+                    EditText textView = (EditText)textEntryView.findViewById(R.id.task_edit_name_edit);
                     String name = textView.getText().toString();
-                    adapter.addTask(name, Task.Priority.Medium);
+                    
+                    RadioGroup group = (RadioGroup)textEntryView.findViewById(R.id.task_priority_group);
+                    Task.Priority p = null;
+                    switch (group.getCheckedRadioButtonId()) {
+                    case R.id.task_priority_low:
+                        p = Task.Priority.Low;
+                        break;
+                    case R.id.task_priority_medium:
+                        p = Task.Priority.Medium;
+                        break;
+                    case R.id.task_priority_high:
+                        p = Task.Priority.High;
+                        break;
+                    }
+
+                    adapter.addTask(name, p);
                     adapter.notifyDataSetChanged();
                     Tasks.this.getListView().invalidate();
                 }
             })
-            .setNegativeButton(R.string.task_name_cancel, new DialogInterface.OnClickListener() {
+            .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int whichButton) {
+                    // NADA
+                }
+            })
+            .create();
+    }
+
+    private Dialog openEditTaskDialog() {
+        if (selectedTask == null) return null;
+        LayoutInflater factory = LayoutInflater.from(this);
+        final View textEntryView = factory.inflate(R.layout.edit_task, null);
+        return new AlertDialog.Builder(Tasks.this)
+            .setView(textEntryView)
+            .setPositiveButton(R.string.edit_task_ok, new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int whichButton) {
+                    EditText textView = (EditText)textEntryView.findViewById(R.id.task_edit_name_edit);
+                    String name = textView.getText().toString();
+                    selectedTask.setTaskName(name);
+                    
+                    RadioGroup group = (RadioGroup)textEntryView.findViewById(R.id.task_priority_group);
+                    Task.Priority p = null;
+                    switch (group.getCheckedRadioButtonId()) {
+                    case R.id.task_priority_low:
+                        p = Task.Priority.Low;
+                        break;
+                    case R.id.task_priority_medium:
+                        p = Task.Priority.Medium;
+                        break;
+                    case R.id.task_priority_high:
+                        p = Task.Priority.High;
+                        break;
+                    }
+                    if (p != null) {
+                        selectedTask.setPriority(p);
+                    }
+
+                    adapter.updateTask(selectedTask);
+                        
+                    adapter.notifyDataSetChanged();
+                    Tasks.this.getListView().invalidate();
+                }
+            })
+            .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
                 public void onClick(DialogInterface dialog, int whichButton) {
                     // NADA
                 }
@@ -90,10 +186,60 @@ public class Tasks extends ListActivity {
             .create();
     }
     
+    private Dialog openDeleteTaskDialog() {
+        String deleteMessage = getString(R.string.delete_task_message);
+        String formattedMessage = String.format(deleteMessage, selectedTask.getTaskName());
+        return new AlertDialog.Builder(Tasks.this)
+            .setTitle(R.string.delete_task_title)
+            .setIcon(android.R.drawable.stat_sys_warning)
+            .setCancelable(true)
+            .setMessage(formattedMessage)
+            .setPositiveButton(R.string.delete_task_ok, new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int whichButton) {
+                    adapter.deleteTask(selectedTask);
+                    adapter.notifyDataSetChanged();
+                    Tasks.this.getListView().invalidate();
+                }
+            })
+            .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int whichButton) {
+                    // NADA
+                }
+            })
+            .create();
+    }
+
     @Override
     protected void onPrepareDialog( int id, Dialog d ) {
-        EditText textView = (EditText)d.findViewById(R.id.task_name_edit);
-        textView.setText("");
+        TaskMenu action = TaskMenu.values()[id];
+        EditText textView;
+        RadioGroup priorityView;
+        switch (action) {
+        case AddTask:
+            textView = (EditText)d.findViewById(R.id.task_edit_name_edit);
+            textView.setText("");
+            priorityView = (RadioGroup)d.findViewById(R.id.task_priority_group);
+            priorityView.check(R.id.task_priority_medium);
+            break;
+        case EditTask:
+            textView = (EditText)d.findViewById(R.id.task_edit_name_edit);
+            textView.setText(selectedTask.getTaskName());
+            priorityView = (RadioGroup)d.findViewById(R.id.task_priority_group);
+            int pid = -1;
+            switch (selectedTask.getPriority()) {
+            case Low:
+                pid = R.id.task_priority_low;
+                break;
+            case Medium:
+                pid = R.id.task_priority_medium;
+                break;
+            case High:
+                pid = R.id.task_priority_high;
+                break;
+            }
+            priorityView.check(pid);
+            break;
+        }
     }
 
 
@@ -112,6 +258,14 @@ public class Tasks extends ListActivity {
 
 
 
+    private static final int DKRED = Color.parseColor("#540000");
+    private static final int LTRED = Color.parseColor("#700000");
+    private static final int DKYELLOW = Color.parseColor("#545400");
+    private static final int LTYELLOW = Color.parseColor("#707000");
+    private static final int DKGREEN = Color.parseColor("#005400");
+    private static final int LTGREEN = Color.parseColor("#007000");
+    private static final int[] SCOLORS = { LTGREEN,LTYELLOW,LTRED };
+    private static final int[] COLORS = { DKGREEN,DKYELLOW,DKRED };
 
     private class TaskView extends LinearLayout {
         private TextView taskName;
@@ -156,11 +310,15 @@ public class Tasks extends ListActivity {
         }
 
         private void markupSelectedTask(Task t) {
+            int bg = Color.BLACK;
+            int[] arry;
             if (t.equals(currentlySelected)) {
-                setBackgroundColor(Color.DKGRAY);
+                arry = SCOLORS;
             } else {
-                setBackgroundColor(Color.BLACK);
+                arry = COLORS;
             }
+            bg = arry[t.getPriority().ordinal()];
+            setBackgroundColor(bg);
         }
     }
 
@@ -179,7 +337,7 @@ public class Tasks extends ListActivity {
         private static final int DBVERSION = 2;
         public static final String TASK_TABLE = "tasks";
         public static final String RANGES_TABLE = "ranges";
-        private List<Task> tasks;
+        private ArrayList<Task> tasks;
         
         public TaskAdapter( Context c ) {
             savedContext = c;
@@ -190,7 +348,7 @@ public class Tasks extends ListActivity {
         
         private void loadTasks() {
             SQLiteDatabase db = dbHelper.getReadableDatabase();
-            Cursor c = db.query(TASK_TABLE, TASK_COLUMNS, null, null, null, null, null);
+            Cursor c = db.query(TASK_TABLE, TASK_COLUMNS, null, null, null, null, "priority DESC");
 
             Task t = null;
             if (c.moveToFirst()) {
@@ -235,7 +393,13 @@ public class Tasks extends ListActivity {
             values.put(PRIORITY, priority.ordinal());
             long id = db.insert(TASK_TABLE, NAME, values);
             Task t = new Task(taskName, (int)id, priority);
-            tasks.add( t );
+            int after;
+            for (after = 0; after < tasks.size(); after++) {
+                if (tasks.get(after).compareTo(t) == 1) {
+                    break;
+                }
+            }
+            tasks.add( after, t );
         }
         
         protected void updateTask( Task t ) {
@@ -261,6 +425,16 @@ public class Tasks extends ListActivity {
                     db.insert(RANGES_TABLE, END, values);
                 }
             }
+            
+            Collections.sort(tasks);
+        }
+        
+        public void deleteTask( Task t ) {
+            tasks.remove(t);
+            SQLiteDatabase db = dbHelper.getWritableDatabase();
+            String[] id = { String.valueOf(t.getId()) };
+            db.delete(TASK_TABLE, "ROWID = ?", id);
+            db.delete(RANGES_TABLE, TASK_ID+" = ?", id);
         }
         
         public int getCount() {
@@ -343,4 +517,5 @@ public class Tasks extends ListActivity {
             adapter.updateTask(selected);
         }
     }
+
 }
