@@ -3,7 +3,6 @@ package net.ser1.timetracker;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
-import java.util.List;
 import java.util.TimerTask;
 
 import android.app.AlertDialog;
@@ -30,7 +29,6 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.RadioGroup;
 import android.widget.AdapterView.AdapterContextMenuInfo;
 
 public class Tasks extends ListActivity  {
@@ -255,7 +253,7 @@ public class Tasks extends ListActivity  {
         private void markupSelectedTask(Task t) {
             int bg;
             if (t.equals(currentlySelected)) {
-                bg = DKGREEN;
+                bg = Color.DKGRAY;
             } else {
                 bg = Color.BLACK;
             }
