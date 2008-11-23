@@ -313,8 +313,8 @@ issues:
   component: TimeTracker
   release: "1.1"
   reporter: Sean Russell <ser@ser1.net>
-  status: :unstarted
-  disposition: 
+  status: :closed
+  disposition: :fixed
   creation_time: 2008-11-23 12:38:43.423927 -05:00
   references: []
 
@@ -327,6 +327,10 @@ issues:
   - - 2008-11-23 12:40:12.094058 -05:00
     - Sean Russell <ser@ser1.net>
     - assigned to release 1.1 from unassigned
+    - ""
+  - - 2008-11-23 14:55:29.393092 -05:00
+    - Sean Russell <ser@ser1.net>
+    - closed issue with disposition fixed
     - ""
 - !ditz.rubyforge.org,2008-03-06/issue 
   title: Add desktop client
@@ -389,8 +393,8 @@ issues:
   component: TimeTracker
   release: "1.1"
   reporter: Sean Russell <ser@ser1.net>
-  status: :unstarted
-  disposition: 
+  status: :closed
+  disposition: :fixed
   creation_time: 2008-11-23 12:57:01.520169 -05:00
   references: []
 
@@ -400,6 +404,10 @@ issues:
     - Sean Russell <ser@ser1.net>
     - created
     - ""
+  - - 2008-11-23 15:05:26.246934 -05:00
+    - Sean Russell <ser@ser1.net>
+    - closed issue with disposition fixed
+    - ""
 - !ditz.rubyforge.org,2008-03-06/issue 
   title: Tell GUI to not word-wrap the times
   desc: ""
@@ -407,8 +415,8 @@ issues:
   component: TimeTracker
   release: "1.1"
   reporter: Sean Russell <ser@ser1.net>
-  status: :unstarted
-  disposition: 
+  status: :closed
+  disposition: :fixed
   creation_time: 2008-11-23 12:57:18.926303 -05:00
   references: []
 
@@ -417,6 +425,10 @@ issues:
   - - 2008-11-23 12:57:19.368071 -05:00
     - Sean Russell <ser@ser1.net>
     - created
+    - ""
+  - - 2008-11-23 15:11:09.401482 -05:00
+    - Sean Russell <ser@ser1.net>
+    - closed issue with disposition fixed
     - ""
 - !ditz.rubyforge.org,2008-03-06/issue 
   title: Remove the priorities
@@ -467,6 +479,28 @@ issues:
   - - 2008-11-23 12:59:47.567540 -05:00
     - Sean Russell <ser@ser1.net>
     - assigned to release 1.2 from unassigned
+    - ""
+- !ditz.rubyforge.org,2008-03-06/issue 
+  title: The add/edit dialog is wonky
+  desc: The name text edit widget needs more space!
+  type: :feature
+  component: TimeTracker
+  release: "1.1"
+  reporter: Sean Russell <ser@ser1.net>
+  status: :closed
+  disposition: :fixed
+  creation_time: 2008-11-23 14:53:38.689553 -05:00
+  references: []
+
+  id: e63eb382f554acaa210217f4ff5a67105d6befc4
+  log_events: 
+  - - 2008-11-23 14:53:39.011650 -05:00
+    - Sean Russell <ser@ser1.net>
+    - created
+    - ""
+  - - 2008-11-23 15:02:01.113270 -05:00
+    - Sean Russell <ser@ser1.net>
+    - closed issue with disposition fixed
     - ""
 components: 
 - !ditz.rubyforge.org,2008-03-06/component 

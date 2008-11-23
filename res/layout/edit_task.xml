@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<RelativeLayout 
+<LinearLayout 
     xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="horizontal"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent">
     
@@ -9,7 +10,8 @@
         android:layout_height="wrap_content"
         android:layout_width="wrap_content"
         android:layout_marginLeft="10dip"
-        android:layout_marginTop="20dip"
+        android:layout_marginTop="5dip"
+        android:layout_marginBottom="5dip"
         android:text="@string/task_name"
         android:gravity="left"
         android:textAppearance="?android:attr/textAppearanceMedium" />
@@ -17,11 +19,10 @@
         android:id="@+id/task_edit_name_edit"
         android:layout_height="wrap_content"
         android:layout_width="fill_parent"
+        android:layout_marginTop="0dip"
         android:layout_marginLeft="10dip"
         android:layout_marginRight="10dip"
-        android:layout_toRightOf="@id/task_edit_name_label"
-        android:layout_alignBaseline="@id/task_edit_name_label"
-        android:layout_alignParentTop="true"
+        android.layout_marginBottom="5dip"
         android:scrollHorizontally="true"
         android:autoText="false"
         android:capitalize="sentences"
@@ -29,4 +30,4 @@
         android:gravity="fill_horizontal"
         android:textAppearance="?android:attr/textAppearanceMedium" />
     
-</RelativeLayout>
+</LinearLayout>

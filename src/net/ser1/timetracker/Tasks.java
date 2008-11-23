@@ -17,7 +17,9 @@ import android.database.sqlite.SQLiteOpenHelper;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
+import android.text.method.SingleLineTransformationMethod;
 import android.view.ContextMenu;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -215,17 +217,19 @@ public class Tasks extends ListActivity  {
         public TaskView( Context context, Task t ) {
             super(context);
             setOrientation(LinearLayout.HORIZONTAL);
-            setPadding(10,20,10,20);
+            setPadding(5,10,5,10);
             
             taskName = new TextView(context);
             taskName.setText(t.getTaskName());
             addView(taskName, new LinearLayout.LayoutParams(
-                    LayoutParams.WRAP_CONTENT, LayoutParams.FILL_PARENT, 0.9f));
+                    LayoutParams.WRAP_CONTENT, LayoutParams.FILL_PARENT, 1f));
 
             total = new TextView(context);
+            total.setGravity(Gravity.RIGHT);
+            total.setTransformationMethod(SingleLineTransformationMethod.getInstance());
             formatTotal( total, t );
             addView(total, new LinearLayout.LayoutParams(
-                    LayoutParams.WRAP_CONTENT, LayoutParams.FILL_PARENT, 0.1f));
+                    LayoutParams.WRAP_CONTENT, LayoutParams.FILL_PARENT, 0.0f));
             
             markupSelectedTask(t);
         }
@@ -330,13 +334,8 @@ public class Tasks extends ListActivity  {
             values.put(NAME, taskName);
             long id = db.insert(TASK_TABLE, NAME, values);
             Task t = new Task(taskName, (int)id);
-            int after;
-            for (after = 0; after < tasks.size(); after++) {
-                if (tasks.get(after).compareTo(t) == 1) {
-                    break;
-                }
-            }
-            tasks.add( after, t );
+            tasks.add( t );
+            Collections.sort(tasks);
         }
         
         protected void updateTask( Task t ) {
