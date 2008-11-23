@@ -85,7 +85,7 @@ issues:
   desc: ""
   type: :feature
   component: TimeTracker
-  release: 
+  release: "1.2"
   reporter: Sean Russell <ser@ser1.net>
   status: :unstarted
   disposition: 
@@ -98,12 +98,16 @@ issues:
     - Sean Russell <ser@ser1.net>
     - created
     - ""
+  - - 2008-11-23 12:41:05.221865 -05:00
+    - Sean Russell <ser@ser1.net>
+    - assigned to release 1.2 from unassigned
+    - ""
 - !ditz.rubyforge.org,2008-03-06/issue 
   title: Add ability to edit / add times
   desc: ""
   type: :feature
   component: TimeTracker
-  release: 
+  release: "1.1"
   reporter: Sean Russell <ser@ser1.net>
   status: :unstarted
   disposition: 
@@ -115,6 +119,10 @@ issues:
   - - 2008-11-20 21:39:07.273747 -05:00
     - Sean Russell <ser@ser1.net>
     - created
+    - ""
+  - - 2008-11-23 12:40:03.537182 -05:00
+    - Sean Russell <ser@ser1.net>
+    - assigned to release 1.1 from unassigned
     - ""
 - !ditz.rubyforge.org,2008-03-06/issue 
   title: Add ability to remove tasks
@@ -255,7 +263,7 @@ issues:
   desc: ""
   type: :feature
   component: TimeTracker
-  release: "1.0"
+  release: "1.1"
   reporter: Sean Russell <ser@ser1.net>
   status: :unstarted
   disposition: 
@@ -268,12 +276,20 @@ issues:
     - Sean Russell <ser@ser1.net>
     - created
     - ""
+  - - 2008-11-23 12:39:00.491897 -05:00
+    - Sean Russell <ser@ser1.net>
+    - unassigned from release 1.0
+    - ""
+  - - 2008-11-23 12:40:08.096102 -05:00
+    - Sean Russell <ser@ser1.net>
+    - assigned to release 1.1 from unassigned
+    - ""
 - !ditz.rubyforge.org,2008-03-06/issue 
   title: Add projects
   desc: ""
   type: :feature
   component: TimeTracker
-  release: 
+  release: "2.0"
   reporter: Sean Russell <ser@ser1.net>
   status: :unstarted
   disposition: 
@@ -286,16 +302,91 @@ issues:
     - Sean Russell <ser@ser1.net>
     - created
     - ""
+  - - 2008-11-23 12:41:19.379273 -05:00
+    - Sean Russell <ser@ser1.net>
+    - assigned to release 2.0 from unassigned
+    - ""
+- !ditz.rubyforge.org,2008-03-06/issue 
+  title: Adding a new task doesn't insert into the correct position.
+  desc: ""
+  type: :feature
+  component: TimeTracker
+  release: "1.1"
+  reporter: Sean Russell <ser@ser1.net>
+  status: :unstarted
+  disposition: 
+  creation_time: 2008-11-23 12:38:43.423927 -05:00
+  references: []
+
+  id: f28d414346550ccc38810e3484643c26c60e8c5b
+  log_events: 
+  - - 2008-11-23 12:38:44.136490 -05:00
+    - Sean Russell <ser@ser1.net>
+    - created
+    - ""
+  - - 2008-11-23 12:40:12.094058 -05:00
+    - Sean Russell <ser@ser1.net>
+    - assigned to release 1.1 from unassigned
+    - ""
+- !ditz.rubyforge.org,2008-03-06/issue 
+  title: Add desktop client
+  desc: ""
+  type: :feature
+  component: TimeTracker
+  release: "2.0"
+  reporter: Sean Russell <ser@ser1.net>
+  status: :unstarted
+  disposition: 
+  creation_time: 2008-11-23 12:42:00.977508 -05:00
+  references: []
+
+  id: 74ce2eb2b5a409b81f6179c29807679a22c684d6
+  log_events: 
+  - - 2008-11-23 12:42:03.469190 -05:00
+    - Sean Russell <ser@ser1.net>
+    - created
+    - ""
 components: 
 - !ditz.rubyforge.org,2008-03-06/component 
   name: TimeTracker
 releases: 
 - !ditz.rubyforge.org,2008-03-06/release 
   name: "1.0"
-  status: :unreleased
-  release_time: 
+  status: :released
+  release_time: 2008-11-23 12:43:46.204831 -05:00
   log_events: 
   - - 2008-11-20 08:35:10.814270 -05:00
     - Sean Russell <ser@ser1.net>
     - created
     - Implements the ability to create and time tasks.
+  - - 2008-11-23 12:43:46.204873 -05:00
+    - Sean Russell <ser@ser1.net>
+    - released
+    - ""
+- !ditz.rubyforge.org,2008-03-06/release 
+  name: "1.1"
+  status: :unreleased
+  release_time: 
+  log_events: 
+  - - 2008-11-23 12:39:32.720138 -05:00
+    - Sean Russell <ser@ser1.net>
+    - created
+    - Minor feature enhancements and bug fixes
+- !ditz.rubyforge.org,2008-03-06/release 
+  name: "1.2"
+  status: :unreleased
+  release_time: 
+  log_events: 
+  - - 2008-11-23 12:40:57.485557 -05:00
+    - Sean Russell <ser@ser1.net>
+    - created
+    - ""
+- !ditz.rubyforge.org,2008-03-06/release 
+  name: "2.0"
+  status: :unreleased
+  release_time: 
+  log_events: 
+  - - 2008-11-23 12:41:11.540547 -05:00
+    - Sean Russell <ser@ser1.net>
+    - created
+    - ""
