@@ -9,8 +9,8 @@ issues:
   component: TimeTracker
   release: "1.0"
   reporter: Sean Russell <ser@ser1.net>
-  status: :paused
-  disposition: 
+  status: :closed
+  disposition: :fixed
   creation_time: 2008-11-20 08:30:43.968573 -05:00
   references: []
 
@@ -27,6 +27,10 @@ issues:
   - - 2008-11-20 20:13:02.049069 -05:00
     - Sean Russell <ser@ser1.net>
     - changed status from in_progress to paused
+    - ""
+  - - 2008-11-22 21:44:16.074764 -05:00
+    - Sean Russell <ser@ser1.net>
+    - closed issue with disposition fixed
     - ""
 - !ditz.rubyforge.org,2008-03-06/issue 
   title: Collapse ranges on loading from DB
@@ -215,6 +219,24 @@ issues:
   id: 5de76bd6f7c7e1d4ce71900a9574637b1a2d1be9
   log_events: 
   - - 2008-11-20 22:06:45.861041 -05:00
+    - Sean Russell <ser@ser1.net>
+    - created
+    - ""
+- !ditz.rubyforge.org,2008-03-06/issue 
+  title: Ignore times < 15s
+  desc: ""
+  type: :feature
+  component: TimeTracker
+  release: "1.0"
+  reporter: Sean Russell <ser@ser1.net>
+  status: :unstarted
+  disposition: 
+  creation_time: 2008-11-22 21:37:10.606118 -05:00
+  references: []
+
+  id: c938b8c47b2dcc95c33a1bb54372208b05aeab15
+  log_events: 
+  - - 2008-11-22 21:37:12.257477 -05:00
     - Sean Russell <ser@ser1.net>
     - created
     - ""

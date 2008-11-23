@@ -116,13 +116,11 @@ public class Tasks extends ListActivity {
     private class TaskView extends LinearLayout {
         private TextView taskName;
         private TextView total;
-        private int DEFAULT;
         
         public TaskView( Context context, Task t ) {
             super(context);
             setOrientation(LinearLayout.HORIZONTAL);
             setPadding(10,20,10,20);
-            DEFAULT = Color.BLACK;
             
             taskName = new TextView(context);
             taskName.setText(t.getTaskName());
@@ -137,20 +135,18 @@ public class Tasks extends ListActivity {
             markupSelectedTask(t);
         }
 
-        private void formatTotal(TextView total2, Task t ) {
-            total2.setText(formatTime(t.getTotal()));
-        }
-
         private static final long MS_H = 3600000;
         private static final long MS_M = 60000;
         private static final long MS_S = 1000;
-        private String formatTime(long total2) {
-            long hours = total2 / MS_H;
+        private void formatTotal(TextView totalView, Task t ) {
+            long total = t.getTotal();
+            long hours = total / MS_H;
             long hours_in_ms = hours * MS_H;
-            long minutes = (total2 - hours_in_ms) / MS_M;
+            long minutes = (total - hours_in_ms) / MS_M;
             long minutes_in_ms = minutes * MS_M;
-            long seconds = (total2 - hours_in_ms - minutes_in_ms) / MS_S;
-            return String.format(TIME_FORMAT, hours, minutes, seconds);
+            long seconds = (total - hours_in_ms - minutes_in_ms) / MS_S;
+            String fmt = String.format(TIME_FORMAT, hours, minutes, seconds);
+            totalView.setText(fmt);
         }
 
         public void setTask(Task t) {
@@ -163,7 +159,7 @@ public class Tasks extends ListActivity {
             if (t.equals(currentlySelected)) {
                 setBackgroundColor(Color.DKGRAY);
             } else {
-                setBackgroundColor(DEFAULT);
+                setBackgroundColor(Color.BLACK);
             }
         }
     }
@@ -177,7 +173,7 @@ public class Tasks extends ListActivity {
         private final String[] RANGE_COLUMNS = { START, END };
         private static final String PRIORITY = "priority";
         private static final String NAME = "name";
-        private final String[] TASK_COLUMNS = new String[] { NAME, PRIORITY };
+        private final String[] TASK_COLUMNS = new String[] { "ROWID", NAME, PRIORITY };
         private DBHelper dbHelper;
         private static final String TIMETRACKER_DB_NAME = "timetracker.db";
         private static final int DBVERSION = 2;
@@ -198,13 +194,12 @@ public class Tasks extends ListActivity {
 
             Task t = null;
             if (c.moveToFirst()) {
-                int rowid_idx = c.getColumnIndex("ROWID");
                 do {
-                    int tid = c.getInt(rowid_idx);
+                    int tid = c.getInt(0);
                     String[] tids = new String[] { String.valueOf(tid) };
-                    t = new Task(c.getString(0), 
+                    t = new Task(c.getString(1), 
                             tid, 
-                            Task.Priority.values()[c.getInt(1)]);
+                            Task.Priority.values()[c.getInt(2)]);
                     Cursor r = db.rawQuery("SELECT SUM(end) - SUM(start) AS total FROM "
                             + RANGES_TABLE+" WHERE "+TASK_ID+" = ? AND end NOTNULL" , 
                             tids );
@@ -227,7 +222,8 @@ public class Tasks extends ListActivity {
         
         public Task findCurrentlyActive() {
             for (Task cur : tasks) {
-                if (cur.getEndTime() == null) return cur;
+                if (cur.getEndTime() == null && cur.getStartTime() != null) 
+                    return cur;
             }
             return null;
         }
