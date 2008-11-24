@@ -17,5 +17,12 @@
 <string name="delete_task_ok">Delete task</string>
 <string name="delete_task_title">Delete Task</string>
 <string name="delete_task_message">Are you sure you want to delete &quot;%s&quot; and all of it's time records?</string>
-<string name="add_task_title">Create new task</string>
+<string name="add_task_title">Add task</string>
+<string name="change_view_title">Change view</string>
+<string name="generate_report_title">Generate report</string>
+<string name="view_today">Today</string>
+<string name="view_yesterday">Yesterday</string>
+<string name="view_this_week">This week</string>
+<string name="view_last_week">Last week</string>
+<string name="select_range">Select range...</string>
 </resources>

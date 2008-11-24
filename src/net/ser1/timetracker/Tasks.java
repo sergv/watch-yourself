@@ -1,11 +1,13 @@
 package net.ser1.timetracker;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collections;
 import java.util.Date;
 import java.util.TimerTask;
 
 import android.app.AlertDialog;
+import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.app.ListActivity;
 import android.content.ContentValues;
@@ -27,20 +29,22 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.ContextMenu.ContextMenuInfo;
 import android.widget.BaseAdapter;
+import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.AdapterView.AdapterContextMenuInfo;
 
-public class Tasks extends ListActivity  {
+public class Tasks extends ListActivity {
     private static final String TIME_FORMAT = "%02d:%02d:%02d";
     private static final int REFRESH_MS = 1000; // 60000
     private TaskAdapter adapter;
     private Handler timer;
     private Task currentlySelected = null;
 
-    enum TaskMenu { AddTask, EditTask, DeleteTask }
+    enum TaskMenu { AddTask, EditTask, DeleteTask, Report, 
+        ShowTimes, ChangeView, SelectStartDate, SelectEndDate }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,8 +70,12 @@ public class Tasks extends ListActivity  {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         super.onCreateOptionsMenu(menu);
-        MenuItem add = menu.add(0, TaskMenu.AddTask.ordinal(), 0, "Add Task");
-        add.setIcon(android.R.drawable.ic_menu_add);
+        menu.add(0, TaskMenu.AddTask.ordinal(), 0, R.string.add_task_title)
+            .setIcon(android.R.drawable.ic_menu_add);
+        menu.add(0, TaskMenu.ChangeView.ordinal(), 1, R.string.change_view_title)
+            .setIcon(android.R.drawable.ic_menu_compass);
+        menu.add(0, TaskMenu.Report.ordinal(), 2, R.string.generate_report_title)
+            .setIcon(android.R.drawable.ic_menu_info_details);
         return true;
     }
 
@@ -77,6 +85,7 @@ public class Tasks extends ListActivity  {
         menu.setHeaderTitle("Task menu");
         menu.add(0, TaskMenu.EditTask.ordinal(), 0, "Edit Task");
         menu.add(0, TaskMenu.DeleteTask.ordinal(), 0, "Delete Task");
+        menu.add(0, TaskMenu.ShowTimes.ordinal(), 0, "Show times");
     }
 
     private Task selectedTask;
@@ -89,7 +98,8 @@ public class Tasks extends ListActivity  {
         return true;
     }
 
-    
+
+    private int sYear, sMonth, sDay;
     protected Dialog onCreateDialog(int id) {
         TaskMenu action = TaskMenu.values()[id];
         switch (action) {
@@ -99,10 +109,108 @@ public class Tasks extends ListActivity  {
             return openEditTaskDialog();
         case DeleteTask:
             return openDeleteTaskDialog();
+        case ChangeView:
+            return new AlertDialog.Builder(Tasks.this)
+                .setItems(R.array.views, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        String[] items = getResources().getStringArray(R.array.views);
+                        switch (which) {
+                        case 0: // today
+                            adapter.loadTasks( Calendar.getInstance() );
+                            break;
+                        case 1: // this week
+                            Calendar tw = Calendar.getInstance();
+                            adapter.loadTasks( weekStart( tw ), weekEnd( tw ) );
+                            break;
+                        case 2: // yesterday
+                            Calendar y = Calendar.getInstance();
+                            y.add(Calendar.DAY_OF_MONTH, -1);
+                            adapter.loadTasks( y );
+                            break;
+                        case 3: // last week
+                            Calendar lw = Calendar.getInstance();
+                            lw.add(Calendar.DAY_OF_MONTH, -7);
+                            adapter.loadTasks( weekStart( lw ), weekEnd( lw ) );
+                            break;
+                        case 4: // all
+                            adapter.loadTasks();
+                            break;
+                        case 5: // select range
+                            showDialog(TaskMenu.SelectStartDate.ordinal());
+                            break;
+                        default: // Unknown
+                            break;
+                        }
+                        adapter.notifyDataSetChanged();
+                        Tasks.this.getListView().invalidate();
+                    }
+
+                    private Calendar weekEnd(Calendar tw) {
+                        int dow = tw.get(Calendar.DAY_OF_WEEK);
+                        Calendar tw_e = (Calendar)tw.clone();
+                        tw_e.add(Calendar.DAY_OF_WEEK, 6-dow);
+                        return tw_e;
+                    }
+
+                    private Calendar weekStart(Calendar tw) {
+                        int dow = tw.get(Calendar.DAY_OF_WEEK);
+                        Calendar tw_s = (Calendar)tw.clone();
+                        tw_s.add(Calendar.DAY_OF_WEEK, -dow);
+                        return tw_s;
+                    }
+                }).create();
+        case Report:
+            break;
+        case ShowTimes:
+            break;
+        case SelectStartDate:
+            Calendar today_s = Calendar.getInstance();
+            return new DatePickerDialog(this,
+                    new DatePickerDialog.OnDateSetListener() {
+                        public void onDateSet(DatePicker view, int year, 
+                                int monthOfYear, int dayOfMonth) {
+                            sYear = year;
+                            sMonth = monthOfYear;
+                            sDay = dayOfMonth;
+                            showDialog(TaskMenu.SelectEndDate.ordinal());
+                        }
+                    }, 
+                    today_s.get(Calendar.YEAR), 
+                    today_s.get(Calendar.MONTH), 
+                    today_s.get(Calendar.DAY_OF_MONTH));
+        case SelectEndDate:
+            Calendar today_e = Calendar.getInstance();
+            return new DatePickerDialog(this,
+                    new DatePickerDialog.OnDateSetListener() {
+                        public void onDateSet(DatePicker view, int year, 
+                                int monthOfYear, int dayOfMonth) {
+                            Calendar start = Calendar.getInstance();
+                            start.set(Calendar.YEAR, sYear);
+                            start.set(Calendar.MONTH, sMonth);
+                            start.set(Calendar.DAY_OF_MONTH, sDay);
+                            start.set(Calendar.HOUR, 0);
+                            start.set(Calendar.MINUTE, 0);
+                            start.set(Calendar.SECOND, 0);
+                            start.set(Calendar.MILLISECOND, 0);
+                            Calendar end = Calendar.getInstance();
+                            end.set(Calendar.YEAR, sYear);
+                            end.set(Calendar.MONTH, sMonth);
+                            end.set(Calendar.DAY_OF_MONTH, sDay);
+                            end.set(Calendar.HOUR, 0);
+                            end.set(Calendar.MINUTE, 0);
+                            end.set(Calendar.SECOND, 0);
+                            end.set(Calendar.MILLISECOND, 0);
+                            end.add(Calendar.DAY_OF_MONTH, 1);
+                            adapter.loadTasks( start, end );
+                        }
+                    }, 
+                    sYear, 
+                    sMonth, 
+                    sDay);
         }
         return null;
     }
-
+    
     private Dialog openNewTaskDialog() {
         LayoutInflater factory = LayoutInflater.from(this);
         final View textEntryView = factory.inflate(R.layout.edit_task, null);
@@ -189,26 +297,28 @@ public class Tasks extends ListActivity  {
             textView = (EditText)d.findViewById(R.id.task_edit_name_edit);
             textView.setText(selectedTask.getTaskName());
             break;
+        default:
+            break;
         }
     }
-
-
+    
     @Override
     public boolean onMenuItemSelected(int featureId, MenuItem item) {
-        TaskMenu selected = TaskMenu.values()[item.getItemId()];
-        switch (selected) {
+        TaskMenu t = TaskMenu.values()[item.getItemId()];
+        switch (t) {
         case AddTask:
-            showDialog(0);
+        case ChangeView:
+        case Report:
+            showDialog(item.getItemId());
             break;
         default:
+            // Ignore the other menu items; they're context menu
             break;
         }
         return super.onMenuItemSelected(featureId, item);
     }
 
 
-
-    private static final int DKGREEN = Color.parseColor("#005400");
 
     private class TaskView extends LinearLayout {
         private TextView taskName;
@@ -287,10 +397,48 @@ public class Tasks extends ListActivity  {
             dbHelper = new DBHelper(c);
             dbHelper.getWritableDatabase();
             tasks = new ArrayList<Task>();
-            loadTasks();
+            loadTasks( Calendar.getInstance() );
         }
         
         private void loadTasks() {
+            loadTasks("", true);
+        }
+        
+        protected void loadTasks( Calendar day ) {
+            loadTasks( day, (Calendar)day.clone() );
+        }
+        
+        protected void loadTasks( Calendar start, Calendar end ) {
+            String query = "AND start >= %d AND end < %d";
+            Calendar today = Calendar.getInstance();
+            today.set(Calendar.HOUR, 12);
+            for (int field : new int[] { Calendar.HOUR, Calendar.MINUTE, 
+                                         Calendar.SECOND, 
+                                         Calendar.MILLISECOND }) {
+                for (Calendar d : new Calendar[] { today, start, end }) {
+                    d.set(field, 0);
+                }
+            }
+            end.add(Calendar.DAY_OF_MONTH, 1);
+            boolean loadCurrentTask = start.compareTo(today) != 1 &&
+                                      end.compareTo(end) != -1;
+            query = String.format( query, start.getTime().getTime(), 
+                    end.getTime().getTime());
+            loadTasks(query, loadCurrentTask);
+        }
+        
+        /**
+         * Load tasks, given a filter.  This overwrites any currently
+         * loaded tasks in the "tasks" data structure.
+         * 
+         * @param whereClause A SQL where clause limiting the range of dates to
+         *        load.  This must be a clause against the ranges table.
+         * @param loadCurrent Whether or not to include data for currently active
+         *        tasks.
+         */
+        private void loadTasks( String whereClause, boolean loadCurrent ) {
+            tasks.clear();
+            
             SQLiteDatabase db = dbHelper.getReadableDatabase();
             Cursor c = db.query(TASK_TABLE, TASK_COLUMNS, null, null, null, null, "name");
 
@@ -298,22 +446,24 @@ public class Tasks extends ListActivity  {
             if (c.moveToFirst()) {
                 do {
                     int tid = c.getInt(0);
-                    String[] tids = new String[] { String.valueOf(tid) };
+                    String[] tids = { String.valueOf(tid) };
                     t = new Task(c.getString(1), tid );
                     Cursor r = db.rawQuery("SELECT SUM(end) - SUM(start) AS total FROM "
-                            + RANGES_TABLE+" WHERE "+TASK_ID+" = ? AND end NOTNULL" , 
-                            tids );
+                            + RANGES_TABLE+" WHERE "+TASK_ID+" = ? AND end NOTNULL " 
+                            + whereClause, tids );
                     if (r.moveToFirst()) {
                         t.setCollapsed(r.getLong(0));
                     }
                     r.close();
-                    r = db.query(RANGES_TABLE, RANGE_COLUMNS, 
-                            TASK_ID+" = ? AND end ISNULL", 
-                            tids, null, null, null);
-                    if (r.moveToFirst()) {
-                        t.setStartTime(new Date(r.getLong(0)));
+                    if (loadCurrent) {
+                        r = db.query(RANGES_TABLE, RANGE_COLUMNS, 
+                                TASK_ID+" = ? AND end ISNULL", 
+                                tids, null, null, null);
+                        if (r.moveToFirst()) {
+                            t.setStartTime(new Date(r.getLong(0)));
+                        }
+                        r.close();
                     }
-                    r.close();
                     tasks.add(t);
                 } while (c.moveToNext());
             }
@@ -458,5 +608,4 @@ public class Tasks extends ListActivity  {
             adapter.updateTask(selected);
         }
     }
-
 }

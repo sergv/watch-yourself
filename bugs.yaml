@@ -85,7 +85,7 @@ issues:
   desc: ""
   type: :feature
   component: TimeTracker
-  release: "1.2"
+  release: "1.1"
   reporter: Sean Russell <ser@ser1.net>
   status: :unstarted
   disposition: 
@@ -101,6 +101,10 @@ issues:
   - - 2008-11-23 12:41:05.221865 -05:00
     - Sean Russell <ser@ser1.net>
     - assigned to release 1.2 from unassigned
+    - ""
+  - - 2008-11-23 15:34:48.734419 -05:00
+    - Sean Russell <ser@ser1.net>
+    - assigned to release 1.1 from 1.2
     - ""
 - !ditz.rubyforge.org,2008-03-06/issue 
   title: Add ability to edit / add times
@@ -263,7 +267,7 @@ issues:
   desc: ""
   type: :feature
   component: TimeTracker
-  release: "1.1"
+  release: "1.2"
   reporter: Sean Russell <ser@ser1.net>
   status: :unstarted
   disposition: 
@@ -283,6 +287,10 @@ issues:
   - - 2008-11-23 12:40:08.096102 -05:00
     - Sean Russell <ser@ser1.net>
     - assigned to release 1.1 from unassigned
+    - ""
+  - - 2008-11-23 17:50:28.386923 -05:00
+    - Sean Russell <ser@ser1.net>
+    - assigned to release 1.2 from 1.1
     - ""
 - !ditz.rubyforge.org,2008-03-06/issue 
   title: Add projects
@@ -357,8 +365,8 @@ issues:
   component: TimeTracker
   release: "1.1"
   reporter: Sean Russell <ser@ser1.net>
-  status: :unstarted
-  disposition: 
+  status: :closed
+  disposition: :wontfix
   creation_time: 2008-11-23 12:53:25.359312 -05:00
   references: []
 
@@ -368,6 +376,12 @@ issues:
     - Sean Russell <ser@ser1.net>
     - created
     - ""
+  - - 2008-11-23 15:13:42.959284 -05:00
+    - Sean Russell <ser@ser1.net>
+    - closed issue with disposition wontfix
+    - |-
+      OBE
+      This was needed because of the priorities, which have since been removed.
 - !ditz.rubyforge.org,2008-03-06/issue 
   title: Change app title
   desc: ""
@@ -375,8 +389,8 @@ issues:
   component: TimeTracker
   release: "1.1"
   reporter: Sean Russell <ser@ser1.net>
-  status: :unstarted
-  disposition: 
+  status: :closed
+  disposition: :fixed
   creation_time: 2008-11-23 12:56:48.569518 -05:00
   references: []
 
@@ -385,6 +399,10 @@ issues:
   - - 2008-11-23 12:56:49.112199 -05:00
     - Sean Russell <ser@ser1.net>
     - created
+    - ""
+  - - 2008-11-23 17:49:27.555300 -05:00
+    - Sean Russell <ser@ser1.net>
+    - closed issue with disposition fixed
     - ""
 - !ditz.rubyforge.org,2008-03-06/issue 
   title: Less padding to the right of times
@@ -463,10 +481,10 @@ issues:
     * Select range
   type: :feature
   component: TimeTracker
-  release: "1.2"
+  release: "1.1"
   reporter: Sean Russell <ser@ser1.net>
-  status: :unstarted
-  disposition: 
+  status: :closed
+  disposition: :fixed
   creation_time: 2008-11-23 12:59:18.999811 -05:00
   references: []
 
@@ -480,6 +498,20 @@ issues:
     - Sean Russell <ser@ser1.net>
     - assigned to release 1.2 from unassigned
     - ""
+  - - 2008-11-23 15:34:58.360997 -05:00
+    - Sean Russell <ser@ser1.net>
+    - assigned to release 1.1 from 1.2
+    - ""
+  - - 2008-11-23 17:50:09.216093 -05:00
+    - Sean Russell <ser@ser1.net>
+    - commented
+    - |-
+      Today, yesterday, this week, last week, and "all" are complete.  Only thing left on
+      this item is "select range."
+  - - 2008-11-23 19:22:20.402540 -05:00
+    - Sean Russell <ser@ser1.net>
+    - closed issue with disposition fixed
+    - Added the ability to filter by range, and fixed a bug in the week selection.
 - !ditz.rubyforge.org,2008-03-06/issue 
   title: The add/edit dialog is wonky
   desc: The name text edit widget needs more space!
@@ -501,6 +533,24 @@ issues:
   - - 2008-11-23 15:02:01.113270 -05:00
     - Sean Russell <ser@ser1.net>
     - closed issue with disposition fixed
+    - ""
+- !ditz.rubyforge.org,2008-03-06/issue 
+  title: Cache the view settings
+  desc: ""
+  type: :feature
+  component: TimeTracker
+  release: "1.2"
+  reporter: Sean Russell <ser@ser1.net>
+  status: :unstarted
+  disposition: 
+  creation_time: 2008-11-23 19:21:37.441099 -05:00
+  references: []
+
+  id: b1b03fbce4dd37dc2144ce16253f9399f0142bb3
+  log_events: 
+  - - 2008-11-23 19:21:38.461062 -05:00
+    - Sean Russell <ser@ser1.net>
+    - created
     - ""
 components: 
 - !ditz.rubyforge.org,2008-03-06/component 
