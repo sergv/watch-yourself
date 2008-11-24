@@ -37,10 +37,11 @@ import android.widget.TextView;
 import android.widget.AdapterView.AdapterContextMenuInfo;
 
 public class Tasks extends ListActivity {
-    private static final String TIME_FORMAT = "%02d:%02d:%02d";
-    private static final int REFRESH_MS = 1000; // 60000
+    private static final String TIME_FORMAT = "%02d:%02d";
+    private static final int REFRESH_MS = 60000; // 60000
     private TaskAdapter adapter;
     private Handler timer;
+    private TimerTask updater;
     private Task currentlySelected = null;
 
     enum TaskMenu { AddTask, EditTask, DeleteTask, Report, 
@@ -49,23 +50,59 @@ public class Tasks extends ListActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        adapter = new TaskAdapter(this);
-        setListAdapter(adapter);
-        currentlySelected = adapter.findCurrentlyActive();
-        timer = new Handler();
-        timer.postDelayed(new TimerTask() {
-            @Override
-            public void run() {
-                if (currentlySelected != null) {
-                    adapter.notifyDataSetChanged();
-                    Tasks.this.getListView().invalidate();
+        if (adapter == null) {
+            adapter = new TaskAdapter(this);
+            setListAdapter(adapter);
+            currentlySelected = adapter.findCurrentlyActive();
+        }
+        if (timer == null) {
+            timer = new Handler();
+        }
+        if (updater == null) {
+            updater = new TimerTask() {
+                @Override
+                public void run() {
+                    System.out.println("Test");
+                    if (currentlySelected != null) {
+                        adapter.notifyDataSetChanged();
+                        Tasks.this.getListView().invalidate();
+                    }
+                    timer.postDelayed( this, REFRESH_MS );
                 }
-                timer.postDelayed( this, REFRESH_MS );
-            }
-            
-        }, REFRESH_MS );
+                
+            };
+        }
         registerForContextMenu(getListView());
     }
+    
+    @Override
+    protected void onPause() {
+        if (timer != null) {
+            timer.removeCallbacks(updater);
+        }
+        super.onPause();
+    }
+
+    @Override
+    protected void onResume() {
+        if (timer != null) {
+            timer.post(updater);
+        }
+        super.onResume();
+    }
+
+    @Override
+    protected void onStart() {
+        // TODO Auto-generated method stub
+        super.onStart();
+    }
+
+    @Override
+    protected void onStop() {
+        adapter.dbHelper.close();
+        super.onStop();
+    }
+
     
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -113,7 +150,6 @@ public class Tasks extends ListActivity {
             return new AlertDialog.Builder(Tasks.this)
                 .setItems(R.array.views, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
-                        String[] items = getResources().getStringArray(R.array.views);
                         switch (which) {
                         case 0: // today
                             adapter.loadTasks( Calendar.getInstance() );
@@ -179,7 +215,6 @@ public class Tasks extends ListActivity {
                     today_s.get(Calendar.MONTH), 
                     today_s.get(Calendar.DAY_OF_MONTH));
         case SelectEndDate:
-            Calendar today_e = Calendar.getInstance();
             return new DatePickerDialog(this,
                     new DatePickerDialog.OnDateSetListener() {
                         public void onDateSet(DatePicker view, int year, 
