@@ -17,6 +17,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.graphics.Color;
+import android.graphics.Paint;
 import android.os.Bundle;
 import android.os.Handler;
 import android.text.method.SingleLineTransformationMethod;
@@ -37,8 +38,8 @@ import android.widget.TextView;
 import android.widget.AdapterView.AdapterContextMenuInfo;
 
 public class Tasks extends ListActivity {
-    private static final String TIME_FORMAT = "%02d:%02d";
-    private static final int REFRESH_MS = 60000; // 60000
+    private static final String TIME_FORMAT = "%02d:%02d:%02d";
+    private static final int REFRESH_MS = 1000; // 60000
     private TaskAdapter adapter;
     private Handler timer;
     private TimerTask updater;
@@ -400,13 +401,13 @@ public class Tasks extends ListActivity {
         }
 
         private void markupSelectedTask(Task t) {
-            int bg;
             if (t.equals(currentlySelected)) {
-                bg = Color.DKGRAY;
+                taskName.getPaint().setShadowLayer(1, 1, 1,Color.YELLOW);
+                total.getPaint().setShadowLayer(1, 1, 1, Color.YELLOW);
             } else {
-                bg = Color.BLACK;
+                taskName.getPaint().clearShadowLayer();
+                total.getPaint().clearShadowLayer();
             }
-            setBackgroundColor(bg);
         }
     }
 
@@ -634,13 +635,13 @@ public class Tasks extends ListActivity {
             Task selected = (Task)item;
             if (selected.equals(currentlySelected)) {
                 currentlySelected = null;
-                adapter.notifyDataSetChanged();
-                getListView().invalidate();
-                return;
+            } else {
+                currentlySelected = selected;
+                currentlySelected.start();
+                adapter.updateTask(selected);
             }
-            currentlySelected = selected;
-            currentlySelected.start();
-            adapter.updateTask(selected);
         }
+        adapter.notifyDataSetChanged();
+        getListView().invalidate();
     }
 }

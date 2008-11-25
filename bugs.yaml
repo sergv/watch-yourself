@@ -557,7 +557,7 @@ issues:
   desc: ""
   type: :feature
   component: TimeTracker
-  release: 
+  release: "1.1"
   reporter: Sean Russell <ser@ser1.net>
   status: :unstarted
   disposition: 
@@ -570,12 +570,16 @@ issues:
     - Sean Russell <ser@ser1.net>
     - created
     - ""
+  - - 2008-11-24 20:16:58.440651 -05:00
+    - Sean Russell <ser@ser1.net>
+    - assigned to release 1.1 from unassigned
+    - ""
 - !ditz.rubyforge.org,2008-03-06/issue 
   title: Add documentation
   desc: ""
   type: :feature
   component: TimeTracker
-  release: 
+  release: "1.1"
   reporter: Sean Russell <ser@ser1.net>
   status: :unstarted
   disposition: 
@@ -587,6 +591,70 @@ issues:
   - - 2008-11-23 19:31:55.652348 -05:00
     - Sean Russell <ser@ser1.net>
     - created
+    - ""
+  - - 2008-11-24 20:17:07.642733 -05:00
+    - Sean Russell <ser@ser1.net>
+    - assigned to release 1.1 from unassigned
+    - ""
+- !ditz.rubyforge.org,2008-03-06/issue 
+  title: Fix the background color issue
+  desc: The way I'm highlighting active tasks interferes with the scroll wheel selection of tasks.
+  type: :feature
+  component: TimeTracker
+  release: "1.1"
+  reporter: Sean Russell <ser@ser1.net>
+  status: :closed
+  disposition: :fixed
+  creation_time: 2008-11-24 20:15:04.259122 -05:00
+  references: []
+
+  id: 28ad4d9c3b218ea69cc60d04c207254cd0dde62d
+  log_events: 
+  - - 2008-11-24 20:15:04.600250 -05:00
+    - Sean Russell <ser@ser1.net>
+    - created
+    - ""
+  - - 2008-11-24 20:17:16.417045 -05:00
+    - Sean Russell <ser@ser1.net>
+    - assigned to release 1.1 from unassigned
+    - ""
+  - - 2008-11-24 20:33:56.339247 -05:00
+    - Sean Russell <ser@ser1.net>
+    - changed status from unstarted to in_progress
+    - ""
+  - - 2008-11-24 21:08:47.013010 -05:00
+    - Sean Russell <ser@ser1.net>
+    - closed issue with disposition fixed
+    - ""
+- !ditz.rubyforge.org,2008-03-06/issue 
+  title: De-selecting a task isn't clearing the selection marker
+  desc: ""
+  type: :feature
+  component: TimeTracker
+  release: "1.1"
+  reporter: Sean Russell <ser@ser1.net>
+  status: :closed
+  disposition: :fixed
+  creation_time: 2008-11-24 20:15:31.014057 -05:00
+  references: []
+
+  id: c7ab091c9eb544a249c465194ed1cd3b8546f4a4
+  log_events: 
+  - - 2008-11-24 20:15:32.603277 -05:00
+    - Sean Russell <ser@ser1.net>
+    - created
+    - ""
+  - - 2008-11-24 20:17:20.649639 -05:00
+    - Sean Russell <ser@ser1.net>
+    - assigned to release 1.1 from unassigned
+    - ""
+  - - 2008-11-24 20:58:58.318877 -05:00
+    - Sean Russell <ser@ser1.net>
+    - changed status from unstarted to in_progress
+    - ""
+  - - 2008-11-24 21:04:37.876901 -05:00
+    - Sean Russell <ser@ser1.net>
+    - closed issue with disposition fixed
     - ""
 components: 
 - !ditz.rubyforge.org,2008-03-06/component 
