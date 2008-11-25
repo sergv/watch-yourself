@@ -29,4 +29,14 @@ public class TimeRange {
     public long getTotal() {
         return end - start;
     }
+    
+    private static final String FORMAT = "%d/%d/%02d %02d:%02d - %d/%d/%02d %02d:%02d";
+    public String toString() {
+        Date s = new Date(start);
+        Date e = new Date(end);
+        return String.format(FORMAT, 
+                s.getMonth()+1, s.getDate()+1, s.getYear()-100, s.getHours(), s.getMinutes(),
+                e.getMonth()+1, e.getDate()+1, e.getYear()-100, e.getHours(), e.getMinutes()
+                );
+    }
 }

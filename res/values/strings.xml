@@ -25,4 +25,5 @@
 <string name="view_this_week">This week</string>
 <string name="view_last_week">Last week</string>
 <string name="select_range">Select range...</string>
+<string name="done">Return to tasks</string>
 </resources>

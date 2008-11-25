@@ -1,9 +1,6 @@
 package net.ser1.timetracker;
 
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.Iterator;
-import java.util.ListIterator;
 
 public class Task implements Comparable<Task>{
     private String taskName;

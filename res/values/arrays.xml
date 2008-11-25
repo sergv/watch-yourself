@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<resources>
+    <string-array name="views">
+        <item>Today</item>
+        <item>This week</item>
+        <item>Yesterday</item>
+        <item>Last week</item>
+        <item>All</item>
+        <item>Select range...</item>
+    </string-array>
+</resources>

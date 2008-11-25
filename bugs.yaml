@@ -107,14 +107,14 @@ issues:
     - assigned to release 1.1 from 1.2
     - ""
 - !ditz.rubyforge.org,2008-03-06/issue 
-  title: Add ability to edit / add times
+  title: Add ability to show times
   desc: ""
   type: :feature
   component: TimeTracker
   release: "1.1"
   reporter: Sean Russell <ser@ser1.net>
-  status: :unstarted
-  disposition: 
+  status: :closed
+  disposition: :fixed
   creation_time: 2008-11-20 21:39:06.290150 -05:00
   references: []
 
@@ -127,6 +127,14 @@ issues:
   - - 2008-11-23 12:40:03.537182 -05:00
     - Sean Russell <ser@ser1.net>
     - assigned to release 1.1 from unassigned
+    - ""
+  - - 2008-11-25 09:03:06.012383 -05:00
+    - Sean Russell <ser@ser1.net>
+    - changed status from unstarted to in_progress
+    - ""
+  - - 2008-11-25 09:28:47.054952 -05:00
+    - Sean Russell <ser@ser1.net>
+    - closed issue with disposition fixed
     - ""
 - !ditz.rubyforge.org,2008-03-06/issue 
   title: Add ability to remove tasks
@@ -263,7 +271,7 @@ issues:
     - closed issue with disposition fixed
     - ""
 - !ditz.rubyforge.org,2008-03-06/issue 
-  title: Ignore times < 15s
+  title: Ignore times < 1m
   desc: ""
   type: :feature
   component: TimeTracker
@@ -291,6 +299,10 @@ issues:
   - - 2008-11-23 17:50:28.386923 -05:00
     - Sean Russell <ser@ser1.net>
     - assigned to release 1.2 from 1.1
+    - ""
+  - - 2008-11-25 09:24:53.153615 -05:00
+    - Sean Russell <ser@ser1.net>
+    - changed title
     - ""
 - !ditz.rubyforge.org,2008-03-06/issue 
   title: Add projects
@@ -655,6 +667,130 @@ issues:
   - - 2008-11-24 21:04:37.876901 -05:00
     - Sean Russell <ser@ser1.net>
     - closed issue with disposition fixed
+    - ""
+- !ditz.rubyforge.org,2008-03-06/issue 
+  title: The calendar is off
+  desc: Suspect the need to ignore the time zone, or force-use UTC
+  type: :feature
+  component: TimeTracker
+  release: "1.1"
+  reporter: Sean Russell <ser@ser1.net>
+  status: :closed
+  disposition: :fixed
+  creation_time: 2008-11-24 21:14:16.479678 -05:00
+  references: []
+
+  id: 8e90770d73f9baca56d3b871d67a3a1dd96bc8f4
+  log_events: 
+  - - 2008-11-24 21:14:16.876347 -05:00
+    - Sean Russell <ser@ser1.net>
+    - created
+    - ""
+  - - 2008-11-24 21:14:27.062944 -05:00
+    - Sean Russell <ser@ser1.net>
+    - changed status from unstarted to in_progress
+    - ""
+  - - 2008-11-25 09:36:11.992144 -05:00
+    - Sean Russell <ser@ser1.net>
+    - closed issue with disposition fixed
+    - I _think_ this is fixed.
+- !ditz.rubyforge.org,2008-03-06/issue 
+  title: Lazy load times
+  desc: ""
+  type: :feature
+  component: TimeTracker
+  release: "1.2"
+  reporter: Sean Russell <ser@ser1.net>
+  status: :unstarted
+  disposition: 
+  creation_time: 2008-11-25 08:47:59.812354 -05:00
+  references: []
+
+  id: 74acffbe70decad9e2e0e8806e0f172a47791ef2
+  log_events: 
+  - - 2008-11-25 08:48:00.173529 -05:00
+    - Sean Russell <ser@ser1.net>
+    - created
+    - ""
+  - - 2008-11-25 09:29:02.828084 -05:00
+    - Sean Russell <ser@ser1.net>
+    - assigned to release 1.2 from unassigned
+    - ""
+- !ditz.rubyforge.org,2008-03-06/issue 
+  title: Fancify the time display
+  desc: Put in date separators
+  type: :feature
+  component: TimeTracker
+  release: "1.2"
+  reporter: Sean Russell <ser@ser1.net>
+  status: :unstarted
+  disposition: 
+  creation_time: 2008-11-25 08:48:30.917325 -05:00
+  references: []
+
+  id: 18865b8824f967c472469ccc9c917b01f4529cc0
+  log_events: 
+  - - 2008-11-25 08:48:31.308802 -05:00
+    - Sean Russell <ser@ser1.net>
+    - created
+    - ""
+  - - 2008-11-25 09:29:13.084252 -05:00
+    - Sean Russell <ser@ser1.net>
+    - assigned to release 1.2 from unassigned
+    - ""
+- !ditz.rubyforge.org,2008-03-06/issue 
+  title: Add deleting times
+  desc: ""
+  type: :feature
+  component: TimeTracker
+  release: "1.1"
+  reporter: Sean Russell <ser@ser1.net>
+  status: :unstarted
+  disposition: 
+  creation_time: 2008-11-25 09:28:08.326984 -05:00
+  references: []
+
+  id: 5ff620f6ed6e6b03dbd17db3b452c47020255a23
+  log_events: 
+  - - 2008-11-25 09:28:08.566929 -05:00
+    - Sean Russell <ser@ser1.net>
+    - created
+    - ""
+- !ditz.rubyforge.org,2008-03-06/issue 
+  title: Add editing times
+  desc: ""
+  type: :feature
+  component: TimeTracker
+  release: "1.1"
+  reporter: Sean Russell <ser@ser1.net>
+  status: :unstarted
+  disposition: 
+  creation_time: 2008-11-25 09:28:19.842194 -05:00
+  references: []
+
+  id: 65a2d7b4684cf59068172a3b178760a0fb7882f0
+  log_events: 
+  - - 2008-11-25 09:28:20.153957 -05:00
+    - Sean Russell <ser@ser1.net>
+    - created
+    - ""
+- !ditz.rubyforge.org,2008-03-06/issue 
+  title: Add adding times
+  desc: ""
+  type: :feature
+  component: TimeTracker
+  release: "1.1"
+  reporter: Sean Russell <ser@ser1.net>
+  status: :unstarted
+  disposition: 
+  creation_time: 2008-11-25 09:28:32.157136 -05:00
+  references: []
+
+  id: a0c9a88e2624f95cbf8ce434f87c322c2169c041
+  log_events: 
+  - - 2008-11-25 09:28:32.764617 -05:00
+    - Sean Russell <ser@ser1.net>
+    - created
     - ""
 components: 
 - !ditz.rubyforge.org,2008-03-06/component 

@@ -1,9 +1,19 @@
 package net.ser1.timetracker;
 
+import static net.ser1.timetracker.DBHelper.END;
+import static net.ser1.timetracker.DBHelper.NAME;
+import static net.ser1.timetracker.DBHelper.RANGES_TABLE;
+import static net.ser1.timetracker.DBHelper.RANGE_COLUMNS;
+import static net.ser1.timetracker.DBHelper.START;
+import static net.ser1.timetracker.DBHelper.TASK_COLUMNS;
+import static net.ser1.timetracker.DBHelper.TASK_ID;
+import static net.ser1.timetracker.DBHelper.TASK_TABLE;
+
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.Date;
+import java.util.TimeZone;
 import java.util.TimerTask;
 
 import android.app.AlertDialog;
@@ -13,11 +23,10 @@ import android.app.ListActivity;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.database.sqlite.SQLiteOpenHelper;
 import android.graphics.Color;
-import android.graphics.Paint;
 import android.os.Bundle;
 import android.os.Handler;
 import android.text.method.SingleLineTransformationMethod;
@@ -37,7 +46,24 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.AdapterView.AdapterContextMenuInfo;
 
+/**
+ *          SharedPreferences mPrefs = getSharedPreferences();
+         mCurViewMode = mPrefs.getInt("view_mode" DAY_VIEW_MODE);
+     }
+
+     protected void onPause() {
+         super.onPause();
+ 
+         SharedPreferences.Editor ed = mPrefs.edit();
+         ed.putInt("view_mode", mCurViewMode);
+         ed.commit();
+
+ * @author ser
+ *
+ */
+
 public class Tasks extends ListActivity {
+    private static final TimeZone UTC = TimeZone.getTimeZone("UTC");
     private static final String TIME_FORMAT = "%02d:%02d:%02d";
     private static final int REFRESH_MS = 1000; // 60000
     private TaskAdapter adapter;
@@ -94,13 +120,11 @@ public class Tasks extends ListActivity {
 
     @Override
     protected void onStart() {
-        // TODO Auto-generated method stub
         super.onStart();
     }
 
     @Override
     protected void onStop() {
-        adapter.dbHelper.close();
         super.onStop();
     }
 
@@ -131,8 +155,17 @@ public class Tasks extends ListActivity {
     public boolean onContextItemSelected(MenuItem item) {
         AdapterContextMenuInfo info = (AdapterContextMenuInfo)item.getMenuInfo();
         selectedTask = (Task)adapter.getItem((int) info.id);
-        
-        showDialog(item.getItemId());
+        TaskMenu m = TaskMenu.values()[item.getItemId()];
+        switch (m) {
+        case ShowTimes:
+            Intent intent = new Intent(this, TaskTimes.class);
+            intent.putExtra(DBHelper.TASK_ID, selectedTask.getId());
+            startActivity(intent);
+            break;
+        default:
+            showDialog(item.getItemId());
+            break;
+        }
         return true;
     }
 
@@ -153,19 +186,19 @@ public class Tasks extends ListActivity {
                     public void onClick(DialogInterface dialog, int which) {
                         switch (which) {
                         case 0: // today
-                            adapter.loadTasks( Calendar.getInstance() );
+                            adapter.loadTasks( Calendar.getInstance(UTC) );
                             break;
                         case 1: // this week
-                            Calendar tw = Calendar.getInstance();
+                            Calendar tw = Calendar.getInstance(UTC);
                             adapter.loadTasks( weekStart( tw ), weekEnd( tw ) );
                             break;
                         case 2: // yesterday
-                            Calendar y = Calendar.getInstance();
+                            Calendar y = Calendar.getInstance(UTC);
                             y.add(Calendar.DAY_OF_MONTH, -1);
                             adapter.loadTasks( y );
                             break;
                         case 3: // last week
-                            Calendar lw = Calendar.getInstance();
+                            Calendar lw = Calendar.getInstance(UTC);
                             lw.add(Calendar.DAY_OF_MONTH, -7);
                             adapter.loadTasks( weekStart( lw ), weekEnd( lw ) );
                             break;
@@ -198,10 +231,8 @@ public class Tasks extends ListActivity {
                 }).create();
         case Report:
             break;
-        case ShowTimes:
-            break;
         case SelectStartDate:
-            Calendar today_s = Calendar.getInstance();
+            Calendar today_s = Calendar.getInstance(UTC);
             return new DatePickerDialog(this,
                     new DatePickerDialog.OnDateSetListener() {
                         public void onDateSet(DatePicker view, int year, 
@@ -220,7 +251,7 @@ public class Tasks extends ListActivity {
                     new DatePickerDialog.OnDateSetListener() {
                         public void onDateSet(DatePicker view, int year, 
                                 int monthOfYear, int dayOfMonth) {
-                            Calendar start = Calendar.getInstance();
+                            Calendar start = Calendar.getInstance(UTC);
                             start.set(Calendar.YEAR, sYear);
                             start.set(Calendar.MONTH, sMonth);
                             start.set(Calendar.DAY_OF_MONTH, sDay);
@@ -228,7 +259,7 @@ public class Tasks extends ListActivity {
                             start.set(Calendar.MINUTE, 0);
                             start.set(Calendar.SECOND, 0);
                             start.set(Calendar.MILLISECOND, 0);
-                            Calendar end = Calendar.getInstance();
+                            Calendar end = Calendar.getInstance(UTC);
                             end.set(Calendar.YEAR, sYear);
                             end.set(Calendar.MONTH, sMonth);
                             end.set(Calendar.DAY_OF_MONTH, sDay);
@@ -414,26 +445,16 @@ public class Tasks extends ListActivity {
     
     
     private class TaskAdapter extends BaseAdapter {
-        private static final String END = "end";
-        private static final String START = "start";
-        private static final String TASK_ID = "task_id";
-        private final String[] RANGE_COLUMNS = { START, END };
-        private static final String NAME = "name";
-        private final String[] TASK_COLUMNS = new String[] { "ROWID", NAME };
         private DBHelper dbHelper;
-        private static final String TIMETRACKER_DB_NAME = "timetracker.db";
-        private static final int DBVERSION = 3;
-        public static final String TASK_TABLE = "tasks";
-        public static final String RANGES_TABLE = "ranges";
-        private static final String TASK_NAME = "name";
         private ArrayList<Task> tasks;
-        
+        private Context savedContext;
+
         public TaskAdapter( Context c ) {
             savedContext = c;
             dbHelper = new DBHelper(c);
             dbHelper.getWritableDatabase();
             tasks = new ArrayList<Task>();
-            loadTasks( Calendar.getInstance() );
+            loadTasks( Calendar.getInstance(UTC) ) ;
         }
         
         private void loadTasks() {
@@ -446,7 +467,7 @@ public class Tasks extends ListActivity {
         
         protected void loadTasks( Calendar start, Calendar end ) {
             String query = "AND start >= %d AND end < %d";
-            Calendar today = Calendar.getInstance();
+            Calendar today = Calendar.getInstance(UTC);
             today.set(Calendar.HOUR, 12);
             for (int field : new int[] { Calendar.HOUR, Calendar.MINUTE, 
                                          Calendar.SECOND, 
@@ -581,44 +602,7 @@ public class Tasks extends ListActivity {
                 if (item != null) view.setTask( (Task)item );
             }
             return view;
-        }
-        
-        private Context savedContext;
-        
-        
-        private class DBHelper extends SQLiteOpenHelper {
-
-            public DBHelper(Context context) {
-                super( context, TIMETRACKER_DB_NAME, null, DBVERSION );
-            }
-
-            private static final String CREATE_TASK_TABLE = 
-                "CREATE TABLE %s ("
-                + TASK_NAME+" TEXT COLLATE LOCALIZED NOT NULL"
-                + ");";
-            @Override
-            public void onCreate(SQLiteDatabase db) {
-                db.execSQL(String.format(CREATE_TASK_TABLE, TASK_TABLE ));
-                db.execSQL("CREATE TABLE "+RANGES_TABLE+"("
-                        + TASK_ID+" INTEGER NOT NULL,"
-                        + START+" INTEGER NOT NULL,"
-                        + END+" INTEGER"
-                        + ");");
-            }
-
-            @Override
-            public void onUpgrade(SQLiteDatabase arg0, int arg1, int arg2) {
-                if (arg1 == 2) {
-                    arg0.execSQL(String.format(CREATE_TASK_TABLE, "temp"));
-                    arg0.execSQL("insert into temp(rowid,"+TASK_NAME+") select rowid,"
-                            +TASK_NAME+" from "+TASK_TABLE+";");
-                    arg0.execSQL("drop table "+TASK_TABLE+";");
-                    arg0.execSQL(String.format(CREATE_TASK_TABLE, TASK_TABLE));
-                    arg0.execSQL("insert into "+TASK_TABLE+"(rowid,"+TASK_NAME+") select rowid,"+TASK_NAME+" from temp;");
-                    arg0.execSQL("drop table temp;");
-                }
-            }
-        }
+        }        
     }
     
     @Override
@@ -643,5 +627,11 @@ public class Tasks extends ListActivity {
         }
         adapter.notifyDataSetChanged();
         getListView().invalidate();
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        adapter.notifyDataSetChanged();
+        Tasks.this.getListView().invalidate();
     }
 }
