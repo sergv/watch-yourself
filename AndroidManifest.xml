@@ -19,5 +19,12 @@
    </intent-filter>
   </activity>
 
+  <activity android:name=".EditTime" android:label="Edit Time">
+   <intent-filter>
+    <action android:name="android.intent.action.VIEW" />
+    <category android:name="android.intent.category.DEFAULT" />
+   </intent-filter>
+  </activity>
+
  </application>
 </manifest> 

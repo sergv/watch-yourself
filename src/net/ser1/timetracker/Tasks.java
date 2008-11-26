@@ -64,8 +64,8 @@ import android.widget.AdapterView.AdapterContextMenuInfo;
 
 public class Tasks extends ListActivity {
     private static final TimeZone UTC = TimeZone.getTimeZone("UTC");
-    private static final String TIME_FORMAT = "%02d:%02d:%02d";
-    private static final int REFRESH_MS = 1000; // 60000
+    private static final String TIME_FORMAT = "%02d:%02d";
+    private static final int REFRESH_MS = 60000; // 60000
     private TaskAdapter adapter;
     private Handler timer;
     private TimerTask updater;
@@ -166,7 +166,7 @@ public class Tasks extends ListActivity {
             showDialog(item.getItemId());
             break;
         }
-        return true;
+        return super.onContextItemSelected(item);
     }
 
 
@@ -211,7 +211,6 @@ public class Tasks extends ListActivity {
                         default: // Unknown
                             break;
                         }
-                        adapter.notifyDataSetChanged();
                         Tasks.this.getListView().invalidate();
                     }
 
@@ -290,7 +289,6 @@ public class Tasks extends ListActivity {
                     EditText textView = (EditText)textEntryView.findViewById(R.id.task_edit_name_edit);
                     String name = textView.getText().toString();
                     adapter.addTask(name);
-                    adapter.notifyDataSetChanged();
                     Tasks.this.getListView().invalidate();
                 }
             })
@@ -316,7 +314,6 @@ public class Tasks extends ListActivity {
                     
                     adapter.updateTask(selectedTask);
                         
-                    adapter.notifyDataSetChanged();
                     Tasks.this.getListView().invalidate();
                 }
             })
@@ -336,10 +333,9 @@ public class Tasks extends ListActivity {
             .setIcon(android.R.drawable.stat_sys_warning)
             .setCancelable(true)
             .setMessage(formattedMessage)
-            .setPositiveButton(R.string.delete_task_ok, new DialogInterface.OnClickListener() {
+            .setPositiveButton(R.string.delete_ok, new DialogInterface.OnClickListener() {
                 public void onClick(DialogInterface dialog, int whichButton) {
                     adapter.deleteTask(selectedTask);
-                    adapter.notifyDataSetChanged();
                     Tasks.this.getListView().invalidate();
                 }
             })
@@ -525,6 +521,7 @@ public class Tasks extends ListActivity {
                 } while (c.moveToNext());
             }
             c.close();
+            notifyDataSetChanged();
         }
         
         public Task findCurrentlyActive() {
@@ -543,6 +540,7 @@ public class Tasks extends ListActivity {
             Task t = new Task(taskName, (int)id);
             tasks.add( t );
             Collections.sort(tasks);
+            notifyDataSetChanged();
         }
         
         protected void updateTask( Task t ) {
@@ -569,6 +567,7 @@ public class Tasks extends ListActivity {
             }
             
             Collections.sort(tasks);
+            notifyDataSetChanged();
         }
         
         public void deleteTask( Task t ) {
@@ -577,6 +576,7 @@ public class Tasks extends ListActivity {
             String[] id = { String.valueOf(t.getId()) };
             db.delete(TASK_TABLE, "ROWID = ?", id);
             db.delete(RANGES_TABLE, TASK_ID+" = ?", id);
+            notifyDataSetChanged();
         }
         
         public int getCount() {
@@ -625,13 +625,11 @@ public class Tasks extends ListActivity {
                 adapter.updateTask(selected);
             }
         }
-        adapter.notifyDataSetChanged();
         getListView().invalidate();
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        adapter.notifyDataSetChanged();
         Tasks.this.getListView().invalidate();
     }
 }

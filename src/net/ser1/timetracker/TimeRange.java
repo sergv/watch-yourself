@@ -2,7 +2,7 @@ package net.ser1.timetracker;
 
 import java.util.Date;
 
-public class TimeRange {
+public class TimeRange implements Comparable<TimeRange> {
     private long start;
     private long end;
     
@@ -38,5 +38,20 @@ public class TimeRange {
                 s.getMonth()+1, s.getDate()+1, s.getYear()-100, s.getHours(), s.getMinutes(),
                 e.getMonth()+1, e.getDate()+1, e.getYear()-100, e.getHours(), e.getMinutes()
                 );
+    }
+    public int compareTo(TimeRange another) {
+        if (start < another.start) {
+            return -1;
+        } else if (start > another.start) {
+            return 1;
+        } else {
+            if (end < another.end) {
+                return -1;
+            } else if (end > another.end) {
+                return 1;
+            } else {
+                return 0;
+            }
+        }
     }
 }

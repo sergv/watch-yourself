@@ -745,8 +745,8 @@ issues:
   component: TimeTracker
   release: "1.1"
   reporter: Sean Russell <ser@ser1.net>
-  status: :unstarted
-  disposition: 
+  status: :closed
+  disposition: :fixed
   creation_time: 2008-11-25 09:28:08.326984 -05:00
   references: []
 
@@ -756,6 +756,10 @@ issues:
     - Sean Russell <ser@ser1.net>
     - created
     - ""
+  - - 2008-11-26 08:27:23.931982 -05:00
+    - Sean Russell <ser@ser1.net>
+    - closed issue with disposition fixed
+    - ""
 - !ditz.rubyforge.org,2008-03-06/issue 
   title: Add editing times
   desc: ""
@@ -763,8 +767,8 @@ issues:
   component: TimeTracker
   release: "1.1"
   reporter: Sean Russell <ser@ser1.net>
-  status: :unstarted
-  disposition: 
+  status: :closed
+  disposition: :fixed
   creation_time: 2008-11-25 09:28:19.842194 -05:00
   references: []
 
@@ -773,6 +777,10 @@ issues:
   - - 2008-11-25 09:28:20.153957 -05:00
     - Sean Russell <ser@ser1.net>
     - created
+    - ""
+  - - 2008-11-26 08:27:34.119533 -05:00
+    - Sean Russell <ser@ser1.net>
+    - closed issue with disposition fixed
     - ""
 - !ditz.rubyforge.org,2008-03-06/issue 
   title: Add adding times
@@ -789,6 +797,100 @@ issues:
   id: a0c9a88e2624f95cbf8ce434f87c322c2169c041
   log_events: 
   - - 2008-11-25 09:28:32.764617 -05:00
+    - Sean Russell <ser@ser1.net>
+    - created
+    - ""
+- !ditz.rubyforge.org,2008-03-06/issue 
+  title: Don't include currently running time in time list
+  desc: ""
+  type: :feature
+  component: TimeTracker
+  release: "1.1"
+  reporter: Sean Russell <ser@ser1.net>
+  status: :closed
+  disposition: :fixed
+  creation_time: 2008-11-25 20:35:13.608530 -05:00
+  references: []
+
+  id: 37020b438b740ee3919e77a21d12d687d32dd779
+  log_events: 
+  - - 2008-11-25 20:35:14.121439 -05:00
+    - Sean Russell <ser@ser1.net>
+    - created
+    - ""
+  - - 2008-11-26 08:30:29.111614 -05:00
+    - Sean Russell <ser@ser1.net>
+    - closed issue with disposition fixed
+    - ""
+- !ditz.rubyforge.org,2008-03-06/issue 
+  title: Make sure that the time ranges are within bounds
+  desc: ""
+  type: :feature
+  component: TimeTracker
+  release: "1.1"
+  reporter: Sean Russell <ser@ser1.net>
+  status: :unstarted
+  disposition: 
+  creation_time: 2008-11-26 08:06:31.649241 -05:00
+  references: []
+
+  id: 7f3e5eb4c717feb3826a79fa35d598dfa1d002e9
+  log_events: 
+  - - 2008-11-26 08:06:31.993648 -05:00
+    - Sean Russell <ser@ser1.net>
+    - created
+    - ""
+- !ditz.rubyforge.org,2008-03-06/issue 
+  title: The year in adding tasks isn't right.
+  desc: ""
+  type: :feature
+  component: TimeTracker
+  release: "1.1"
+  reporter: Sean Russell <ser@ser1.net>
+  status: :unstarted
+  disposition: 
+  creation_time: 2008-11-26 08:25:00.646006 -05:00
+  references: []
+
+  id: 1f8b12d4a02164cee3c752e32a0af59b58bccd62
+  log_events: 
+  - - 2008-11-26 08:25:00.977983 -05:00
+    - Sean Russell <ser@ser1.net>
+    - created
+    - ""
+- !ditz.rubyforge.org,2008-03-06/issue 
+  title: Clicking a time should go directly to editing.
+  desc: ""
+  type: :feature
+  component: TimeTracker
+  release: "1.1"
+  reporter: Sean Russell <ser@ser1.net>
+  status: :unstarted
+  disposition: 
+  creation_time: 2008-11-26 08:25:18.355695 -05:00
+  references: []
+
+  id: ea26a43cc46386456a15c5aab4a4616e60b44575
+  log_events: 
+  - - 2008-11-26 08:25:18.726912 -05:00
+    - Sean Russell <ser@ser1.net>
+    - created
+    - ""
+- !ditz.rubyforge.org,2008-03-06/issue 
+  title: Prettify the time editing dialog
+  desc: ""
+  type: :feature
+  component: TimeTracker
+  release: "1.2"
+  reporter: Sean Russell <ser@ser1.net>
+  status: :unstarted
+  disposition: 
+  creation_time: 2008-11-26 08:26:26.473521 -05:00
+  references: []
+
+  id: d78140efc32348814c0199041452ce5cc899a81b
+  log_events: 
+  - - 2008-11-26 08:26:26.784637 -05:00
     - Sean Russell <ser@ser1.net>
     - created
     - ""

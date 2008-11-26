@@ -14,7 +14,7 @@
 <string name="priority_high">High</string>
 <string name="edit_task_ok">Accept</string>
 
-<string name="delete_task_ok">Delete task</string>
+<string name="delete_ok">Delete</string>
 <string name="delete_task_title">Delete Task</string>
 <string name="delete_task_message">Are you sure you want to delete &quot;%s&quot; and all of it's time records?</string>
 <string name="add_task_title">Add task</string>
@@ -26,4 +26,10 @@
 <string name="view_last_week">Last week</string>
 <string name="select_range">Select range...</string>
 <string name="done">Return to tasks</string>
+<string name="add_time_title">Add a new time range</string>
+<string name="delete_time_message">Are you sure you want to delete this time range?</string>
+<string name="delete_time_title">Delete Time Range</string>
+<string name="accept">Accept</string>
+<string name="start_time_label">Start Time</string>
+<string name="end_time_label">End Time</string>
 </resources>
