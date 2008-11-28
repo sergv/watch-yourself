@@ -32,4 +32,7 @@
 <string name="accept">Accept</string>
 <string name="start_time_label">Start Time</string>
 <string name="end_time_label">End Time</string>
+<string name="end_not_greater_than_start">The end time must be greater than the start time</string>
+<string name="range_error_title">Time Range Error</string>
+<string name="confirm">Confirm</string>
 </resources>

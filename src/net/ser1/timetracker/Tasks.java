@@ -65,7 +65,7 @@ import android.widget.AdapterView.AdapterContextMenuInfo;
 public class Tasks extends ListActivity {
     private static final TimeZone UTC = TimeZone.getTimeZone("UTC");
     private static final String TIME_FORMAT = "%02d:%02d";
-    private static final int REFRESH_MS = 60000; // 60000
+    private static final int REFRESH_MS = 1000; // 60000
     private TaskAdapter adapter;
     private Handler timer;
     private TimerTask updater;
@@ -89,7 +89,8 @@ public class Tasks extends ListActivity {
             updater = new TimerTask() {
                 @Override
                 public void run() {
-                    System.out.println("Test");
+                    Date d = new Date();
+                    System.out.println(d + " -- " + d.getTimezoneOffset());
                     if (currentlySelected != null) {
                         adapter.notifyDataSetChanged();
                         Tasks.this.getListView().invalidate();

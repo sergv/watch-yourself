@@ -1,0 +1,8 @@
+syntax: glob
+
+bin/*
+.classpath
+.project
+src/net/ser1/timetracker/R.java
+*~
+TimeTracker.apk

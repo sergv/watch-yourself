@@ -789,8 +789,8 @@ issues:
   component: TimeTracker
   release: "1.1"
   reporter: Sean Russell <ser@ser1.net>
-  status: :unstarted
-  disposition: 
+  status: :closed
+  disposition: :fixed
   creation_time: 2008-11-25 09:28:32.157136 -05:00
   references: []
 
@@ -799,6 +799,10 @@ issues:
   - - 2008-11-25 09:28:32.764617 -05:00
     - Sean Russell <ser@ser1.net>
     - created
+    - ""
+  - - 2008-11-27 08:43:44.426036 -05:00
+    - Sean Russell <ser@ser1.net>
+    - closed issue with disposition fixed
     - ""
 - !ditz.rubyforge.org,2008-03-06/issue 
   title: Don't include currently running time in time list
@@ -829,8 +833,8 @@ issues:
   component: TimeTracker
   release: "1.1"
   reporter: Sean Russell <ser@ser1.net>
-  status: :unstarted
-  disposition: 
+  status: :closed
+  disposition: :fixed
   creation_time: 2008-11-26 08:06:31.649241 -05:00
   references: []
 
@@ -840,6 +844,10 @@ issues:
     - Sean Russell <ser@ser1.net>
     - created
     - ""
+  - - 2008-11-28 09:12:55.728951 -05:00
+    - Sean Russell <ser@ser1.net>
+    - closed issue with disposition fixed
+    - ""
 - !ditz.rubyforge.org,2008-03-06/issue 
   title: The year in adding tasks isn't right.
   desc: ""
@@ -847,8 +855,8 @@ issues:
   component: TimeTracker
   release: "1.1"
   reporter: Sean Russell <ser@ser1.net>
-  status: :unstarted
-  disposition: 
+  status: :closed
+  disposition: :fixed
   creation_time: 2008-11-26 08:25:00.646006 -05:00
   references: []
 
@@ -857,6 +865,10 @@ issues:
   - - 2008-11-26 08:25:00.977983 -05:00
     - Sean Russell <ser@ser1.net>
     - created
+    - ""
+  - - 2008-11-28 08:19:55.526083 -05:00
+    - Sean Russell <ser@ser1.net>
+    - closed issue with disposition fixed
     - ""
 - !ditz.rubyforge.org,2008-03-06/issue 
   title: Clicking a time should go directly to editing.
@@ -893,6 +905,126 @@ issues:
   - - 2008-11-26 08:26:26.784637 -05:00
     - Sean Russell <ser@ser1.net>
     - created
+    - ""
+- !ditz.rubyforge.org,2008-03-06/issue 
+  title: Times are still f'ed up
+  desc: This might still be a timezone issue.
+  type: :feature
+  component: TimeTracker
+  release: "1.1"
+  reporter: Sean Russell <ser@ser1.net>
+  status: :in_progress
+  disposition: 
+  creation_time: 2008-11-27 08:41:17.180320 -05:00
+  references: []
+
+  id: 1c0d83a250b213e2a00e76d51ca0c475d0b9de07
+  log_events: 
+  - - 2008-11-27 08:41:18.087351 -05:00
+    - Sean Russell <ser@ser1.net>
+    - created
+    - ""
+  - - 2008-11-28 06:50:43.756672 -05:00
+    - Sean Russell <ser@ser1.net>
+    - changed status from unstarted to in_progress
+    - ""
+- !ditz.rubyforge.org,2008-03-06/issue 
+  title: Sync DB to mem card
+  desc: ""
+  type: :feature
+  component: TimeTracker
+  release: 
+  reporter: Sean Russell <ser@ser1.net>
+  status: :unstarted
+  disposition: 
+  creation_time: 2008-11-28 08:02:33.946138 -05:00
+  references: []
+
+  id: faae94287b0410e18d7c9d338fccd8999dd7091f
+  log_events: 
+  - - 2008-11-28 08:02:34.382641 -05:00
+    - Sean Russell <ser@ser1.net>
+    - created
+    - ""
+- !ditz.rubyforge.org,2008-03-06/issue 
+  title: Sharing a DB between activities
+  desc: ""
+  type: :feature
+  component: TimeTracker
+  release: 
+  reporter: Sean Russell <ser@ser1.net>
+  status: :unstarted
+  disposition: 
+  creation_time: 2008-11-28 08:02:49.020561 -05:00
+  references: []
+
+  id: 49065f03fe6c75c528ad795c6311cbcd53669271
+  log_events: 
+  - - 2008-11-28 08:02:49.322849 -05:00
+    - Sean Russell <ser@ser1.net>
+    - created
+    - ""
+- !ditz.rubyforge.org,2008-03-06/issue 
+  title: Deleting doesn't work.
+  desc: ""
+  type: :feature
+  component: TimeTracker
+  release: "1.1"
+  reporter: Sean Russell <ser@ser1.net>
+  status: :closed
+  disposition: :fixed
+  creation_time: 2008-11-28 08:19:30.066026 -05:00
+  references: []
+
+  id: 9fce9ffed7ac45edec1a14cfb496b0720148b500
+  log_events: 
+  - - 2008-11-28 08:19:30.507394 -05:00
+    - Sean Russell <ser@ser1.net>
+    - created
+    - ""
+  - - 2008-11-28 08:43:29.637144 -05:00
+    - Sean Russell <ser@ser1.net>
+    - closed issue with disposition fixed
+    - ""
+- !ditz.rubyforge.org,2008-03-06/issue 
+  title: Transition between activities by sideways-sliding
+  desc: ""
+  type: :feature
+  component: TimeTracker
+  release: 
+  reporter: Sean Russell <ser@ser1.net>
+  status: :unstarted
+  disposition: 
+  creation_time: 2008-11-28 08:44:14.338740 -05:00
+  references: []
+
+  id: 26c6b108aabc800967703550aca0fdeb5b3b1095
+  log_events: 
+  - - 2008-11-28 08:44:14.583758 -05:00
+    - Sean Russell <ser@ser1.net>
+    - created
+    - ""
+- !ditz.rubyforge.org,2008-03-06/issue 
+  title: Need a way of getting out of "add time"
+  desc: ""
+  type: :feature
+  component: TimeTracker
+  release: "1.1"
+  reporter: Sean Russell <ser@ser1.net>
+  status: :closed
+  disposition: :fixed
+  creation_time: 2008-11-28 09:02:40.559069 -05:00
+  references: []
+
+  id: a03a85f94d24b888e07a03d04356df583122c664
+  log_events: 
+  - - 2008-11-28 09:02:40.829711 -05:00
+    - Sean Russell <ser@ser1.net>
+    - created
+    - ""
+  - - 2008-11-28 09:12:40.741072 -05:00
+    - Sean Russell <ser@ser1.net>
+    - closed issue with disposition fixed
     - ""
 components: 
 - !ditz.rubyforge.org,2008-03-06/component 

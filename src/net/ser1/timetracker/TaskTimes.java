@@ -11,6 +11,7 @@ import static net.ser1.timetracker.EditTime.START_DATE;
 import java.util.ArrayList;
 import java.util.Collections;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.ListActivity;
@@ -29,25 +30,23 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ContextMenu.ContextMenuInfo;
-import android.view.View.OnClickListener;
 import android.widget.BaseAdapter;
 import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.AdapterView.AdapterContextMenuInfo;
 
-public class TaskTimes extends ListActivity implements OnClickListener {
+public class TaskTimes extends ListActivity {
     private TimesAdapter adapter;
     private enum TimeMenu { AddTime, DeleteTime, EditTime }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.timelist);
         if (adapter == null) {
             adapter = new TimesAdapter(this);
             setListAdapter(adapter);
         }
-        findViewById(R.id.doneButton).setOnClickListener( this );
         registerForContextMenu(getListView());
     }
 
@@ -177,7 +176,7 @@ public class TaskTimes extends ListActivity implements OnClickListener {
                     new String[]{ 
                         String.valueOf(range.getStart()), 
                         String.valueOf(range.getEnd()), 
-                        getIntent().getExtras().getString(DBHelper.TASK_ID)
+                        String.valueOf(getIntent().getExtras().getInt(DBHelper.TASK_ID))
             });
             times.remove(range);
             notifyDataSetChanged();
@@ -303,25 +302,35 @@ public class TaskTimes extends ListActivity implements OnClickListener {
         }
     }
 
-    public void onClick(View v) {
-        adapter.clear();
-        finish();
+    @Override
+    public void onActivityResult(int reqCode, int resCode, Intent intent) {
+        if (resCode == Activity.RESULT_OK) {
+            TimeMenu item = TimeMenu.values()[reqCode];
+            long sd = intent.getExtras().getLong(START_DATE);
+            long ed = intent.getExtras().getLong(END_DATE);
+            switch (item) {
+            case AddTime:
+                adapter.addTimeRange(sd, ed);
+                break;
+            case EditTime:
+                adapter.updateTimeRange(sd, ed, 
+                        getIntent().getExtras().getInt(TASK_ID), selectedRange);
+                break;
+            }
+        }
+        this.getListView().invalidate();
     }
     
     @Override
-    public void onActivityResult(int reqCode, int resCode, Intent intent) {
-        TimeMenu item = TimeMenu.values()[reqCode];
-        long sd = intent.getExtras().getLong(START_DATE);
-        long ed = intent.getExtras().getLong(END_DATE);
-        switch (item) {
-        case AddTime:
-            adapter.addTimeRange(sd, ed);
-            break;
-        case EditTime:
-            adapter.updateTimeRange(sd, ed, 
-                    getIntent().getExtras().getInt(TASK_ID), selectedRange);
-            break;
+    protected void onListItemClick(ListView l, View v, int position, long id) {
+        super.onListItemClick(l, v, position, id);
+        // Disable previous
+        selectedRange = (TimeRange)getListView().getItemAtPosition(position);
+        if (selectedRange != null) {
+            Intent intent = new Intent(this, EditTime.class);
+            intent.putExtra(EditTime.START_DATE, selectedRange.getStart());
+            intent.putExtra(EditTime.END_DATE, selectedRange.getEnd());
+            startActivityForResult(intent, TimeMenu.EditTime.ordinal());
         }
-        this.getListView().invalidate();
     }
 }
