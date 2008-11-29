@@ -175,6 +175,9 @@ public class Report extends Activity implements OnClickListener {
         total.setTypeface(Typeface.SANS_SERIF, Typeface.BOLD);
         row.addView(total, new TableRow.LayoutParams());
         
+        for (int i=1; i<9; i++) {
+            mainReport.setColumnStretchable(i, false);
+        }
         mainReport.setColumnShrinkable(0, true);
         mainReport.setColumnStretchable(0, true);
     }
@@ -216,7 +219,7 @@ public class Report extends Activity implements OnClickListener {
         
     private Calendar getCalendarDay(Day d) {
         Calendar day = (Calendar)week.clone();
-        day.add(Calendar.DAY_OF_WEEK, d.calEnum());
+        day.set(Calendar.DAY_OF_WEEK, d.calEnum());
         return day;
     }
 

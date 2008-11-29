@@ -47,6 +47,7 @@ public class TimeRange implements Comparable<TimeRange> {
         b.append(FORMAT.format(e));
         return b.toString();
     }
+    
     public int compareTo(TimeRange another) {
         if (start < another.start) {
             return -1;
@@ -63,6 +64,17 @@ public class TimeRange implements Comparable<TimeRange> {
         }
     }
     
+    private static final int[] FIELDS = {
+      Calendar.HOUR_OF_DAY,
+      Calendar.MINUTE,
+      Calendar.SECOND,
+      Calendar.MILLISECOND
+    };
+    
+    private static Date toDate(long v) {
+        return new Date(v);
+    }
+    
     /**
      * Returns the amount of time that occurs during a given day
      * @param d the day to find the overlapping time for
@@ -71,18 +83,13 @@ public class TimeRange implements Comparable<TimeRange> {
      */
     public int dayOverlap(Calendar d) {
         d = (Calendar)d.clone();
-        d.set(Calendar.HOUR_OF_DAY, 0);
-        d.set(Calendar.MINUTE, 0);
-        d.set(Calendar.SECOND, 0);
-        d.set(Calendar.MILLISECOND, 0);
+        for (int x : FIELDS) d.set(x, d.getMinimum(x));
         long ms_start = d.getTime().getTime();
-        d.set(Calendar.HOUR_OF_DAY, 23);
-        d.set(Calendar.MINUTE, 59);
-        d.set(Calendar.SECOND, 59);
-        d.set(Calendar.MILLISECOND, 999);
+        d.add(Calendar.DAY_OF_MONTH, 1);
         long ms_end = d.getTime().getTime();
         
-        if (ms_end < start || ms_start > end) return 0;
+        if (ms_end < start || end < ms_start) return 0;
+        
         long off_start = ms_start > start ? ms_start : start;
         long off_end   = ms_end < end ? ms_end : end;
         long off_diff  = off_end - off_start;

@@ -1187,8 +1187,8 @@ issues:
   component: TimeTracker
   release: "1.1"
   reporter: Sean Russell <ser@ser1.net>
-  status: :unstarted
-  disposition: 
+  status: :closed
+  disposition: :fixed
   creation_time: 2008-11-28 22:19:28.110387 -05:00
   references: []
 
@@ -1197,6 +1197,10 @@ issues:
   - - 2008-11-28 22:19:28.404653 -05:00
     - Sean Russell <ser@ser1.net>
     - created
+    - ""
+  - - 2008-11-29 12:05:22.960960 -05:00
+    - Sean Russell <ser@ser1.net>
+    - closed issue with disposition fixed
     - ""
 - !ditz.rubyforge.org,2008-03-06/issue 
   title: Add ability to show times in report as fractions of an hour
@@ -1236,6 +1240,44 @@ issues:
     - Sean Russell <ser@ser1.net>
     - created
     - ""
+- !ditz.rubyforge.org,2008-03-06/issue 
+  title: Make the report buttons stick to the bottom
+  desc: ""
+  type: :feature
+  component: TimeTracker
+  release: "1.2"
+  reporter: Sean Russell <ser@ser1.net>
+  status: :unstarted
+  disposition: 
+  creation_time: 2008-11-29 09:46:56.849975 -05:00
+  references: []
+
+  id: 571dd07fac39b3b9403132ee6daf7121ab623b79
+  log_events: 
+  - - 2008-11-29 09:46:57.120320 -05:00
+    - Sean Russell <ser@ser1.net>
+    - created
+    - ""
+- !ditz.rubyforge.org,2008-03-06/issue 
+  title: Optimize the report generation
+  desc: |-
+    If a TimeRange has been consumed, remove it from the list of ranges
+    being iterated over for each day.
+  type: :feature
+  component: TimeTracker
+  release: 
+  reporter: Sean Russell <ser@ser1.net>
+  status: :unstarted
+  disposition: 
+  creation_time: 2008-11-29 12:05:09.509062 -05:00
+  references: []
+
+  id: 11a4c04d04ccf8776f99e549dce02a04596e13b6
+  log_events: 
+  - - 2008-11-29 12:05:09.819976 -05:00
+    - Sean Russell <ser@ser1.net>
+    - created
+    - ""
 components: 
 - !ditz.rubyforge.org,2008-03-06/component 
   name: TimeTracker
@@ -1255,13 +1297,17 @@ releases:
     - ""
 - !ditz.rubyforge.org,2008-03-06/release 
   name: "1.1"
-  status: :unreleased
-  release_time: 
+  status: :released
+  release_time: 2008-11-29 12:05:49.222064 -05:00
   log_events: 
   - - 2008-11-23 12:39:32.720138 -05:00
     - Sean Russell <ser@ser1.net>
     - created
     - Minor feature enhancements and bug fixes
+  - - 2008-11-29 12:05:49.222106 -05:00
+    - Sean Russell <ser@ser1.net>
+    - released
+    - Ready for release
 - !ditz.rubyforge.org,2008-03-06/release 
   name: "1.2"
   status: :unreleased

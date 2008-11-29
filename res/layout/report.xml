@@ -5,25 +5,20 @@
      android:layout_height="fill_parent">
  
     <ScrollView android:layout_width="fill_parent"
-        android:layout_height="wrap_content">
+                android:layout_height="wrap_content">
  
-        <LinearLayout android:orientation="vertical"
-            android:layout_width="fill_parent"
-            android:layout_height="fill_parent">
-     
-            <TableLayout android:id="@+id/report"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:stretchColumns="1"
-                android:collapseColumns="2">
-            </TableLayout>
-        </LinearLayout>
+        <TableLayout android:id="@+id/report"
+                     android:layout_width="fill_parent"
+                     android:layout_height="wrap_content"
+                     android:stretchColumns="1"
+                     android:collapseColumns="2">
+        </TableLayout>
     </ScrollView>
     
     <LinearLayout android:orientation="horizontal"
         android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
-        android:gravity="center_horizontal">
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal|bottom">
         
         <ImageButton android:id="@+id/decrement_week" 
             android:layout_width="wrap_content"
