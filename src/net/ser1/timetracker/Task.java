@@ -1,3 +1,8 @@
+/**
+ * TimeTracker 
+ * ©2008 Sean Russell
+ * @author Sean Russell <ser@germane-software.com>
+ */
 package net.ser1.timetracker;
 
 import java.util.Date;
@@ -85,4 +90,5 @@ public class Task implements Comparable<Task>{
     public int compareTo(Task another) {
         return taskName.compareTo(another.getTaskName());
     }
+
 }

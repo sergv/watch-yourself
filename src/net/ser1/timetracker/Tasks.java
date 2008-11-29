@@ -1,3 +1,8 @@
+/**
+ * TimeTracker 
+ * ©2008 Sean Russell
+ * @author Sean Russell <ser@germane-software.com>
+ */
 package net.ser1.timetracker;
 
 import static net.ser1.timetracker.DBHelper.END;
@@ -8,7 +13,10 @@ import static net.ser1.timetracker.DBHelper.START;
 import static net.ser1.timetracker.DBHelper.TASK_COLUMNS;
 import static net.ser1.timetracker.DBHelper.TASK_ID;
 import static net.ser1.timetracker.DBHelper.TASK_TABLE;
+import static net.ser1.timetracker.Report.weekEnd;
+import static net.ser1.timetracker.Report.weekStart;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
@@ -47,36 +55,54 @@ import android.widget.TextView;
 import android.widget.AdapterView.AdapterContextMenuInfo;
 
 /**
- *          SharedPreferences mPrefs = getSharedPreferences();
-         mCurViewMode = mPrefs.getInt("view_mode" DAY_VIEW_MODE);
-     }
-
-     protected void onPause() {
-         super.onPause();
- 
-         SharedPreferences.Editor ed = mPrefs.edit();
-         ed.putInt("view_mode", mCurViewMode);
-         ed.commit();
-
+ * Manages and displays a list of tasks, providing the ability to edit and
+ * display individual task items.
+ * 
  * @author ser
- *
  */
-
 public class Tasks extends ListActivity {
-    private static final TimeZone UTC = TimeZone.getTimeZone("UTC");
-    private static final String TIME_FORMAT = "%02d:%02d";
-    private static final int REFRESH_MS = 1000; // 60000
+    /**
+     * Defines how each task's time is displayed 
+     */
+    private static final SimpleDateFormat FORMAT = new SimpleDateFormat("HH:mm");
+    /**
+     * How often to refresh the display, in milliseconds
+     */
+    private static final int REFRESH_MS = 60000;
+    /**
+     * The model for this view
+     */
     private TaskAdapter adapter;
+    /**
+     * A timer for refreshing the display.
+     */
     private Handler timer;
+    /**
+     * The callback that actually updates the display.
+     */
     private TimerTask updater;
+    /**
+     * The currently active task (the one that is currently being timed).  There
+     * can be only one.
+     */
     private Task currentlySelected = null;
+    /**
+     * The currently selected task when the context menu is invoked.
+     */
+    private Task selectedTask;
+    private int sYear, sMonth, sDay;
 
+    /**
+     * A list of menu options, including both context and options menu items 
+     */
     enum TaskMenu { AddTask, EditTask, DeleteTask, Report, 
         ShowTimes, ChangeView, SelectStartDate, SelectEndDate }
 
+    
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        FORMAT.setTimeZone(TimeZone.getTimeZone("UTC"));
         if (adapter == null) {
             adapter = new TaskAdapter(this);
             setListAdapter(adapter);
@@ -118,17 +144,6 @@ public class Tasks extends ListActivity {
         }
         super.onResume();
     }
-
-    @Override
-    protected void onStart() {
-        super.onStart();
-    }
-
-    @Override
-    protected void onStop() {
-        super.onStop();
-    }
-
     
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -151,7 +166,6 @@ public class Tasks extends ListActivity {
         menu.add(0, TaskMenu.ShowTimes.ordinal(), 0, "Show times");
     }
 
-    private Task selectedTask;
     @Override
     public boolean onContextItemSelected(MenuItem item) {
         AdapterContextMenuInfo info = (AdapterContextMenuInfo)item.getMenuInfo();
@@ -169,9 +183,28 @@ public class Tasks extends ListActivity {
         }
         return super.onContextItemSelected(item);
     }
+    
+    @Override
+    public boolean onMenuItemSelected(int featureId, MenuItem item) {
+        TaskMenu t = TaskMenu.values()[item.getItemId()];
+        switch (t) {
+        case AddTask:
+        case ChangeView:
+            showDialog(item.getItemId());
+            break;
+        case Report:
+            Intent intent = new Intent(this, Report.class);
+            intent.putExtra("report-date", new Date().getTime());
+            startActivity(intent);
+            break;
+        default:
+            // Ignore the other menu items; they're context menu
+            break;
+        }
+        return super.onMenuItemSelected(featureId, item);
+    }
 
-
-    private int sYear, sMonth, sDay;
+    @Override
     protected Dialog onCreateDialog(int id) {
         TaskMenu action = TaskMenu.values()[id];
         switch (action) {
@@ -182,57 +215,12 @@ public class Tasks extends ListActivity {
         case DeleteTask:
             return openDeleteTaskDialog();
         case ChangeView:
-            return new AlertDialog.Builder(Tasks.this)
-                .setItems(R.array.views, new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int which) {
-                        switch (which) {
-                        case 0: // today
-                            adapter.loadTasks( Calendar.getInstance(UTC) );
-                            break;
-                        case 1: // this week
-                            Calendar tw = Calendar.getInstance(UTC);
-                            adapter.loadTasks( weekStart( tw ), weekEnd( tw ) );
-                            break;
-                        case 2: // yesterday
-                            Calendar y = Calendar.getInstance(UTC);
-                            y.add(Calendar.DAY_OF_MONTH, -1);
-                            adapter.loadTasks( y );
-                            break;
-                        case 3: // last week
-                            Calendar lw = Calendar.getInstance(UTC);
-                            lw.add(Calendar.DAY_OF_MONTH, -7);
-                            adapter.loadTasks( weekStart( lw ), weekEnd( lw ) );
-                            break;
-                        case 4: // all
-                            adapter.loadTasks();
-                            break;
-                        case 5: // select range
-                            showDialog(TaskMenu.SelectStartDate.ordinal());
-                            break;
-                        default: // Unknown
-                            break;
-                        }
-                        Tasks.this.getListView().invalidate();
-                    }
-
-                    private Calendar weekEnd(Calendar tw) {
-                        int dow = tw.get(Calendar.DAY_OF_WEEK);
-                        Calendar tw_e = (Calendar)tw.clone();
-                        tw_e.add(Calendar.DAY_OF_WEEK, 6-dow);
-                        return tw_e;
-                    }
-
-                    private Calendar weekStart(Calendar tw) {
-                        int dow = tw.get(Calendar.DAY_OF_WEEK);
-                        Calendar tw_s = (Calendar)tw.clone();
-                        tw_s.add(Calendar.DAY_OF_WEEK, -dow);
-                        return tw_s;
-                    }
-                }).create();
-        case Report:
-            break;
+            return openChangeViewDialog();
         case SelectStartDate:
-            Calendar today_s = Calendar.getInstance(UTC);
+            Calendar today_s = Calendar.getInstance();
+            // An ad-hoc date picker for the start date, which in turn
+            // invokes another dialog (the "pick end date" dialog) when it is 
+            // finished
             return new DatePickerDialog(this,
                     new DatePickerDialog.OnDateSetListener() {
                         public void onDateSet(DatePicker view, int year, 
@@ -247,11 +235,14 @@ public class Tasks extends ListActivity {
                     today_s.get(Calendar.MONTH), 
                     today_s.get(Calendar.DAY_OF_MONTH));
         case SelectEndDate:
+            // Another ad-hoc date picker for the end date.  This is invoked by
+            // the start-date dialog.  When complete, loads a new list of tasks
+            // filtered by the date range.
             return new DatePickerDialog(this,
                     new DatePickerDialog.OnDateSetListener() {
                         public void onDateSet(DatePicker view, int year, 
                                 int monthOfYear, int dayOfMonth) {
-                            Calendar start = Calendar.getInstance(UTC);
+                            Calendar start = Calendar.getInstance();
                             start.set(Calendar.YEAR, sYear);
                             start.set(Calendar.MONTH, sMonth);
                             start.set(Calendar.DAY_OF_MONTH, sDay);
@@ -259,7 +250,7 @@ public class Tasks extends ListActivity {
                             start.set(Calendar.MINUTE, 0);
                             start.set(Calendar.SECOND, 0);
                             start.set(Calendar.MILLISECOND, 0);
-                            Calendar end = Calendar.getInstance(UTC);
+                            Calendar end = Calendar.getInstance();
                             end.set(Calendar.YEAR, sYear);
                             end.set(Calendar.MONTH, sMonth);
                             end.set(Calendar.DAY_OF_MONTH, sDay);
@@ -270,14 +261,61 @@ public class Tasks extends ListActivity {
                             end.add(Calendar.DAY_OF_MONTH, 1);
                             adapter.loadTasks( start, end );
                         }
-                    }, 
-                    sYear, 
-                    sMonth, 
-                    sDay);
+                    }, sYear, sMonth, sDay);
         }
+        // TODO: If we get here, we're in trouble; android doesn't like null dialogs.
         return null;
     }
     
+    /**
+     * Creates a dialog to change the dates for which task times are shown.
+     * Offers a short selection of pre-defined defaults, and the option to
+     * choose a range from a dialog.
+     * 
+     * @see arrays.xml
+     * @return the dialog to be displayed
+     */
+    private Dialog openChangeViewDialog() {
+        return new AlertDialog.Builder(Tasks.this)
+        .setItems(R.array.views, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int which) {
+                switch (which) {
+                case 0: // today
+                    adapter.loadTasks( Calendar.getInstance() );
+                    break;
+                case 1: // this week
+                    Calendar tw = Calendar.getInstance();
+                    adapter.loadTasks( weekStart( tw ), weekEnd( tw ) );
+                    break;
+                case 2: // yesterday
+                    Calendar y = Calendar.getInstance();
+                    y.add(Calendar.DAY_OF_MONTH, -1);
+                    adapter.loadTasks( y );
+                    break;
+                case 3: // last week
+                    Calendar lw = Calendar.getInstance();
+                    lw.add(Calendar.WEEK_OF_YEAR, -1);
+                    adapter.loadTasks( weekStart( lw ), weekEnd( lw ) );
+                    break;
+                case 4: // all
+                    adapter.loadTasks();
+                    break;
+                case 5: // select range
+                    showDialog(TaskMenu.SelectStartDate.ordinal());
+                    break;
+                default: // Unknown
+                    break;
+                }
+                Tasks.this.getListView().invalidate();
+            }
+        }).create();
+    }
+
+    /**
+     * Constructs a dialog for defining a new task.  If accepted, creates a new
+     * task.  If cancelled, closes the dialog with no affect.
+     * @return the dialog to display
+     */
     private Dialog openNewTaskDialog() {
         LayoutInflater factory = LayoutInflater.from(this);
         final View textEntryView = factory.inflate(R.layout.edit_task, null);
@@ -301,6 +339,11 @@ public class Tasks extends ListActivity {
             .create();
     }
 
+    /**
+     * Constructs a dialog for editing task attributes.  If accepted, alters
+     * the task being edited.  If cancelled, dismissed the dialog with no effect.
+     * @return the dialog to display
+     */
     private Dialog openEditTaskDialog() {
         if (selectedTask == null) return null;
         LayoutInflater factory = LayoutInflater.from(this);
@@ -326,9 +369,14 @@ public class Tasks extends ListActivity {
             .create();
     }
     
+    /**
+     * Constructs a dialog asking for confirmation for a delete request.  If
+     * accepted, deletes the task.  If cancelled, closes the dialog.
+     * @return the dialog to display
+     */
     private Dialog openDeleteTaskDialog() {
-        String deleteMessage = getString(R.string.delete_task_message);
-        String formattedMessage = String.format(deleteMessage, selectedTask.getTaskName());
+        String formattedMessage = getString(R.string.delete_task_message, 
+                selectedTask.getTaskName());
         return new AlertDialog.Builder(Tasks.this)
             .setTitle(R.string.delete_task_title)
             .setIcon(android.R.drawable.stat_sys_warning)
@@ -366,26 +414,17 @@ public class Tasks extends ListActivity {
         }
     }
     
-    @Override
-    public boolean onMenuItemSelected(int featureId, MenuItem item) {
-        TaskMenu t = TaskMenu.values()[item.getItemId()];
-        switch (t) {
-        case AddTask:
-        case ChangeView:
-        case Report:
-            showDialog(item.getItemId());
-            break;
-        default:
-            // Ignore the other menu items; they're context menu
-            break;
-        }
-        return super.onMenuItemSelected(featureId, item);
-    }
-
-
-
+    /**
+     * The view for an individial task in the list.
+     */
     private class TaskView extends LinearLayout {
+        /**
+         * The view of the task name displayed in the list
+         */
         private TextView taskName;
+        /**
+         * The view of the total time of the task.
+         */
         private TextView total;
         
         public TaskView( Context context, Task t ) {
@@ -401,30 +440,16 @@ public class Tasks extends ListActivity {
             total = new TextView(context);
             total.setGravity(Gravity.RIGHT);
             total.setTransformationMethod(SingleLineTransformationMethod.getInstance());
-            formatTotal( total, t );
+            total.setText(FORMAT.format(new Date(t.getTotal())));
             addView(total, new LinearLayout.LayoutParams(
                     LayoutParams.WRAP_CONTENT, LayoutParams.FILL_PARENT, 0.0f));
             
             markupSelectedTask(t);
         }
 
-        private static final long MS_H = 3600000;
-        private static final long MS_M = 60000;
-        private static final long MS_S = 1000;
-        private void formatTotal(TextView totalView, Task t ) {
-            long total = t.getTotal();
-            long hours = total / MS_H;
-            long hours_in_ms = hours * MS_H;
-            long minutes = (total - hours_in_ms) / MS_M;
-            long minutes_in_ms = minutes * MS_M;
-            long seconds = (total - hours_in_ms - minutes_in_ms) / MS_S;
-            String fmt = String.format(TIME_FORMAT, hours, minutes, seconds);
-            totalView.setText(fmt);
-        }
-
         public void setTask(Task t) {
             taskName.setText(t.getTaskName());
-            formatTotal( total, t );
+            total.setText(FORMAT.format(new Date(t.getTotal())));
             markupSelectedTask(t);
         }
 
@@ -451,7 +476,7 @@ public class Tasks extends ListActivity {
             dbHelper = new DBHelper(c);
             dbHelper.getWritableDatabase();
             tasks = new ArrayList<Task>();
-            loadTasks( Calendar.getInstance(UTC) ) ;
+            loadTasks( Calendar.getInstance() ) ;
         }
         
         private void loadTasks() {
@@ -464,7 +489,7 @@ public class Tasks extends ListActivity {
         
         protected void loadTasks( Calendar start, Calendar end ) {
             String query = "AND start >= %d AND end < %d";
-            Calendar today = Calendar.getInstance(UTC);
+            Calendar today = Calendar.getInstance();
             today.set(Calendar.HOUR, 12);
             for (int field : new int[] { Calendar.HOUR, Calendar.MINUTE, 
                                          Calendar.SECOND, 
@@ -631,6 +656,6 @@ public class Tasks extends ListActivity {
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        Tasks.this.getListView().invalidate();
+        if (getListView() != null) getListView().invalidate();
     }
 }

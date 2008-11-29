@@ -87,8 +87,8 @@ issues:
   component: TimeTracker
   release: "1.1"
   reporter: Sean Russell <ser@ser1.net>
-  status: :unstarted
-  disposition: 
+  status: :closed
+  disposition: :fixed
   creation_time: 2008-11-20 21:38:50.339672 -05:00
   references: []
 
@@ -105,6 +105,10 @@ issues:
   - - 2008-11-23 15:34:48.734419 -05:00
     - Sean Russell <ser@ser1.net>
     - assigned to release 1.1 from 1.2
+    - ""
+  - - 2008-11-28 17:00:38.337754 -05:00
+    - Sean Russell <ser@ser1.net>
+    - closed issue with disposition fixed
     - ""
 - !ditz.rubyforge.org,2008-03-06/issue 
   title: Add ability to show times
@@ -304,6 +308,10 @@ issues:
     - Sean Russell <ser@ser1.net>
     - changed title
     - ""
+  - - 2008-11-28 22:22:04.486536 -05:00
+    - Sean Russell <ser@ser1.net>
+    - commented
+    - Bind this to the update period
 - !ditz.rubyforge.org,2008-03-06/issue 
   title: Add projects
   desc: ""
@@ -564,12 +572,26 @@ issues:
     - Sean Russell <ser@ser1.net>
     - created
     - ""
+  - - 2008-11-28 10:28:56.782436 -05:00
+    - Sean Russell <ser@ser1.net>
+    - commented
+    - |+
+      SharedPreferences mPrefs = getSharedPreferences();
+      mCurViewMode = mPrefs.getInt("view_mode" DAY_VIEW_MODE);
+      }
+      protected void onPause() {
+      super.onPause();
+      
+      SharedPreferences.Editor ed = mPrefs.edit();
+      ed.putInt("view_mode", mCurViewMode);
+      ed.commit();
+      
 - !ditz.rubyforge.org,2008-03-06/issue 
   title: Add an "about" dialog
   desc: ""
   type: :feature
   component: TimeTracker
-  release: "1.1"
+  release: "1.2"
   reporter: Sean Russell <ser@ser1.net>
   status: :unstarted
   disposition: 
@@ -586,12 +608,16 @@ issues:
     - Sean Russell <ser@ser1.net>
     - assigned to release 1.1 from unassigned
     - ""
+  - - 2008-11-28 09:43:43.330077 -05:00
+    - Sean Russell <ser@ser1.net>
+    - assigned to release 1.2 from 1.1
+    - ""
 - !ditz.rubyforge.org,2008-03-06/issue 
   title: Add documentation
   desc: ""
   type: :feature
   component: TimeTracker
-  release: "1.1"
+  release: "1.2"
   reporter: Sean Russell <ser@ser1.net>
   status: :unstarted
   disposition: 
@@ -607,6 +633,10 @@ issues:
   - - 2008-11-24 20:17:07.642733 -05:00
     - Sean Russell <ser@ser1.net>
     - assigned to release 1.1 from unassigned
+    - ""
+  - - 2008-11-28 09:43:52.826579 -05:00
+    - Sean Russell <ser@ser1.net>
+    - assigned to release 1.2 from 1.1
     - ""
 - !ditz.rubyforge.org,2008-03-06/issue 
   title: Fix the background color issue
@@ -877,8 +907,8 @@ issues:
   component: TimeTracker
   release: "1.1"
   reporter: Sean Russell <ser@ser1.net>
-  status: :unstarted
-  disposition: 
+  status: :closed
+  disposition: :fixed
   creation_time: 2008-11-26 08:25:18.355695 -05:00
   references: []
 
@@ -887,6 +917,10 @@ issues:
   - - 2008-11-26 08:25:18.726912 -05:00
     - Sean Russell <ser@ser1.net>
     - created
+    - ""
+  - - 2008-11-28 09:42:17.515476 -05:00
+    - Sean Russell <ser@ser1.net>
+    - closed issue with disposition fixed
     - ""
 - !ditz.rubyforge.org,2008-03-06/issue 
   title: Prettify the time editing dialog
@@ -911,7 +945,7 @@ issues:
   desc: This might still be a timezone issue.
   type: :feature
   component: TimeTracker
-  release: "1.1"
+  release: "1.2"
   reporter: Sean Russell <ser@ser1.net>
   status: :in_progress
   disposition: 
@@ -927,6 +961,10 @@ issues:
   - - 2008-11-28 06:50:43.756672 -05:00
     - Sean Russell <ser@ser1.net>
     - changed status from unstarted to in_progress
+    - ""
+  - - 2008-11-28 19:01:36.900252 -05:00
+    - Sean Russell <ser@ser1.net>
+    - assigned to release 1.2 from 1.1
     - ""
 - !ditz.rubyforge.org,2008-03-06/issue 
   title: Sync DB to mem card
@@ -1025,6 +1063,178 @@ issues:
   - - 2008-11-28 09:12:40.741072 -05:00
     - Sean Russell <ser@ser1.net>
     - closed issue with disposition fixed
+    - ""
+- !ditz.rubyforge.org,2008-03-06/issue 
+  title: Improve the date range picker dialogs
+  desc: They're sort of hokey right now.
+  type: :feature
+  component: TimeTracker
+  release: "1.2"
+  reporter: Sean Russell <ser@ser1.net>
+  status: :unstarted
+  disposition: 
+  creation_time: 2008-11-28 10:47:59.101214 -05:00
+  references: []
+
+  id: 5c42b638fa1e5d77514cd4df71accba2ab4c170e
+  log_events: 
+  - - 2008-11-28 10:47:59.586287 -05:00
+    - Sean Russell <ser@ser1.net>
+    - created
+    - ""
+- !ditz.rubyforge.org,2008-03-06/issue 
+  title: Add ability to pick week to view (report)
+  desc: ""
+  type: :feature
+  component: TimeTracker
+  release: "1.1"
+  reporter: Sean Russell <ser@ser1.net>
+  status: :closed
+  disposition: :fixed
+  creation_time: 2008-11-28 17:00:59.392473 -05:00
+  references: []
+
+  id: 620007414daf06f6c7bf83a148c40525ae799132
+  log_events: 
+  - - 2008-11-28 17:01:00.246913 -05:00
+    - Sean Russell <ser@ser1.net>
+    - created
+    - ""
+  - - 2008-11-28 22:20:58.088390 -05:00
+    - Sean Russell <ser@ser1.net>
+    - closed issue with disposition fixed
+    - ""
+- !ditz.rubyforge.org,2008-03-06/issue 
+  title: Add ability to specify which day the week starts on
+  desc: ""
+  type: :feature
+  component: TimeTracker
+  release: "1.2"
+  reporter: Sean Russell <ser@ser1.net>
+  status: :unstarted
+  disposition: 
+  creation_time: 2008-11-28 17:31:13.985239 -05:00
+  references: []
+
+  id: 754a9d73242499568ce1e58831f23ffa37eb0116
+  log_events: 
+  - - 2008-11-28 17:31:14.197029 -05:00
+    - Sean Russell <ser@ser1.net>
+    - created
+    - ""
+- !ditz.rubyforge.org,2008-03-06/issue 
+  title: Improve report
+  desc: Allow users to choose which task attribute to show for the "name"
+  type: :feature
+  component: TimeTracker
+  release: "2.0"
+  reporter: Sean Russell <ser@ser1.net>
+  status: :unstarted
+  disposition: 
+  creation_time: 2008-11-28 17:32:12.968401 -05:00
+  references: []
+
+  id: d2da23f5b2edbd8c5d0e08b2dfa4d4ae75e92511
+  log_events: 
+  - - 2008-11-28 17:32:13.149049 -05:00
+    - Sean Russell <ser@ser1.net>
+    - created
+    - ""
+- !ditz.rubyforge.org,2008-03-06/issue 
+  title: Put table in a scroll view
+  desc: While I'm at it, give the task name a minimum size
+  type: :feature
+  component: TimeTracker
+  release: "1.1"
+  reporter: Sean Russell <ser@ser1.net>
+  status: :closed
+  disposition: :fixed
+  creation_time: 2008-11-28 17:33:22.526106 -05:00
+  references: []
+
+  id: 0efe6fb66dd5bd9404b4e234b70828316240de64
+  log_events: 
+  - - 2008-11-28 17:33:22.700039 -05:00
+    - Sean Russell <ser@ser1.net>
+    - created
+    - ""
+  - - 2008-11-28 19:01:24.046822 -05:00
+    - Sean Russell <ser@ser1.net>
+    - closed issue with disposition fixed
+    - ""
+- !ditz.rubyforge.org,2008-03-06/issue 
+  title: Add "go to today" to report
+  desc: ""
+  type: :feature
+  component: TimeTracker
+  release: 
+  reporter: Sean Russell <ser@ser1.net>
+  status: :unstarted
+  disposition: 
+  creation_time: 2008-11-28 21:32:07.487351 -05:00
+  references: []
+
+  id: 87d58d75853d074e3596051d8d4cb844a0d4615a
+  log_events: 
+  - - 2008-11-28 21:32:07.893599 -05:00
+    - Sean Russell <ser@ser1.net>
+    - created
+    - ""
+- !ditz.rubyforge.org,2008-03-06/issue 
+  title: Report times are in the previous day
+  desc: ""
+  type: :feature
+  component: TimeTracker
+  release: "1.1"
+  reporter: Sean Russell <ser@ser1.net>
+  status: :unstarted
+  disposition: 
+  creation_time: 2008-11-28 22:19:28.110387 -05:00
+  references: []
+
+  id: b2c18d469ebf4fe64227e7d65029b7797a7ed0de
+  log_events: 
+  - - 2008-11-28 22:19:28.404653 -05:00
+    - Sean Russell <ser@ser1.net>
+    - created
+    - ""
+- !ditz.rubyforge.org,2008-03-06/issue 
+  title: Add ability to show times in report as fractions of an hour
+  desc: For SAP.  1:15 becomes 1.25.  Add rounding to nearest quarter hour (configurable?) too.
+  type: :feature
+  component: TimeTracker
+  release: "1.2"
+  reporter: Sean Russell <ser@ser1.net>
+  status: :unstarted
+  disposition: 
+  creation_time: 2008-11-28 22:20:41.726090 -05:00
+  references: []
+
+  id: 05e69467698a0ac6a8d4f25fecc6554b67a0c621
+  log_events: 
+  - - 2008-11-28 22:20:42.178666 -05:00
+    - Sean Russell <ser@ser1.net>
+    - created
+    - ""
+- !ditz.rubyforge.org,2008-03-06/issue 
+  title: Add other attributes to Tasks
+  desc: |-
+    This is for holding user-defineable attributes, which can then be used in reports.
+    E.g., SAP codes.
+  type: :feature
+  component: TimeTracker
+  release: "2.0"
+  reporter: Sean Russell <ser@ser1.net>
+  status: :unstarted
+  disposition: 
+  creation_time: 2008-11-28 22:23:00.406787 -05:00
+  references: []
+
+  id: b717d2189a6e3e9138c32017f23e831c7fea57ed
+  log_events: 
+  - - 2008-11-28 22:23:00.657792 -05:00
+    - Sean Russell <ser@ser1.net>
+    - created
     - ""
 components: 
 - !ditz.rubyforge.org,2008-03-06/component 

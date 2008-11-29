@@ -16,7 +16,7 @@
 
 <string name="delete_ok">Delete</string>
 <string name="delete_task_title">Delete Task</string>
-<string name="delete_task_message">Are you sure you want to delete &quot;%s&quot; and all of it's time records?</string>
+<string name="delete_task_message">Are you sure you want to delete '%s' and all of it's time records?</string>
 <string name="add_task_title">Add task</string>
 <string name="change_view_title">Change view</string>
 <string name="generate_report_title">Generate report</string>
@@ -35,4 +35,6 @@
 <string name="end_not_greater_than_start">The end time must be greater than the start time</string>
 <string name="range_error_title">Time Range Error</string>
 <string name="confirm">Confirm</string>
+<string name="report_title">Report for the week %s to %s </string>
+<string name="week">Week %s</string>
 </resources>

@@ -1,3 +1,8 @@
+/**
+ * TimeTracker 
+ * ©2008 Sean Russell
+ * @author Sean Russell <ser@germane-software.com>
+ */
 package net.ser1.timetracker;
 
 import android.content.Context;

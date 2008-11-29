@@ -1,3 +1,8 @@
+/**
+ * TimeTracker 
+ * ©2008 Sean Russell
+ * @author Sean Russell <ser@germane-software.com>
+ */
 package net.ser1.timetracker;
 
 import static net.ser1.timetracker.DBHelper.END;
@@ -8,8 +13,11 @@ import static net.ser1.timetracker.DBHelper.TASK_ID;
 import static net.ser1.timetracker.EditTime.END_DATE;
 import static net.ser1.timetracker.EditTime.START_DATE;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Date;
+import java.util.TimeZone;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -39,10 +47,12 @@ import android.widget.AdapterView.AdapterContextMenuInfo;
 public class TaskTimes extends ListActivity {
     private TimesAdapter adapter;
     private enum TimeMenu { AddTime, DeleteTime, EditTime }
+    private static final SimpleDateFormat FORMAT = new SimpleDateFormat("HH:mm");
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        FORMAT.setTimeZone(TimeZone.getTimeZone("UTC"));
         if (adapter == null) {
             adapter = new TimesAdapter(this);
             setListAdapter(adapter);
@@ -220,8 +230,7 @@ public class TaskTimes extends ListActivity {
             return position;
         }
         
-        
-        
+                
         private class TimeView extends LinearLayout {
             private TextView dateRange;
             private TextView total;
@@ -239,28 +248,14 @@ public class TaskTimes extends ListActivity {
                 total = new TextView(context);
                 total.setGravity(Gravity.RIGHT);
                 total.setTransformationMethod(SingleLineTransformationMethod.getInstance());
-                formatTotal( total, t.getTotal() );
+                total.setText(FORMAT.format(new Date(t.getTotal())));
                 addView(total, new LinearLayout.LayoutParams(
                         LayoutParams.WRAP_CONTENT, LayoutParams.FILL_PARENT, 0.0f));
             }
 
-            private static final long MS_H = 3600000;
-            private static final long MS_M = 60000;
-            private static final long MS_S = 1000;
-            private static final String TIME_FORMAT = "%02d:%02d:%02d";
-            private void formatTotal(TextView totalView, long total ) {
-                long hours = total / MS_H;
-                long hours_in_ms = hours * MS_H;
-                long minutes = (total - hours_in_ms) / MS_M;
-                long minutes_in_ms = minutes * MS_M;
-                long seconds = (total - hours_in_ms - minutes_in_ms) / MS_S;
-                String fmt = String.format(TIME_FORMAT, hours, minutes, seconds);
-                totalView.setText(fmt);
-            }
-
             public void setTimeRange(TimeRange t) {
                 dateRange.setText(t.toString());
-                formatTotal( total, t.getTotal() );
+                total.setText(FORMAT.format(new Date(t.getTotal())));
             }
         }
 
