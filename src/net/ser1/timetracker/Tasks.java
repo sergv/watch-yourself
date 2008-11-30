@@ -413,6 +413,10 @@ public class Tasks extends ListActivity {
             })
             .create();
     }
+    
+    private Dialog openAboutDialog() {
+        return null; 
+    }
 
     @Override
     protected void onPrepareDialog( int id, Dialog d ) {

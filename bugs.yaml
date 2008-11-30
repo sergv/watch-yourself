@@ -100,11 +100,11 @@ issues:
     - ""
   - - 2008-11-23 12:41:05.221865 -05:00
     - Sean Russell <ser@ser1.net>
-    - assigned to release 1.2 from unassigned
+    - assigned to release 2008.4 from unassigned
     - ""
   - - 2008-11-23 15:34:48.734419 -05:00
     - Sean Russell <ser@ser1.net>
-    - assigned to release 1.1 from 1.2
+    - assigned to release 1.1 from 2008.4
     - ""
   - - 2008-11-28 17:00:38.337754 -05:00
     - Sean Russell <ser@ser1.net>
@@ -279,7 +279,7 @@ issues:
   desc: ""
   type: :feature
   component: TimeTracker
-  release: "1.2"
+  release: "2008.4"
   reporter: Sean Russell <ser@ser1.net>
   status: :unstarted
   disposition: 
@@ -302,7 +302,7 @@ issues:
     - ""
   - - 2008-11-23 17:50:28.386923 -05:00
     - Sean Russell <ser@ser1.net>
-    - assigned to release 1.2 from 1.1
+    - assigned to release 2008.4 from 1.1
     - ""
   - - 2008-11-25 09:24:53.153615 -05:00
     - Sean Russell <ser@ser1.net>
@@ -516,11 +516,11 @@ issues:
     - ""
   - - 2008-11-23 12:59:47.567540 -05:00
     - Sean Russell <ser@ser1.net>
-    - assigned to release 1.2 from unassigned
+    - assigned to release 2008.4 from unassigned
     - ""
   - - 2008-11-23 15:34:58.360997 -05:00
     - Sean Russell <ser@ser1.net>
-    - assigned to release 1.1 from 1.2
+    - assigned to release 1.1 from 2008.4
     - ""
   - - 2008-11-23 17:50:09.216093 -05:00
     - Sean Russell <ser@ser1.net>
@@ -559,7 +559,7 @@ issues:
   desc: ""
   type: :feature
   component: TimeTracker
-  release: "1.2"
+  release: "2008.4"
   reporter: Sean Russell <ser@ser1.net>
   status: :closed
   disposition: :fixed
@@ -595,7 +595,7 @@ issues:
   desc: ""
   type: :feature
   component: TimeTracker
-  release: "1.2"
+  release: "2008.4"
   reporter: Sean Russell <ser@ser1.net>
   status: :unstarted
   disposition: 
@@ -614,14 +614,14 @@ issues:
     - ""
   - - 2008-11-28 09:43:43.330077 -05:00
     - Sean Russell <ser@ser1.net>
-    - assigned to release 1.2 from 1.1
+    - assigned to release 2008.4 from 1.1
     - ""
 - !ditz.rubyforge.org,2008-03-06/issue 
   title: Add documentation
   desc: ""
   type: :feature
   component: TimeTracker
-  release: "1.2"
+  release: "2008.4"
   reporter: Sean Russell <ser@ser1.net>
   status: :unstarted
   disposition: 
@@ -640,7 +640,7 @@ issues:
     - ""
   - - 2008-11-28 09:43:52.826579 -05:00
     - Sean Russell <ser@ser1.net>
-    - assigned to release 1.2 from 1.1
+    - assigned to release 2008.4 from 1.1
     - ""
 - !ditz.rubyforge.org,2008-03-06/issue 
   title: Fix the background color issue
@@ -733,7 +733,7 @@ issues:
   desc: ""
   type: :feature
   component: TimeTracker
-  release: "1.2"
+  release: "2.0"
   reporter: Sean Russell <ser@ser1.net>
   status: :unstarted
   disposition: 
@@ -748,14 +748,18 @@ issues:
     - ""
   - - 2008-11-25 09:29:02.828084 -05:00
     - Sean Russell <ser@ser1.net>
-    - assigned to release 1.2 from unassigned
+    - assigned to release 2008.4 from unassigned
+    - ""
+  - - 2008-11-29 23:06:56.138098 -05:00
+    - Sean Russell <ser@ser1.net>
+    - assigned to release 2.0 from 2008.4
     - ""
 - !ditz.rubyforge.org,2008-03-06/issue 
   title: Fancify the time display
   desc: Put in date separators
   type: :feature
   component: TimeTracker
-  release: "1.2"
+  release: "2008.4"
   reporter: Sean Russell <ser@ser1.net>
   status: :unstarted
   disposition: 
@@ -770,7 +774,7 @@ issues:
     - ""
   - - 2008-11-25 09:29:13.084252 -05:00
     - Sean Russell <ser@ser1.net>
-    - assigned to release 1.2 from unassigned
+    - assigned to release 2008.4 from unassigned
     - ""
 - !ditz.rubyforge.org,2008-03-06/issue 
   title: Add deleting times
@@ -931,7 +935,7 @@ issues:
   desc: ""
   type: :feature
   component: TimeTracker
-  release: "1.2"
+  release: "2008.4"
   reporter: Sean Russell <ser@ser1.net>
   status: :unstarted
   disposition: 
@@ -949,10 +953,10 @@ issues:
   desc: This might still be a timezone issue.
   type: :feature
   component: TimeTracker
-  release: "1.2"
+  release: "2008.4"
   reporter: Sean Russell <ser@ser1.net>
-  status: :in_progress
-  disposition: 
+  status: :closed
+  disposition: :fixed
   creation_time: 2008-11-27 08:41:17.180320 -05:00
   references: []
 
@@ -968,7 +972,11 @@ issues:
     - ""
   - - 2008-11-28 19:01:36.900252 -05:00
     - Sean Russell <ser@ser1.net>
-    - assigned to release 1.2 from 1.1
+    - assigned to release 2008.4 from 1.1
+    - ""
+  - - 2008-11-29 23:07:11.610727 -05:00
+    - Sean Russell <ser@ser1.net>
+    - closed issue with disposition fixed
     - ""
 - !ditz.rubyforge.org,2008-03-06/issue 
   title: Sync DB to mem card
@@ -1073,7 +1081,7 @@ issues:
   desc: They're sort of hokey right now.
   type: :feature
   component: TimeTracker
-  release: "1.2"
+  release: "2008.4"
   reporter: Sean Russell <ser@ser1.net>
   status: :unstarted
   disposition: 
@@ -1113,7 +1121,7 @@ issues:
   desc: ""
   type: :feature
   component: TimeTracker
-  release: "1.2"
+  release: "2008.4"
   reporter: Sean Russell <ser@ser1.net>
   status: :unstarted
   disposition: 
@@ -1211,7 +1219,7 @@ issues:
   desc: For SAP.  1:15 becomes 1.25.  Add rounding to nearest quarter hour (configurable?) too.
   type: :feature
   component: TimeTracker
-  release: "1.2"
+  release: "2008.4"
   reporter: Sean Russell <ser@ser1.net>
   status: :unstarted
   disposition: 
@@ -1249,7 +1257,7 @@ issues:
   desc: ""
   type: :feature
   component: TimeTracker
-  release: "1.2"
+  release: "2008.4"
   reporter: Sean Russell <ser@ser1.net>
   status: :closed
   disposition: :fixed
@@ -1275,8 +1283,8 @@ issues:
   component: TimeTracker
   release: 
   reporter: Sean Russell <ser@ser1.net>
-  status: :unstarted
-  disposition: 
+  status: :closed
+  disposition: :fixed
   creation_time: 2008-11-29 12:05:09.509062 -05:00
   references: []
 
@@ -1286,6 +1294,13 @@ issues:
     - Sean Russell <ser@ser1.net>
     - created
     - ""
+  - - 2008-11-30 08:43:06.805790 -05:00
+    - Sean Russell <ser@ser1.net>
+    - closed issue with disposition fixed
+    - |-
+      Builds view directly from the DB now, which avoids creating TimeRanges.  More importantly
+      it now only loads time ranges for the current view and only loops over those ranges.  This
+      version is more space and time efficient, although the code is less readable.
 components: 
 - !ditz.rubyforge.org,2008-03-06/component 
   name: TimeTracker
@@ -1317,7 +1332,7 @@ releases:
     - released
     - Ready for release
 - !ditz.rubyforge.org,2008-03-06/release 
-  name: "1.2"
+  name: "2008.4"
   status: :unreleased
   release_time: 
   log_events: 
