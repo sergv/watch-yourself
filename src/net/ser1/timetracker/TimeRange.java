@@ -70,11 +70,7 @@ public class TimeRange implements Comparable<TimeRange> {
       Calendar.SECOND,
       Calendar.MILLISECOND
     };
-    
-    private static Date toDate(long v) {
-        return new Date(v);
-    }
-    
+        
     /**
      * Returns the amount of time that occurs during a given day
      * @param d the day to find the overlapping time for

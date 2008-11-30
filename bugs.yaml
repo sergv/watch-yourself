@@ -561,8 +561,8 @@ issues:
   component: TimeTracker
   release: "1.2"
   reporter: Sean Russell <ser@ser1.net>
-  status: :unstarted
-  disposition: 
+  status: :closed
+  disposition: :fixed
   creation_time: 2008-11-23 19:21:37.441099 -05:00
   references: []
 
@@ -586,6 +586,10 @@ issues:
       ed.putInt("view_mode", mCurViewMode);
       ed.commit();
       
+  - - 2008-11-29 23:02:48.546262 -05:00
+    - Sean Russell <ser@ser1.net>
+    - closed issue with disposition fixed
+    - ""
 - !ditz.rubyforge.org,2008-03-06/issue 
   title: Add an "about" dialog
   desc: ""

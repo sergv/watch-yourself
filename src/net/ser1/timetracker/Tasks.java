@@ -32,6 +32,7 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Color;
@@ -91,6 +92,7 @@ public class Tasks extends ListActivity {
      */
     private Task selectedTask;
     private int sYear, sMonth, sDay;
+    private SharedPreferences preferences;
 
     /**
      * A list of menu options, including both context and options menu items 
@@ -103,9 +105,12 @@ public class Tasks extends ListActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         FORMAT.setTimeZone(TimeZone.getTimeZone("UTC"));
+        preferences = getSharedPreferences("timetracker.pref", MODE_PRIVATE);
+        int which = preferences.getInt("view_mode", 0);
         if (adapter == null) {
             adapter = new TaskAdapter(this);
             setListAdapter(adapter);
+            switchView(which);
             currentlySelected = adapter.findCurrentlyActive();
         }
         if (timer == null) {
@@ -115,8 +120,6 @@ public class Tasks extends ListActivity {
             updater = new TimerTask() {
                 @Override
                 public void run() {
-                    Date d = new Date();
-                    System.out.println(d + " -- " + d.getTimezoneOffset());
                     if (currentlySelected != null) {
                         adapter.notifyDataSetChanged();
                         Tasks.this.getListView().invalidate();
@@ -139,6 +142,9 @@ public class Tasks extends ListActivity {
 
     @Override
     protected void onResume() {
+        int which = preferences.getInt("view_mode", 0);
+        switchView(which);
+
         if (timer != null && currentlySelected != null) {
             timer.post(updater);
         }
@@ -278,37 +284,49 @@ public class Tasks extends ListActivity {
     private Dialog openChangeViewDialog() {
         return new AlertDialog.Builder(Tasks.this)
         .setItems(R.array.views, new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int which) {
-                switch (which) {
-                case 0: // today
-                    adapter.loadTasks( Calendar.getInstance() );
-                    break;
-                case 1: // this week
-                    Calendar tw = Calendar.getInstance();
-                    adapter.loadTasks( weekStart( tw ), weekEnd( tw ) );
-                    break;
-                case 2: // yesterday
-                    Calendar y = Calendar.getInstance();
-                    y.add(Calendar.DAY_OF_MONTH, -1);
-                    adapter.loadTasks( y );
-                    break;
-                case 3: // last week
-                    Calendar lw = Calendar.getInstance();
-                    lw.add(Calendar.WEEK_OF_YEAR, -1);
-                    adapter.loadTasks( weekStart( lw ), weekEnd( lw ) );
-                    break;
-                case 4: // all
-                    adapter.loadTasks();
-                    break;
-                case 5: // select range
-                    showDialog(TaskMenu.SelectStartDate.ordinal());
-                    break;
-                default: // Unknown
-                    break;
+            public void onClick(DialogInterface dialog, int which) {                
+                switchView(which);
+                if (which < 5) {
+                    SharedPreferences.Editor ed = preferences.edit();
+                    ed.putInt("view_mode", which);
+                    ed.commit();
                 }
                 Tasks.this.getListView().invalidate();
             }
         }).create();
+    }
+    
+    private void switchView(int which) {
+        switch (which) {
+        case 0: // today
+            adapter.loadTasks( Calendar.getInstance() );
+            break;
+        case 1: // this week
+            Calendar tw = Calendar.getInstance();
+            adapter.loadTasks( weekStart( tw ), weekEnd( tw ) );
+            break;
+        case 2: // yesterday
+            Calendar y = Calendar.getInstance();
+            y.add(Calendar.DAY_OF_MONTH, -1);
+            adapter.loadTasks( y );
+            break;
+        case 3: // last week
+            Calendar lw = Calendar.getInstance();
+            lw.add(Calendar.WEEK_OF_YEAR, -1);
+            adapter.loadTasks( weekStart( lw ), weekEnd( lw ) );
+            break;
+        case 4: // all
+            adapter.loadTasks();
+            break;
+        case 5: // select range
+            showDialog(TaskMenu.SelectStartDate.ordinal());
+            break;
+        default: // Unknown
+            break;
+        }
+        String ttl = getString(R.string.title,         
+                               getResources().getStringArray(R.array.views)[which]); 
+        setTitle(ttl);
     }
 
     /**
@@ -476,7 +494,6 @@ public class Tasks extends ListActivity {
             dbHelper = new DBHelper(c);
             dbHelper.getWritableDatabase();
             tasks = new ArrayList<Task>();
-            loadTasks( Calendar.getInstance() ) ;
         }
         
         private void loadTasks() {
