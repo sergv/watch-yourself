@@ -5,13 +5,14 @@
      android:layout_height="fill_parent">
  
     <ScrollView android:layout_width="fill_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                android:layout_weight="1">
  
         <TableLayout android:id="@+id/report"
                      android:layout_width="fill_parent"
                      android:layout_height="wrap_content"
-                     android:stretchColumns="1"
-                     android:collapseColumns="2">
+                     android:stretchColumns="0"
+                     android:collapseColumns="0">
         </TableLayout>
     </ScrollView>
     

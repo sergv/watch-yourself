@@ -174,12 +174,6 @@ public class Report extends Activity implements OnClickListener {
         total.setGravity(Gravity.CENTER_HORIZONTAL);
         total.setTypeface(Typeface.SANS_SERIF, Typeface.BOLD);
         row.addView(total, new TableRow.LayoutParams());
-        
-        for (int i=1; i<9; i++) {
-            mainReport.setColumnStretchable(i, false);
-        }
-        mainReport.setColumnShrinkable(0, true);
-        mainReport.setColumnStretchable(0, true);
     }
 
     private void createReport( TableLayout mainReport ) {

@@ -139,7 +139,7 @@ public class Tasks extends ListActivity {
 
     @Override
     protected void onResume() {
-        if (timer != null) {
+        if (timer != null && currentlySelected != null) {
             timer.post(updater);
         }
         super.onResume();
@@ -645,10 +645,12 @@ public class Tasks extends ListActivity {
             Task selected = (Task)item;
             if (selected.equals(currentlySelected)) {
                 currentlySelected = null;
+                timer.removeCallbacks(updater);
             } else {
                 currentlySelected = selected;
                 currentlySelected.start();
                 adapter.updateTask(selected);
+                timer.post(updater);
             }
         }
         getListView().invalidate();
