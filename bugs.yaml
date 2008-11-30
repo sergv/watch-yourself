@@ -761,8 +761,8 @@ issues:
   component: TimeTracker
   release: "2008.4"
   reporter: Sean Russell <ser@ser1.net>
-  status: :unstarted
-  disposition: 
+  status: :closed
+  disposition: :fixed
   creation_time: 2008-11-25 08:48:30.917325 -05:00
   references: []
 
@@ -775,6 +775,10 @@ issues:
   - - 2008-11-25 09:29:13.084252 -05:00
     - Sean Russell <ser@ser1.net>
     - assigned to release 2008.4 from unassigned
+    - ""
+  - - 2008-11-30 11:42:05.044552 -05:00
+    - Sean Russell <ser@ser1.net>
+    - closed issue with disposition fixed
     - ""
 - !ditz.rubyforge.org,2008-03-06/issue 
   title: Add deleting times
@@ -1301,6 +1305,45 @@ issues:
       Builds view directly from the DB now, which avoids creating TimeRanges.  More importantly
       it now only loads time ranges for the current view and only loops over those ranges.  This
       version is more space and time efficient, although the code is less readable.
+- !ditz.rubyforge.org,2008-03-06/issue 
+  title: The task times in the main view don't accurately reflect the selected view
+  desc: |-
+    This is an issue where a range may start in the current view but end outside of it
+    (or start outside but end inside).  This needs to be fixed the same way it has been
+    for the report.
+  type: :feature
+  component: TimeTracker
+  release: 
+  reporter: Sean Russell <ser@ser1.net>
+  status: :unstarted
+  disposition: 
+  creation_time: 2008-11-30 08:53:05.165555 -05:00
+  references: []
+
+  id: d2aef488d0eefaeaa4914c4643c2c4a5e98cbc24
+  log_events: 
+  - - 2008-11-30 08:53:05.419674 -05:00
+    - Sean Russell <ser@ser1.net>
+    - created
+    - ""
+- !ditz.rubyforge.org,2008-03-06/issue 
+  title: Change time viewer to only show times for the selected range.
+  desc: ""
+  type: :feature
+  component: TimeTracker
+  release: "2008.4"
+  reporter: Sean Russell <ser@ser1.net>
+  status: :unstarted
+  disposition: 
+  creation_time: 2008-11-30 11:42:55.501454 -05:00
+  references: []
+
+  id: 6ca805fbbb23c40b44a009d39bdd3e94a6622d36
+  log_events: 
+  - - 2008-11-30 11:42:55.676126 -05:00
+    - Sean Russell <ser@ser1.net>
+    - created
+    - ""
 components: 
 - !ditz.rubyforge.org,2008-03-06/component 
   name: TimeTracker

@@ -13,8 +13,10 @@ import static net.ser1.timetracker.DBHelper.TASK_ID;
 import static net.ser1.timetracker.EditTime.END_DATE;
 import static net.ser1.timetracker.EditTime.START_DATE;
 
+import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collections;
 import java.util.Date;
 import java.util.TimeZone;
@@ -29,6 +31,8 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.graphics.Color;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.text.method.SingleLineTransformationMethod;
 import android.view.ContextMenu;
@@ -73,6 +77,7 @@ public class TaskTimes extends ListActivity {
     @Override
     protected void onResume() {
         adapter.loadTimes(getIntent().getExtras().getInt(DBHelper.TASK_ID));
+        getListView().invalidate();
         super.onResume();
     }
 
@@ -165,7 +170,7 @@ public class TaskTimes extends ListActivity {
     }
     
     
-    
+    private static final DateFormat SEPFORMAT = new SimpleDateFormat("EEEE, MMM dd yyyy");
     private class TimesAdapter extends BaseAdapter {
 
         private Context savedContext;
@@ -177,6 +182,16 @@ public class TaskTimes extends ListActivity {
             dbHelper = new DBHelper(c);
             dbHelper.getWritableDatabase();
             times = new ArrayList<TimeRange>();
+        }
+        
+        @Override
+        public boolean areAllItemsEnabled() {
+            return false;
+        }
+        
+        @Override
+        public boolean isEnabled( int position ) {
+            return true;
         }
         
         public void deleteTimeRange(TimeRange range) {
@@ -203,19 +218,35 @@ public class TaskTimes extends ListActivity {
                 } while (c.moveToNext());
             }
             c.close();
+            addSeparators();
+            notifyDataSetChanged();
         }
-
+        
         public View getView(int position, View convertView, ViewGroup parent) {
-            TimeView view = null;
-            if (convertView == null) {
-                Object item = getItem(position);
-                if (item != null) view = new TimeView(savedContext,(TimeRange)item);
-            } else {
-                view = (TimeView) convertView;
-                Object item = getItem(position);
-                if (item != null) view.setTimeRange( (TimeRange)item );
+            Object item = getItem(position);
+            if (item == null) return convertView;
+            TimeRange range = (TimeRange)item;
+            if (range.getEnd() == -1)  {
+                TextView headerText;
+                if (convertView == null || !(convertView instanceof TextView)) {
+                    headerText = new TextView(savedContext);
+                    headerText.setTextColor(Color.YELLOW);
+                    headerText.setTypeface(Typeface.DEFAULT, Typeface.ITALIC);
+                    headerText.setText(SEPFORMAT.format(new Date(range.getStart())));
+                } else {
+                    headerText = (TextView)convertView;
+                }
+                headerText.setText(SEPFORMAT.format(new Date(range.getStart())));
+                return headerText;
             }
-            return view;
+            TimeView timeView;
+            if (convertView == null || !(convertView instanceof TimeView)) {
+                timeView = new TimeView(savedContext,(TimeRange)item);
+            } else {
+                timeView = (TimeView)convertView;
+            }
+            timeView.setTimeRange( (TimeRange)item );
+            return timeView;
         }
 
         public int getCount() {
@@ -230,7 +261,6 @@ public class TaskTimes extends ListActivity {
             return position;
         }
         
-                
         private class TimeView extends LinearLayout {
             private TextView dateRange;
             private TextView total;
@@ -255,7 +285,8 @@ public class TaskTimes extends ListActivity {
 
             public void setTimeRange(TimeRange t) {
                 dateRange.setText(t.toString());
-                total.setText(FORMAT.format(new Date(t.getTotal())));
+                dateRange.setTextColor(Color.WHITE);
+                total.setText(FORMAT.format(new Date(t.getTotal())));                    
             }
         }
 
@@ -272,7 +303,25 @@ public class TaskTimes extends ListActivity {
             db.insert(RANGES_TABLE, END, values);
             times.add(new TimeRange(sd,ed));
             Collections.sort(times);
+            addSeparators();
             notifyDataSetChanged();
+        }
+
+        private void addSeparators() {
+            int dayOfYear = -1, year = -1;
+            Calendar curDay = Calendar.getInstance();
+            for (int i = 0; i < times.size()-1; i++) {
+                TimeRange tr = times.get(i);
+                curDay.setTimeInMillis(tr.getStart());
+                int doy = curDay.get(Calendar.DAY_OF_YEAR);
+                int y = curDay.get(Calendar.YEAR);
+                if (doy != dayOfYear || y != year) {
+                    dayOfYear = doy;
+                    year = y;
+                    times.add(i, new TimeRange(tr.getStart(), -1));
+                    i++;
+                }
+            }
         }
 
         public void updateTimeRange(long sd, long ed, int newTaskId, TimeRange old) {

@@ -509,7 +509,7 @@ public class Tasks extends ListActivity {
         }
         
         protected void loadTasks( Calendar start, Calendar end ) {
-            String query = "AND start >= %d AND end < %d";
+            String query = "AND start < %d AND end > %d";
             Calendar today = Calendar.getInstance();
             today.set(Calendar.HOUR, 12);
             for (int field : new int[] { Calendar.HOUR, Calendar.MINUTE, 
@@ -522,8 +522,8 @@ public class Tasks extends ListActivity {
             end.add(Calendar.DAY_OF_MONTH, 1);
             boolean loadCurrentTask = start.compareTo(today) != 1 &&
                                       end.compareTo(end) != -1;
-            query = String.format( query, start.getTime().getTime(), 
-                    end.getTime().getTime());
+            query = String.format( query, end.getTime().getTime(), 
+                    start.getTime().getTime());
             loadTasks(query, loadCurrentTask);
         }
         

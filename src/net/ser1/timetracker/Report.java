@@ -185,6 +185,7 @@ public class Report extends Activity implements OnClickListener {
                 row.addView(total, new TableRow.LayoutParams());
             } while (c.moveToNext());
         }
+        c.close();
     }
         
     /**

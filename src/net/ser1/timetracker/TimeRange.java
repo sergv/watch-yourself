@@ -7,7 +7,6 @@ package net.ser1.timetracker;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
 import java.util.Date;
 
 public class TimeRange implements Comparable<TimeRange> {
@@ -34,7 +33,7 @@ public class TimeRange implements Comparable<TimeRange> {
         return end - start;
     }
     
-    private static final DateFormat FORMAT = new SimpleDateFormat("MM/dd/yy HH:mm");
+    private static final DateFormat FORMAT = new SimpleDateFormat("HH:mm");
     public String toString() {
         Date s = new Date(start);
         Date e = new Date(end);
