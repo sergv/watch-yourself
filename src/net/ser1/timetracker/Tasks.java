@@ -183,7 +183,11 @@ public class Tasks extends ListActivity {
         switch (m) {
         case ShowTimes:
             Intent intent = new Intent(this, TaskTimes.class);
-            intent.putExtra(DBHelper.TASK_ID, selectedTask.getId());
+            intent.putExtra(TASK_ID, selectedTask.getId());
+            if (adapter.currentRangeStart != -1) {
+                intent.putExtra(START, adapter.currentRangeStart);
+                intent.putExtra(END, adapter.currentRangeEnd);
+            }
             startActivity(intent);
             break;
         default:
@@ -485,6 +489,8 @@ public class Tasks extends ListActivity {
         private DBHelper dbHelper;
         private ArrayList<Task> tasks;
         private Context savedContext;
+        private long currentRangeStart;
+        private long currentRangeEnd;
 
         public TaskAdapter( Context c ) {
             savedContext = c;
@@ -493,7 +499,11 @@ public class Tasks extends ListActivity {
             tasks = new ArrayList<Task>();
         }
         
+        /**
+         * Loads all tasks.
+         */
         private void loadTasks() {
+            currentRangeStart = currentRangeEnd = -1;
             loadTasks("", true);
         }
         
@@ -513,8 +523,10 @@ public class Tasks extends ListActivity {
                 }
             }
             end.add(Calendar.DAY_OF_MONTH, 1);
-            boolean loadCurrentTask = start.compareTo(today) != 1 &&
-                                      end.compareTo(end) != -1;
+            currentRangeStart = start.getTime().getTime();
+            currentRangeEnd = end.getTime().getTime();
+            boolean loadCurrentTask = today.compareTo(start) != 1 &&
+                                      today.compareTo(end) != -1;
             query = String.format( query, end.getTime().getTime(), 
                     start.getTime().getTime());
             loadTasks(query, loadCurrentTask);

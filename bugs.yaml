@@ -281,8 +281,8 @@ issues:
   component: TimeTracker
   release: "2008.4"
   reporter: Sean Russell <ser@ser1.net>
-  status: :unstarted
-  disposition: 
+  status: :closed
+  disposition: :wontfix
   creation_time: 2008-11-22 21:37:10.606118 -05:00
   references: []
 
@@ -312,6 +312,10 @@ issues:
     - Sean Russell <ser@ser1.net>
     - commented
     - Bind this to the update period
+  - - 2008-12-02 09:31:31.936188 -05:00
+    - Sean Russell <ser@ser1.net>
+    - closed issue with disposition wontfix
+    - I'm not sure that this is needed.
 - !ditz.rubyforge.org,2008-03-06/issue 
   title: Add projects
   desc: ""
@@ -1137,8 +1141,8 @@ issues:
   component: TimeTracker
   release: 
   reporter: Sean Russell <ser@ser1.net>
-  status: :unstarted
-  disposition: 
+  status: :closed
+  disposition: :fixed
   creation_time: 2008-11-28 17:32:12.968401 -05:00
   references: []
 
@@ -1147,6 +1151,10 @@ issues:
   - - 2008-11-28 17:32:13.149049 -05:00
     - Sean Russell <ser@ser1.net>
     - created
+    - ""
+  - - 2008-12-02 09:30:37.632837 -05:00
+    - Sean Russell <ser@ser1.net>
+    - closed issue with disposition fixed
     - ""
 - !ditz.rubyforge.org,2008-03-06/issue 
   title: Put table in a scroll view
@@ -1325,8 +1333,8 @@ issues:
   component: TimeTracker
   release: "2008.4"
   reporter: Sean Russell <ser@ser1.net>
-  status: :unstarted
-  disposition: 
+  status: :closed
+  disposition: :fixed
   creation_time: 2008-11-30 11:42:55.501454 -05:00
   references: []
 
@@ -1335,6 +1343,14 @@ issues:
   - - 2008-11-30 11:42:55.676126 -05:00
     - Sean Russell <ser@ser1.net>
     - created
+    - ""
+  - - 2008-12-02 07:04:45.608988 -05:00
+    - Sean Russell <ser@ser1.net>
+    - changed status from unstarted to in_progress
+    - ""
+  - - 2008-12-02 09:14:37.435816 -05:00
+    - Sean Russell <ser@ser1.net>
+    - closed issue with disposition fixed
     - ""
 - !ditz.rubyforge.org,2008-03-06/issue 
   title: Add ability to move times between tasks
@@ -1502,7 +1518,7 @@ issues:
   desc: ""
   type: :feature
   component: TimeTracker
-  release: 
+  release: "2008.4"
   reporter: Sean Russell <ser@ser1.net>
   status: :unstarted
   disposition: 
@@ -1514,6 +1530,50 @@ issues:
   - - 2008-12-02 06:54:37.509656 -05:00
     - Sean Russell <ser@ser1.net>
     - created
+    - ""
+  - - 2008-12-02 09:07:28.049425 -05:00
+    - Sean Russell <ser@ser1.net>
+    - assigned to release 2008.4 from unassigned
+    - ""
+- !ditz.rubyforge.org,2008-03-06/issue 
+  title: Auto-adjust end time if start time advances beyond; auto-adjust start time if end time decreases beyond
+  desc: ""
+  type: :feature
+  component: TimeTracker
+  release: 
+  reporter: Sean Russell <ser@ser1.net>
+  status: :unstarted
+  disposition: 
+  creation_time: 2008-12-02 09:10:06.203054 -05:00
+  references: []
+
+  id: 5b4d05bdebfb8c98e2c6f172dce62e2923d5b5e7
+  log_events: 
+  - - 2008-12-02 09:10:06.464859 -05:00
+    - Sean Russell <ser@ser1.net>
+    - created
+    - ""
+- !ditz.rubyforge.org,2008-03-06/issue 
+  title: Adding task that gets inserted at top of list doesn't add header
+  desc: ""
+  type: :feature
+  component: TimeTracker
+  release: "2008.4"
+  reporter: Sean Russell <ser@ser1.net>
+  status: :closed
+  disposition: :fixed
+  creation_time: 2008-12-02 09:13:21.991065 -05:00
+  references: []
+
+  id: 1b89a855d399eaa9d65ed53b256460b018d58a55
+  log_events: 
+  - - 2008-12-02 09:13:22.282850 -05:00
+    - Sean Russell <ser@ser1.net>
+    - created
+    - ""
+  - - 2008-12-02 09:29:11.153207 -05:00
+    - Sean Russell <ser@ser1.net>
+    - closed issue with disposition fixed
     - ""
 components: 
 - !ditz.rubyforge.org,2008-03-06/component 

@@ -61,7 +61,14 @@ public class TaskTimes extends ListActivity {
             setListAdapter(adapter);
         }
         registerForContextMenu(getListView());
-        adapter.loadTimes(getIntent().getExtras().getInt(DBHelper.TASK_ID));
+        Bundle extras = getIntent().getExtras();
+        if (extras.get(START) != null) {
+            adapter.loadTimes(extras.getInt(TASK_ID),
+                    extras.getLong(START),
+                    extras.getLong(END));
+        } else {
+            adapter.loadTimes(extras.getInt(TASK_ID));            
+        }
     }
 
     @Override
@@ -182,14 +189,32 @@ public class TaskTimes extends ListActivity {
                         String.valueOf(range.getEnd()), 
                         String.valueOf(getIntent().getExtras().getInt(DBHelper.TASK_ID))
             });
-            times.remove(range);
+            int pos = times.indexOf(range);
+            times.remove(pos);
+            if (pos != 0 
+                    && times.get(pos-1).getEnd() == -1 
+                    && (pos == times.size() || 
+                            times.get(pos-1).getEnd() == -1)) {
+                times.remove(pos-1);
+            }
             notifyDataSetChanged();
         }
-
+        
         protected void loadTimes(int selectedTaskId) {
+            loadTimes(TASK_ID+" = ? AND end NOTNULL",
+                    new String[] { String.valueOf(selectedTaskId) });
+        }
+
+        protected void loadTimes(int selectedTaskId, long start, long end) {
+            loadTimes(TASK_ID+" = ? AND end NOTNULL AND "+START+" < ? AND "+END+" > ?",
+                    new String[] { String.valueOf(selectedTaskId),
+                    String.valueOf(end),
+                    String.valueOf(start)});
+        }
+        
+        protected void loadTimes(String where, String[] args) {
             SQLiteDatabase db = dbHelper.getReadableDatabase();
-            Cursor c = db.query(RANGES_TABLE, RANGE_COLUMNS, 
-                    TASK_ID+" = ? AND end NOTNULL", new String[] { String.valueOf(selectedTaskId) }, 
+            Cursor c = db.query(RANGES_TABLE, RANGE_COLUMNS, where, args, 
                     null, null, START+","+END);
             if (c.moveToFirst()) {
                 do {
@@ -305,6 +330,8 @@ public class TaskTimes extends ListActivity {
                     pyear != c.get(Calendar.YEAR)) {
                     times.add(insertPoint, new TimeRange(item.getStart(), -1));                    
                 }
+            } else {
+                times.add(insertPoint, new TimeRange(item.getStart(), -1));                
             }
         }
 
