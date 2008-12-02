@@ -17,7 +17,6 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Collections;
 import java.util.Date;
 import java.util.TimeZone;
 
@@ -171,7 +170,7 @@ public class TaskTimes extends ListActivity {
         
         @Override
         public boolean isEnabled( int position ) {
-            return true;
+            return times.get(position).getEnd() != -1;
         }
         
         public void deleteTimeRange(TimeRange range) {

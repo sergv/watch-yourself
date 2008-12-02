@@ -317,7 +317,7 @@ issues:
   desc: ""
   type: :feature
   component: TimeTracker
-  release: "2.0"
+  release: 
   reporter: Sean Russell <ser@ser1.net>
   status: :unstarted
   disposition: 
@@ -329,10 +329,6 @@ issues:
   - - 2008-11-22 21:46:20.941591 -05:00
     - Sean Russell <ser@ser1.net>
     - created
-    - ""
-  - - 2008-11-23 12:41:19.379273 -05:00
-    - Sean Russell <ser@ser1.net>
-    - assigned to release 2.0 from unassigned
     - ""
 - !ditz.rubyforge.org,2008-03-06/issue 
   title: Adding a new task doesn't insert into the correct position.
@@ -365,7 +361,7 @@ issues:
   desc: ""
   type: :feature
   component: TimeTracker
-  release: "2.0"
+  release: 
   reporter: Sean Russell <ser@ser1.net>
   status: :unstarted
   disposition: 
@@ -733,7 +729,7 @@ issues:
   desc: ""
   type: :feature
   component: TimeTracker
-  release: "2.0"
+  release: 
   reporter: Sean Russell <ser@ser1.net>
   status: :unstarted
   disposition: 
@@ -749,10 +745,6 @@ issues:
   - - 2008-11-25 09:29:02.828084 -05:00
     - Sean Russell <ser@ser1.net>
     - assigned to release 2008.4 from unassigned
-    - ""
-  - - 2008-11-29 23:06:56.138098 -05:00
-    - Sean Russell <ser@ser1.net>
-    - assigned to release 2.0 from 2008.4
     - ""
 - !ditz.rubyforge.org,2008-03-06/issue 
   title: Fancify the time display
@@ -1143,7 +1135,7 @@ issues:
   desc: Allow users to choose which task attribute to show for the "name"
   type: :feature
   component: TimeTracker
-  release: "2.0"
+  release: 
   reporter: Sean Russell <ser@ser1.net>
   status: :unstarted
   disposition: 
@@ -1243,7 +1235,7 @@ issues:
     E.g., SAP codes.
   type: :feature
   component: TimeTracker
-  release: "2.0"
+  release: 
   reporter: Sean Russell <ser@ser1.net>
   status: :unstarted
   disposition: 
@@ -1349,7 +1341,7 @@ issues:
   desc: ""
   type: :feature
   component: TimeTracker
-  release: "2.0"
+  release: 
   reporter: Sean Russell <ser@ser1.net>
   status: :unstarted
   disposition: 
@@ -1424,6 +1416,17 @@ issues:
     - Sean Russell <ser@ser1.net>
     - created
     - ""
+  - - 2008-12-01 22:02:10.658771 -05:00
+    - Sean Russell <ser@ser1.net>
+    - commented
+    - |-
+      This happens when times are edited in the time view; returning to the task list
+      returns to a list that hasn't been updated because of the changes.  Returning
+      from the time list should cause the totals to be recalculated.
+  - - 2008-12-01 22:07:38.613938 -05:00
+    - Sean Russell <ser@ser1.net>
+    - commented
+    - Ok, that wasn't it.
 - !ditz.rubyforge.org,2008-03-06/issue 
   title: It is adding headers to view multiple times when times are edited
   desc: ""
@@ -1457,14 +1460,58 @@ issues:
   component: TimeTracker
   release: "2008.4"
   reporter: Sean Russell <ser@ser1.net>
-  status: :unstarted
-  disposition: 
+  status: :closed
+  disposition: :fixed
   creation_time: 2008-12-01 21:48:50.695202 -05:00
   references: []
 
   id: bc66264fdb9c4de8423765a296b8e1bf612184ae
   log_events: 
   - - 2008-12-01 21:48:50.919082 -05:00
+    - Sean Russell <ser@ser1.net>
+    - created
+    - ""
+  - - 2008-12-02 07:00:18.760456 -05:00
+    - Sean Russell <ser@ser1.net>
+    - changed status from unstarted to in_progress
+    - ""
+  - - 2008-12-02 07:02:08.449392 -05:00
+    - Sean Russell <ser@ser1.net>
+    - closed issue with disposition fixed
+    - ""
+- !ditz.rubyforge.org,2008-03-06/issue 
+  title: Export to CSV
+  desc: ""
+  type: :feature
+  component: TimeTracker
+  release: 
+  reporter: Sean Russell <ser@ser1.net>
+  status: :unstarted
+  disposition: 
+  creation_time: 2008-12-02 06:53:59.633559 -05:00
+  references: []
+
+  id: 989adb8e1933cce184fe430b2a9be9b4023409ae
+  log_events: 
+  - - 2008-12-02 06:53:59.826826 -05:00
+    - Sean Russell <ser@ser1.net>
+    - created
+    - ""
+- !ditz.rubyforge.org,2008-03-06/issue 
+  title: Color code report
+  desc: ""
+  type: :feature
+  component: TimeTracker
+  release: 
+  reporter: Sean Russell <ser@ser1.net>
+  status: :unstarted
+  disposition: 
+  creation_time: 2008-12-02 06:54:37.248661 -05:00
+  references: []
+
+  id: 8ec23229163dd35c3748a6dc9d6d6bf6af122d9f
+  log_events: 
+  - - 2008-12-02 06:54:37.509656 -05:00
     - Sean Russell <ser@ser1.net>
     - created
     - ""
@@ -1504,15 +1551,6 @@ releases:
   release_time: 
   log_events: 
   - - 2008-11-23 12:40:57.485557 -05:00
-    - Sean Russell <ser@ser1.net>
-    - created
-    - ""
-- !ditz.rubyforge.org,2008-03-06/release 
-  name: "2.0"
-  status: :unreleased
-  release_time: 
-  log_events: 
-  - - 2008-11-23 12:41:11.540547 -05:00
     - Sean Russell <ser@ser1.net>
     - created
     - ""

@@ -142,6 +142,8 @@ public class Tasks extends ListActivity {
 
     @Override
     protected void onResume() {
+        // This is only to cause the view to reload, so that we catch 
+        // updates to the time list.
         int which = preferences.getInt("view_mode", 0);
         switchView(which);
 
