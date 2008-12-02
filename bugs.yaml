@@ -1121,7 +1121,7 @@ issues:
   desc: ""
   type: :feature
   component: TimeTracker
-  release: "2008.4"
+  release: 
   reporter: Sean Russell <ser@ser1.net>
   status: :unstarted
   disposition: 
@@ -1133,6 +1133,10 @@ issues:
   - - 2008-11-28 17:31:14.197029 -05:00
     - Sean Russell <ser@ser1.net>
     - created
+    - ""
+  - - 2008-12-02 14:27:46.508556 -05:00
+    - Sean Russell <ser@ser1.net>
+    - unassigned from release 2008.4
     - ""
 - !ditz.rubyforge.org,2008-03-06/issue 
   title: Improve report
@@ -1223,7 +1227,7 @@ issues:
   desc: For SAP.  1:15 becomes 1.25.  Add rounding to nearest quarter hour (configurable?) too.
   type: :feature
   component: TimeTracker
-  release: "2008.4"
+  release: 
   reporter: Sean Russell <ser@ser1.net>
   status: :unstarted
   disposition: 
@@ -1235,6 +1239,10 @@ issues:
   - - 2008-11-28 22:20:42.178666 -05:00
     - Sean Russell <ser@ser1.net>
     - created
+    - ""
+  - - 2008-12-02 14:28:10.202852 -05:00
+    - Sean Russell <ser@ser1.net>
+    - unassigned from release 2008.4
     - ""
 - !ditz.rubyforge.org,2008-03-06/issue 
   title: Add other attributes to Tasks
@@ -1315,8 +1323,8 @@ issues:
   component: TimeTracker
   release: 
   reporter: Sean Russell <ser@ser1.net>
-  status: :unstarted
-  disposition: 
+  status: :closed
+  disposition: :fixed
   creation_time: 2008-11-30 08:53:05.165555 -05:00
   references: []
 
@@ -1325,6 +1333,10 @@ issues:
   - - 2008-11-30 08:53:05.419674 -05:00
     - Sean Russell <ser@ser1.net>
     - created
+    - ""
+  - - 2008-12-02 14:29:07.592491 -05:00
+    - Sean Russell <ser@ser1.net>
+    - closed issue with disposition fixed
     - ""
 - !ditz.rubyforge.org,2008-03-06/issue 
   title: Change time viewer to only show times for the selected range.
@@ -1401,10 +1413,10 @@ issues:
   desc: ""
   type: :feature
   component: TimeTracker
-  release: 
+  release: "2008.4"
   reporter: Sean Russell <ser@ser1.net>
-  status: :unstarted
-  disposition: 
+  status: :closed
+  disposition: :fixed
   creation_time: 2008-12-01 21:27:19.112410 -05:00
   references: []
 
@@ -1413,6 +1425,14 @@ issues:
   - - 2008-12-01 21:27:19.373139 -05:00
     - Sean Russell <ser@ser1.net>
     - created
+    - ""
+  - - 2008-12-02 14:28:44.878525 -05:00
+    - Sean Russell <ser@ser1.net>
+    - assigned to release 2008.4 from unassigned
+    - ""
+  - - 2008-12-02 14:28:50.548131 -05:00
+    - Sean Russell <ser@ser1.net>
+    - closed issue with disposition fixed
     - ""
 - !ditz.rubyforge.org,2008-03-06/issue 
   title: Task list is not including times correctly for day view
@@ -1588,7 +1608,7 @@ issues:
   desc: ""
   type: :feature
   component: TimeTracker
-  release: 
+  release: "2008.4"
   reporter: Sean Russell <ser@ser1.net>
   status: :unstarted
   disposition: 
@@ -1600,6 +1620,10 @@ issues:
   - - 2008-12-02 11:06:01.012861 -05:00
     - Sean Russell <ser@ser1.net>
     - created
+    - ""
+  - - 2008-12-02 14:28:31.022224 -05:00
+    - Sean Russell <ser@ser1.net>
+    - assigned to release 2008.4 from unassigned
     - ""
 - !ditz.rubyforge.org,2008-03-06/issue 
   title: Ant build file, with rules for signing and installing

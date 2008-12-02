@@ -94,6 +94,7 @@ public class Tasks extends ListActivity {
     private Task selectedTask;
     private int sYear, sMonth, sDay;
     private SharedPreferences preferences;
+    private static int FONT_SIZE = 16;
 
     /**
      * A list of menu options, including both context and options menu items 
@@ -107,6 +108,8 @@ public class Tasks extends ListActivity {
         super.onCreate(savedInstanceState);
         FORMAT.setTimeZone(TimeZone.getTimeZone("UTC"));
         preferences = getSharedPreferences("timetracker.pref", MODE_PRIVATE);
+        FONT_SIZE = preferences.getInt("font-size", 16);
+
         int which = preferences.getInt("view_mode", 0);
         if (adapter == null) {
             adapter = new TaskAdapter(this);
@@ -452,11 +455,13 @@ public class Tasks extends ListActivity {
             setPadding(5,10,5,10);
             
             taskName = new TextView(context);
+            taskName.setTextSize(FONT_SIZE);
             taskName.setText(t.getTaskName());
             addView(taskName, new LinearLayout.LayoutParams(
                     LayoutParams.WRAP_CONTENT, LayoutParams.FILL_PARENT, 1f));
 
             total = new TextView(context);
+            total.setTextSize(FONT_SIZE);
             total.setGravity(Gravity.RIGHT);
             total.setTransformationMethod(SingleLineTransformationMethod.getInstance());
             total.setText(FORMAT.format(new Date(t.getTotal())));

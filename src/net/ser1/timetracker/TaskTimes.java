@@ -28,6 +28,7 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Color;
@@ -49,6 +50,7 @@ import android.widget.AdapterView.AdapterContextMenuInfo;
 
 public class TaskTimes extends ListActivity {
     private TimesAdapter adapter;
+    private static int FONT_SIZE;
     private enum TimeMenu { AddTime, DeleteTime, EditTime }
     private static final SimpleDateFormat FORMAT = new SimpleDateFormat("HH:mm");
 
@@ -56,6 +58,8 @@ public class TaskTimes extends ListActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         FORMAT.setTimeZone(TimeZone.getTimeZone("UTC"));
+        SharedPreferences preferences = getSharedPreferences("timetracker.pref", MODE_PRIVATE);
+        FONT_SIZE = preferences.getInt("font-size", 16);
         if (adapter == null) {
             adapter = new TimesAdapter(this);
             setListAdapter(adapter);
@@ -234,6 +238,7 @@ public class TaskTimes extends ListActivity {
                 TextView headerText;
                 if (convertView == null || !(convertView instanceof TextView)) {
                     headerText = new TextView(savedContext);
+                    headerText.setTextSize(FONT_SIZE);
                     headerText.setTextColor(Color.YELLOW);
                     headerText.setTypeface(Typeface.DEFAULT, Typeface.ITALIC);
                     headerText.setText(SEPFORMAT.format(new Date(range.getStart())));
@@ -276,10 +281,12 @@ public class TaskTimes extends ListActivity {
                 
                 dateRange = new TextView(context);
                 dateRange.setText(t.toString());
+                dateRange.setTextSize(FONT_SIZE);
                 addView(dateRange, new LinearLayout.LayoutParams(
                         LayoutParams.WRAP_CONTENT, LayoutParams.FILL_PARENT, 1f));
 
                 total = new TextView(context);
+                total.setTextSize(FONT_SIZE);
                 total.setGravity(Gravity.RIGHT);
                 total.setTransformationMethod(SingleLineTransformationMethod.getInstance());
                 total.setText(FORMAT.format(new Date(t.getTotal())));
@@ -289,7 +296,6 @@ public class TaskTimes extends ListActivity {
 
             public void setTimeRange(TimeRange t) {
                 dateRange.setText(t.toString());
-                dateRange.setTextColor(Color.WHITE);
                 total.setText(FORMAT.format(new Date(t.getTotal())));                    
             }
         }
