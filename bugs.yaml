@@ -1520,8 +1520,8 @@ issues:
   component: TimeTracker
   release: "2008.4"
   reporter: Sean Russell <ser@ser1.net>
-  status: :unstarted
-  disposition: 
+  status: :closed
+  disposition: :fixed
   creation_time: 2008-12-02 06:54:37.248661 -05:00
   references: []
 
@@ -1534,6 +1534,10 @@ issues:
   - - 2008-12-02 09:07:28.049425 -05:00
     - Sean Russell <ser@ser1.net>
     - assigned to release 2008.4 from unassigned
+    - ""
+  - - 2008-12-02 09:45:12.482286 -05:00
+    - Sean Russell <ser@ser1.net>
+    - closed issue with disposition fixed
     - ""
 - !ditz.rubyforge.org,2008-03-06/issue 
   title: Auto-adjust end time if start time advances beyond; auto-adjust start time if end time decreases beyond

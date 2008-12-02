@@ -20,6 +20,7 @@ import android.app.Activity;
 import android.content.pm.ActivityInfo;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.view.Gravity;
@@ -69,6 +70,7 @@ public class Report extends Activity implements OnClickListener {
     private Calendar week, weekEnd;
     private Map<Integer,TextView[]> dateViews = new TreeMap<Integer,TextView[]>();
     private static final int PAD = 2;
+    private static final int RPAD = 4;
     private static final SimpleDateFormat FORMAT = new SimpleDateFormat("HH:mm");
     private TextView weekView;
     private static final SimpleDateFormat WEEK_FORMAT = new SimpleDateFormat("w");
@@ -95,6 +97,7 @@ public class Report extends Activity implements OnClickListener {
         setTitle( title );
 
         createHeader( mainReport );
+        
         dbHelper = new DBHelper(this);
         db = dbHelper.getReadableDatabase();
         
@@ -105,9 +108,43 @@ public class Report extends Activity implements OnClickListener {
         ((ImageButton)findViewById(R.id.increment_week)).setOnClickListener(this);
         
         createReport( mainReport );
+        createTotals( mainReport );
+
         fillInTasksAndRanges();
     }
     
+    private static final int DKDKYELLOW = Color.argb(100, 75, 75, 0);
+    private void createTotals(TableLayout mainReport) {
+        TextView[] totals = new TextView[8];
+        dateViews.put(-1, totals);
+        TableRow row = new TableRow(this);
+        mainReport.addView(row, new TableLayout.LayoutParams());
+        TextView blank = new TextView(this);
+        blank.setPadding(PAD,PAD*2,RPAD,PAD);
+        row.addView(blank, new TableRow.LayoutParams(0));
+        for (int i = week.getMinimum(Calendar.DAY_OF_WEEK); 
+                 i <= week.getMaximum(Calendar.DAY_OF_WEEK);
+                 i++) {
+            TextView dayTime = new TextView(this);
+            totals[i-1] = dayTime;
+            dayTime.setPadding(PAD,PAD*2,RPAD,PAD);
+            dayTime.setTypeface(Typeface.SANS_SERIF, Typeface.ITALIC);
+            if (i % 2 == 0) 
+                dayTime.setBackgroundColor(DKYELLOW);
+            else
+                dayTime.setBackgroundColor(DKDKYELLOW);
+            row.addView(dayTime, new TableRow.LayoutParams());
+        }
+
+        TextView total = new TextView(this);
+        totals[7] = total;
+        total.setText("");
+        total.setPadding(PAD,PAD*2,RPAD,PAD);
+        total.setTypeface(Typeface.SANS_SERIF, Typeface.ITALIC);
+        total.setBackgroundColor(DKYELLOW);
+        row.addView(total, new TableRow.LayoutParams());
+    }
+
     @Override
     protected void onResume() {
         super.onResume();
@@ -120,13 +157,14 @@ public class Report extends Activity implements OnClickListener {
         db.close();
     }
     
+    private static final int DKYELLOW = Color.argb(150, 100, 100, 0);
     private void createHeader(TableLayout mainReport) {
         TableRow row = new TableRow(this);
         mainReport.addView(row, new TableLayout.LayoutParams());
 
         TextView blank = new TextView(this);
         blank.setText("Task");
-        blank.setPadding(PAD,PAD,PAD,PAD);
+        blank.setPadding(PAD,PAD,RPAD,PAD);
         blank.setTypeface(Typeface.SANS_SERIF, Typeface.BOLD);
         row.addView(blank, new TableRow.LayoutParams(0));
 
@@ -136,17 +174,20 @@ public class Report extends Activity implements OnClickListener {
             Day s = Day.fromCalEnum(i);
             TextView header  = new TextView(this);
             header.setText(s.toString());
-            header.setPadding(PAD,PAD,PAD,PAD);
+            header.setPadding(PAD,PAD,RPAD,PAD);
             header.setGravity(Gravity.CENTER_HORIZONTAL);
             header.setTypeface(Typeface.SANS_SERIF, Typeface.BOLD);
+            if (i % 2 == 0) 
+                header.setBackgroundColor(Color.DKGRAY);
             row.addView(header,new TableRow.LayoutParams());
         }
         
         TextView total = new TextView(this);
         total.setText("Ttl");
-        total.setPadding(PAD,PAD,PAD,PAD+2);
+        total.setPadding(PAD,PAD,RPAD,PAD+2);
         total.setGravity(Gravity.CENTER_HORIZONTAL);
         total.setTypeface(Typeface.SANS_SERIF, Typeface.BOLD);
+        total.setBackgroundColor(DKYELLOW);
         row.addView(total, new TableRow.LayoutParams());
     }
 
@@ -164,24 +205,25 @@ public class Report extends Activity implements OnClickListener {
                 
                 TextView taskName = new TextView(this);
                 taskName.setText(c.getString(1));
-                taskName.setPadding(PAD,PAD,PAD,PAD);
+                taskName.setPadding(PAD,PAD,RPAD,PAD);
                 row.addView(taskName, new TableRow.LayoutParams(0));
                 
-                int dayTotal = 0;
                 for (int i = week.getMinimum(Calendar.DAY_OF_WEEK); 
                          i <= week.getMaximum(Calendar.DAY_OF_WEEK);
                          i++) {
                     TextView dayTime = new TextView(this);
                     arryForDay[i-1] = dayTime;
-                    dayTime.setPadding(PAD,PAD,PAD,PAD);
+                    dayTime.setPadding(PAD,PAD,RPAD,PAD);
+                    if (i % 2 == 0) 
+                        dayTime.setBackgroundColor(Color.DKGRAY);
                     row.addView(dayTime, new TableRow.LayoutParams());
                 }
     
                 TextView total = new TextView(this);
                 arryForDay[7] = total;
-                total.setText(FORMAT.format(new Date(dayTotal)));
-                total.setPadding(PAD,PAD,PAD,PAD);
+                total.setPadding(PAD,PAD,RPAD,PAD);
                 total.setTypeface(Typeface.SANS_SERIF, Typeface.ITALIC);
+                total.setBackgroundColor(DKYELLOW);
                 row.addView(total, new TableRow.LayoutParams());
             } while (c.moveToNext());
         }
@@ -247,6 +289,7 @@ public class Report extends Activity implements OnClickListener {
         // the instance data.  This is here for optimization.
         Calendar day = Calendar.getInstance();
 
+        long dayTotals[] = {0,0,0,0,0,0,0,0};
         if (c.moveToFirst()) {
             do {
                 int tid = c.getInt(0);
@@ -291,12 +334,25 @@ public class Report extends Activity implements OnClickListener {
                 int weekTotal = 0;
                 for (int i = 0 ; i < 7; i++) {
                     weekTotal += days[i];
+                    dayTotals[i] += days[i];
                     arryForDay[i].setText( FORMAT.format(new Date(days[i])) );                        
                 }
                 arryForDay[7].setText(FORMAT.format(new Date(weekTotal)));
+                dayTotals[7] += weekTotal;
             } while (c.moveToNext());
         }
         c.close();
+        
+        TextView[] totals = dateViews.get(-1);
+        for (int i = 0; i < 7; i++) {
+            int hours = (int)(dayTotals[i] / 3600000);
+            int mins = (int)((dayTotals[i] - hours*3600000) / 60000);
+            String total = String.format("%02d:%02d", hours, mins);
+            totals[i].setText(total);
+        }
+        int hours = (int)(dayTotals[7] / 3600000);
+        int mins = (int)((dayTotals[7] - hours*3600000) / 60000);
+        totals[7].setText(String.format("%02d:%02d", hours, mins));
     }
     
     private static final int[] FIELDS = {
