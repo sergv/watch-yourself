@@ -1421,8 +1421,8 @@ issues:
   component: TimeTracker
   release: "2008.4"
   reporter: Sean Russell <ser@ser1.net>
-  status: :unstarted
-  disposition: 
+  status: :closed
+  disposition: :fixed
   creation_time: 2008-12-01 21:28:55.204411 -05:00
   references: []
 
@@ -1443,6 +1443,10 @@ issues:
     - Sean Russell <ser@ser1.net>
     - commented
     - Ok, that wasn't it.
+  - - 2008-12-02 14:20:09.430719 -05:00
+    - Sean Russell <ser@ser1.net>
+    - closed issue with disposition fixed
+    - ""
 - !ditz.rubyforge.org,2008-03-06/issue 
   title: It is adding headers to view multiple times when times are edited
   desc: ""
@@ -1578,6 +1582,42 @@ issues:
   - - 2008-12-02 09:29:11.153207 -05:00
     - Sean Russell <ser@ser1.net>
     - closed issue with disposition fixed
+    - ""
+- !ditz.rubyforge.org,2008-03-06/issue 
+  title: Make fonts bigger in task & time lists
+  desc: ""
+  type: :feature
+  component: TimeTracker
+  release: 
+  reporter: Sean Russell <ser@ser1.net>
+  status: :unstarted
+  disposition: 
+  creation_time: 2008-12-02 11:06:00.758239 -05:00
+  references: []
+
+  id: fd5443442b60d9ca00a20fcea06dafc7560a7cff
+  log_events: 
+  - - 2008-12-02 11:06:01.012861 -05:00
+    - Sean Russell <ser@ser1.net>
+    - created
+    - ""
+- !ditz.rubyforge.org,2008-03-06/issue 
+  title: Ant build file, with rules for signing and installing
+  desc: ""
+  type: :feature
+  component: TimeTracker
+  release: 
+  reporter: Sean Russell <ser@ser1.net>
+  status: :unstarted
+  disposition: 
+  creation_time: 2008-12-02 14:11:13.932070 -05:00
+  references: []
+
+  id: b225f33f9f44bed70ccc93c08e6b856e2ec2dd6b
+  log_events: 
+  - - 2008-12-02 14:11:14.152779 -05:00
+    - Sean Russell <ser@ser1.net>
+    - created
     - ""
 components: 
 - !ditz.rubyforge.org,2008-03-06/component 

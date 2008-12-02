@@ -328,11 +328,21 @@ public class TaskTimes extends ListActivity {
                 c.setTimeInMillis(item.getStart());
                 if (pday != c.get(Calendar.DAY_OF_YEAR) ||
                     pyear != c.get(Calendar.YEAR)) {
-                    times.add(insertPoint, new TimeRange(item.getStart(), -1));                    
+                    times.add(insertPoint, new TimeRange(startOfDay(item.getStart()), -1));                    
                 }
             } else {
-                times.add(insertPoint, new TimeRange(item.getStart(), -1));                
+                times.add(insertPoint, new TimeRange(startOfDay(item.getStart()), -1));                    
             }
+        }
+
+        private long startOfDay(long start) {
+            Calendar cal = Calendar.getInstance();
+            cal.setTimeInMillis(start);
+            cal.set(Calendar.HOUR_OF_DAY, cal.getMinimum(Calendar.HOUR_OF_DAY));
+            cal.set(Calendar.MINUTE, cal.getMinimum(Calendar.MINUTE));
+            cal.set(Calendar.SECOND, cal.getMinimum(Calendar.SECOND));
+            cal.set(Calendar.MILLISECOND, cal.getMinimum(Calendar.MILLISECOND));
+            return cal.getTimeInMillis();
         }
 
         private void addSeparators() {
@@ -346,7 +356,7 @@ public class TaskTimes extends ListActivity {
                 if (doy != dayOfYear || y != year) {
                     dayOfYear = doy;
                     year = y;
-                    times.add(i, new TimeRange(tr.getStart(), -1));
+                    times.add(i, new TimeRange(startOfDay(tr.getStart()), -1));
                     i++;
                 }
             }

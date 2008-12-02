@@ -80,7 +80,7 @@ public class Tasks extends ListActivity {
      */
     private Handler timer;
     /**
-     * The callback that actually updates the display.
+     * The call-back that actually updates the display.
      */
     private TimerTask updater;
     /**
@@ -514,8 +514,8 @@ public class Tasks extends ListActivity {
         protected void loadTasks( Calendar start, Calendar end ) {
             String query = "AND start < %d AND end >= %d";
             Calendar today = Calendar.getInstance();
-            today.set(Calendar.HOUR, 12);
-            for (int field : new int[] { Calendar.HOUR, Calendar.MINUTE, 
+            today.set(Calendar.HOUR_OF_DAY, 12);
+            for (int field : new int[] { Calendar.HOUR_OF_DAY, Calendar.MINUTE, 
                                          Calendar.SECOND, 
                                          Calendar.MILLISECOND }) {
                 for (Calendar d : new Calendar[] { today, start, end }) {
@@ -525,8 +525,8 @@ public class Tasks extends ListActivity {
             end.add(Calendar.DAY_OF_MONTH, 1);
             currentRangeStart = start.getTime().getTime();
             currentRangeEnd = end.getTime().getTime();
-            boolean loadCurrentTask = today.compareTo(start) != 1 &&
-                                      today.compareTo(end) != -1;
+            boolean loadCurrentTask = today.compareTo(start) != -1 &&
+                                      today.compareTo(end) != 1;
             query = String.format( query, end.getTime().getTime(), 
                     start.getTime().getTime());
             loadTasks(query, loadCurrentTask);
@@ -611,9 +611,9 @@ public class Tasks extends ListActivity {
                 if (t.getEndTime() != NULL) {
                     values.put(END, t.getEndTime());
                 }
+                // If an update fails, then this is an insert
                 if (db.update(RANGES_TABLE, values, TASK_ID+" = ? AND "+START+" = ?", vals) == 0) {
                     values.put(TASK_ID, t.getId());
-                    values.put(END, (String)null);
                     db.insert(RANGES_TABLE, END, values);
                 }
             }
@@ -659,7 +659,11 @@ public class Tasks extends ListActivity {
     
     @Override
     protected void onListItemClick(ListView l, View v, int position, long id) {
-        super.onListItemClick(l, v, position, id);
+        // Stop the update.  If a task is already running and we're stopping
+        // the timer, it'll stay stopped.  If a task is already running and 
+        // we're switching to a new task, or if nothing is running and we're
+        // starting a new timer, then it'll be restarted.
+        timer.removeCallbacks(updater);
         // Disable previous
         if (currentlySelected != null) {
             currentlySelected.stop();
@@ -671,7 +675,6 @@ public class Tasks extends ListActivity {
             Task selected = (Task)item;
             if (selected.equals(currentlySelected)) {
                 currentlySelected = null;
-                timer.removeCallbacks(updater);
             } else {
                 currentlySelected = selected;
                 currentlySelected.start();
@@ -680,6 +683,7 @@ public class Tasks extends ListActivity {
             }
         }
         getListView().invalidate();
+        super.onListItemClick(l, v, position, id);
     }
 
     @Override
