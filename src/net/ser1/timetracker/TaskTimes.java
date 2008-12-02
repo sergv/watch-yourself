@@ -62,35 +62,15 @@ public class TaskTimes extends ListActivity {
             setListAdapter(adapter);
         }
         registerForContextMenu(getListView());
-    }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-    }
-
-    @Override
-    protected void onRestart() {
-        super.onRestart();
+        adapter.loadTimes(getIntent().getExtras().getInt(DBHelper.TASK_ID));
     }
 
     @Override
     protected void onResume() {
-        adapter.loadTimes(getIntent().getExtras().getInt(DBHelper.TASK_ID));
         getListView().invalidate();
         super.onResume();
     }
 
-    @Override
-    protected void onStart() {
-        super.onStart();
-    }
-
-    @Override
-    protected void onStop() {
-        super.onStop();
-    }
-    
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         super.onCreateOptionsMenu(menu);
@@ -301,16 +281,38 @@ public class TaskTimes extends ListActivity {
             values.put(START, sd);
             values.put(END, ed);
             db.insert(RANGES_TABLE, END, values);
-            times.add(new TimeRange(sd,ed));
-            Collections.sort(times);
-            addSeparators();
+            insert(times, new TimeRange(sd,ed));
             notifyDataSetChanged();
+        }
+        
+        // Inserts an item into the list in order.  Why Java doesn't provide
+        // this is beyond me.
+        private void insert( ArrayList<TimeRange> list, TimeRange item ) {
+            int insertPoint=0;
+            for (; insertPoint < list.size(); insertPoint++) {
+                if (list.get(insertPoint).compareTo(item) != -1) {
+                    break;
+                }
+            }
+            list.add(insertPoint,item);
+            if (insertPoint > 0) {
+                Calendar c = Calendar.getInstance();
+                TimeRange prev = list.get(insertPoint - 1);
+                c.setTimeInMillis(prev.getStart());
+                int pyear = c.get(Calendar.YEAR), 
+                    pday = c.get(Calendar.DAY_OF_YEAR);
+                c.setTimeInMillis(item.getStart());
+                if (pday != c.get(Calendar.DAY_OF_YEAR) ||
+                    pyear != c.get(Calendar.YEAR)) {
+                    times.add(insertPoint, new TimeRange(item.getStart(), -1));                    
+                }
+            }
         }
 
         private void addSeparators() {
             int dayOfYear = -1, year = -1;
             Calendar curDay = Calendar.getInstance();
-            for (int i = 0; i < times.size()-1; i++) {
+            for (int i = 0; i < times.size(); i++) {
                 TimeRange tr = times.get(i);
                 curDay.setTimeInMillis(tr.getStart());
                 int doy = curDay.get(Calendar.DAY_OF_YEAR);

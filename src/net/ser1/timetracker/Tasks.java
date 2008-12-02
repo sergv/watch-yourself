@@ -269,7 +269,6 @@ public class Tasks extends ListActivity {
                         }
                     }, sYear, sMonth, sDay);
         }
-        // TODO: If we get here, we're in trouble; android doesn't like null dialogs.
         return null;
     }
     

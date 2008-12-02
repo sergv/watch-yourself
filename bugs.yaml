@@ -1344,6 +1344,130 @@ issues:
     - Sean Russell <ser@ser1.net>
     - created
     - ""
+- !ditz.rubyforge.org,2008-03-06/issue 
+  title: Add ability to move times between tasks
+  desc: ""
+  type: :feature
+  component: TimeTracker
+  release: "2.0"
+  reporter: Sean Russell <ser@ser1.net>
+  status: :unstarted
+  disposition: 
+  creation_time: 2008-11-30 22:20:25.581041 -05:00
+  references: []
+
+  id: dbbb1ef70684910494eeaaf65792150c091e04aa
+  log_events: 
+  - - 2008-11-30 22:20:25.882083 -05:00
+    - Sean Russell <ser@ser1.net>
+    - created
+    - ""
+- !ditz.rubyforge.org,2008-03-06/issue 
+  title: Some headers are missing (on days with 1 time and current running?)
+  desc: ""
+  type: :feature
+  component: TimeTracker
+  release: "2008.4"
+  reporter: Sean Russell <ser@ser1.net>
+  status: :closed
+  disposition: :fixed
+  creation_time: 2008-12-01 21:26:54.379794 -05:00
+  references: []
+
+  id: b97ed3275bb2c41597af898e0433b0d41c23678f
+  log_events: 
+  - - 2008-12-01 21:26:54.625905 -05:00
+    - Sean Russell <ser@ser1.net>
+    - created
+    - ""
+  - - 2008-12-01 21:56:06.990744 -05:00
+    - Sean Russell <ser@ser1.net>
+    - commented
+    - The last time?
+  - - 2008-12-01 21:57:31.709340 -05:00
+    - Sean Russell <ser@ser1.net>
+    - closed issue with disposition fixed
+    - ""
+- !ditz.rubyforge.org,2008-03-06/issue 
+  title: Add day and week totals
+  desc: ""
+  type: :feature
+  component: TimeTracker
+  release: 
+  reporter: Sean Russell <ser@ser1.net>
+  status: :unstarted
+  disposition: 
+  creation_time: 2008-12-01 21:27:19.112410 -05:00
+  references: []
+
+  id: 75e18f4f8782621579000b1a069aefdfc1f4f1ad
+  log_events: 
+  - - 2008-12-01 21:27:19.373139 -05:00
+    - Sean Russell <ser@ser1.net>
+    - created
+    - ""
+- !ditz.rubyforge.org,2008-03-06/issue 
+  title: Task list is not including times correctly for day view
+  desc: ""
+  type: :feature
+  component: TimeTracker
+  release: "2008.4"
+  reporter: Sean Russell <ser@ser1.net>
+  status: :unstarted
+  disposition: 
+  creation_time: 2008-12-01 21:28:55.204411 -05:00
+  references: []
+
+  id: ec76d9ea700977b67fb9558cad79ef6c292b00ae
+  log_events: 
+  - - 2008-12-01 21:28:55.438449 -05:00
+    - Sean Russell <ser@ser1.net>
+    - created
+    - ""
+- !ditz.rubyforge.org,2008-03-06/issue 
+  title: It is adding headers to view multiple times when times are edited
+  desc: ""
+  type: :feature
+  component: TimeTracker
+  release: "2008.4"
+  reporter: Sean Russell <ser@ser1.net>
+  status: :closed
+  disposition: :fixed
+  creation_time: 2008-12-01 21:29:32.900471 -05:00
+  references: []
+
+  id: 387a240ededee3b2024cd5c6a565a481fa56bad4
+  log_events: 
+  - - 2008-12-01 21:29:33.132885 -05:00
+    - Sean Russell <ser@ser1.net>
+    - created
+    - ""
+  - - 2008-12-01 21:30:22.693287 -05:00
+    - Sean Russell <ser@ser1.net>
+    - changed status from unstarted to in_progress
+    - ""
+  - - 2008-12-01 21:57:54.749356 -05:00
+    - Sean Russell <ser@ser1.net>
+    - closed issue with disposition fixed
+    - ""
+- !ditz.rubyforge.org,2008-03-06/issue 
+  title: Don't allow editing separators
+  desc: ""
+  type: :feature
+  component: TimeTracker
+  release: "2008.4"
+  reporter: Sean Russell <ser@ser1.net>
+  status: :unstarted
+  disposition: 
+  creation_time: 2008-12-01 21:48:50.695202 -05:00
+  references: []
+
+  id: bc66264fdb9c4de8423765a296b8e1bf612184ae
+  log_events: 
+  - - 2008-12-01 21:48:50.919082 -05:00
+    - Sean Russell <ser@ser1.net>
+    - created
+    - ""
 components: 
 - !ditz.rubyforge.org,2008-03-06/component 
   name: TimeTracker
