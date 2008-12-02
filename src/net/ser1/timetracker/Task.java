@@ -10,8 +10,9 @@ import java.util.Date;
 public class Task implements Comparable<Task>{
     private String taskName;
     private int id;
-    private Date startTime = null;
-    private Date endTime = null;
+    public static final long NULL = -1;
+    private long startTime = NULL;
+    private long endTime = NULL;
     private long collapsed;
     
     /**
@@ -39,8 +40,8 @@ public class Task implements Comparable<Task>{
     
     public long getTotal() {
         long sum = 0;
-        if (startTime != null && endTime == null) {
-            sum += new Date().getTime() - startTime.getTime();
+        if (startTime != NULL && endTime == NULL) {
+            sum += new Date().getTime() - startTime;
         }
         return sum + collapsed;
     }
@@ -54,32 +55,32 @@ public class Task implements Comparable<Task>{
     }
     
     public void start() {
-        if (endTime != null || startTime == null) {
-            startTime = new Date();
-            endTime = null;
+        if (endTime != NULL || startTime == NULL) {
+            startTime = new Date().getTime();
+            endTime = NULL;
         }
     }
 
     public void stop() {
-        if (endTime == null) {
-            endTime = new Date();
-            collapsed += endTime.getTime() - startTime.getTime();
+        if (endTime == NULL) {
+            endTime = new Date().getTime();
+            collapsed += endTime - startTime;
         }
     }
 
-    public Date getStartTime() {
+    public long getStartTime() {
         return startTime;
     }
 
-    public void setStartTime(Date startTime) {
+    public void setStartTime(long startTime) {
         this.startTime = startTime;
     }
 
-    public Date getEndTime() {
+    public long getEndTime() {
         return endTime;
     }
 
-    public void setEndTime(Date endTime) {
+    public void setEndTime(long endTime) {
         this.endTime = endTime;
     }
     

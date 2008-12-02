@@ -15,6 +15,7 @@ import static net.ser1.timetracker.DBHelper.TASK_ID;
 import static net.ser1.timetracker.DBHelper.TASK_TABLE;
 import static net.ser1.timetracker.Report.weekEnd;
 import static net.ser1.timetracker.Report.weekStart;
+import static net.ser1.timetracker.Task.NULL;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -254,19 +255,10 @@ public class Tasks extends ListActivity {
                             start.set(Calendar.YEAR, sYear);
                             start.set(Calendar.MONTH, sMonth);
                             start.set(Calendar.DAY_OF_MONTH, sDay);
-                            start.set(Calendar.HOUR, 0);
-                            start.set(Calendar.MINUTE, 0);
-                            start.set(Calendar.SECOND, 0);
-                            start.set(Calendar.MILLISECOND, 0);
                             Calendar end = Calendar.getInstance();
                             end.set(Calendar.YEAR, sYear);
                             end.set(Calendar.MONTH, sMonth);
                             end.set(Calendar.DAY_OF_MONTH, sDay);
-                            end.set(Calendar.HOUR, 0);
-                            end.set(Calendar.MINUTE, 0);
-                            end.set(Calendar.SECOND, 0);
-                            end.set(Calendar.MILLISECOND, 0);
-                            end.add(Calendar.DAY_OF_MONTH, 1);
                             adapter.loadTasks( start, end );
                         }
                     }, sYear, sMonth, sDay);
@@ -510,14 +502,14 @@ public class Tasks extends ListActivity {
         }
         
         protected void loadTasks( Calendar start, Calendar end ) {
-            String query = "AND start < %d AND end > %d";
+            String query = "AND start < %d AND end >= %d";
             Calendar today = Calendar.getInstance();
             today.set(Calendar.HOUR, 12);
             for (int field : new int[] { Calendar.HOUR, Calendar.MINUTE, 
                                          Calendar.SECOND, 
                                          Calendar.MILLISECOND }) {
                 for (Calendar d : new Calendar[] { today, start, end }) {
-                    d.set(field, 0);
+                    d.set(field, d.getMinimum(field));
                 }
             }
             end.add(Calendar.DAY_OF_MONTH, 1);
@@ -561,7 +553,7 @@ public class Tasks extends ListActivity {
                                 TASK_ID+" = ? AND end ISNULL", 
                                 tids, null, null, null);
                         if (r.moveToFirst()) {
-                            t.setStartTime(new Date(r.getLong(0)));
+                            t.setStartTime(r.getLong(0));
                         }
                         r.close();
                     }
@@ -574,7 +566,7 @@ public class Tasks extends ListActivity {
         
         public Task findCurrentlyActive() {
             for (Task cur : tasks) {
-                if (cur.getEndTime() == null && cur.getStartTime() != null) 
+                if (cur.getEndTime() == NULL && cur.getStartTime() != NULL) 
                     return cur;
             }
             return null;
@@ -599,13 +591,13 @@ public class Tasks extends ListActivity {
             String[] vals = { id };
             db.update(TASK_TABLE, values, "ROWID = ?", vals);
             
-            if (t.getStartTime() != null) {
+            if (t.getStartTime() != NULL) {
                 values.clear();
-                long startTime = t.getStartTime().getTime();
+                long startTime = t.getStartTime();
                 values.put(START, startTime);
                 vals = new String[] { id, String.valueOf(startTime) };
-                if (t.getEndTime() != null) {
-                    values.put(END, t.getEndTime().getTime());
+                if (t.getEndTime() != NULL) {
+                    values.put(END, t.getEndTime());
                 }
                 if (db.update(RANGES_TABLE, values, TASK_ID+" = ? AND "+START+" = ?", vals) == 0) {
                     values.put(TASK_ID, t.getId());
