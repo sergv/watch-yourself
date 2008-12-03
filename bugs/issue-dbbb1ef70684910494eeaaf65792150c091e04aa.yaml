@@ -1,0 +1,18 @@
+--- !ditz.rubyforge.org,2008-03-06/issue 
+title: Add ability to move times between tasks
+desc: ""
+type: :feature
+component: TimeTracker
+release: 
+reporter: Sean Russell <ser@ser1.net>
+status: :unstarted
+disposition: 
+creation_time: 2008-12-01 03:20:25.581041 Z
+references: []
+
+id: dbbb1ef70684910494eeaaf65792150c091e04aa
+log_events: 
+- - 2008-12-01 03:20:25.882083 Z
+  - Sean Russell <ser@ser1.net>
+  - created
+  - ""

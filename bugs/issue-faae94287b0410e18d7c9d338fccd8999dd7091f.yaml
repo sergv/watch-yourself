@@ -1,0 +1,18 @@
+--- !ditz.rubyforge.org,2008-03-06/issue 
+title: Sync DB to mem card
+desc: ""
+type: :feature
+component: TimeTracker
+release: 
+reporter: Sean Russell <ser@ser1.net>
+status: :unstarted
+disposition: 
+creation_time: 2008-11-28 13:02:33.946138 Z
+references: []
+
+id: faae94287b0410e18d7c9d338fccd8999dd7091f
+log_events: 
+- - 2008-11-28 13:02:34.382641 Z
+  - Sean Russell <ser@ser1.net>
+  - created
+  - ""

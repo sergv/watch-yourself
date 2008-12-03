@@ -1,0 +1,42 @@
+--- !ditz.rubyforge.org,2008-03-06/project 
+name: TimeTracker
+version: "0.1"
+components: 
+- !ditz.rubyforge.org,2008-03-06/component 
+  name: TimeTracker
+releases: 
+- !ditz.rubyforge.org,2008-03-06/release 
+  name: "2008.2"
+  status: :released
+  release_time: 2008-11-23 17:43:46.204831 Z
+  log_events: 
+  - - 2008-11-20 13:35:10.814270 Z
+    - Sean Russell <ser@ser1.net>
+    - created
+    - Implements the ability to create and time tasks.
+  - - 2008-11-23 17:43:46.204873 Z
+    - Sean Russell <ser@ser1.net>
+    - released
+    - ""
+- !ditz.rubyforge.org,2008-03-06/release 
+  name: "2008.3"
+  status: :released
+  release_time: 2008-11-29 17:05:49.222064 Z
+  log_events: 
+  - - 2008-11-23 17:39:32.720138 Z
+    - Sean Russell <ser@ser1.net>
+    - created
+    - Minor feature enhancements and bug fixes
+  - - 2008-11-29 17:05:49.222106 Z
+    - Sean Russell <ser@ser1.net>
+    - released
+    - Ready for release
+- !ditz.rubyforge.org,2008-03-06/release 
+  name: "2008.4"
+  status: :unreleased
+  release_time: 
+  log_events: 
+  - - 2008-11-23 17:40:57.485557 Z
+    - Sean Russell <ser@ser1.net>
+    - created
+    - ""

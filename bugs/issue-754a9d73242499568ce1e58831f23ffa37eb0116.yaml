@@ -1,0 +1,22 @@
+--- !ditz.rubyforge.org,2008-03-06/issue 
+title: Add ability to specify which day the week starts on
+desc: ""
+type: :feature
+component: TimeTracker
+release: 
+reporter: Sean Russell <ser@ser1.net>
+status: :unstarted
+disposition: 
+creation_time: 2008-11-28 22:31:13.985239 Z
+references: []
+
+id: 754a9d73242499568ce1e58831f23ffa37eb0116
+log_events: 
+- - 2008-11-28 22:31:14.197029 Z
+  - Sean Russell <ser@ser1.net>
+  - created
+  - ""
+- - 2008-12-02 19:27:46.508556 Z
+  - Sean Russell <ser@ser1.net>
+  - unassigned from release 2008.4
+  - ""

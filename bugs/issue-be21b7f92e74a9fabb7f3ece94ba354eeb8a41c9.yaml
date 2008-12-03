@@ -1,0 +1,26 @@
+--- !ditz.rubyforge.org,2008-03-06/issue 
+title: Add an "about" dialog
+desc: ""
+type: :feature
+component: TimeTracker
+release: "2008.4"
+reporter: Sean Russell <ser@ser1.net>
+status: :unstarted
+disposition: 
+creation_time: 2008-11-24 00:31:38.812716 Z
+references: []
+
+id: be21b7f92e74a9fabb7f3ece94ba354eeb8a41c9
+log_events: 
+- - 2008-11-24 00:31:39.344623 Z
+  - Sean Russell <ser@ser1.net>
+  - created
+  - ""
+- - 2008-11-25 01:16:58.440651 Z
+  - Sean Russell <ser@ser1.net>
+  - assigned to release 2008.3 from unassigned
+  - ""
+- - 2008-11-28 14:43:43.330077 Z
+  - Sean Russell <ser@ser1.net>
+  - assigned to release 2008.4 from 2008.3
+  - ""

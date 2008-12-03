@@ -1,0 +1,18 @@
+--- !ditz.rubyforge.org,2008-03-06/issue 
+title: Add projects
+desc: ""
+type: :feature
+component: TimeTracker
+release: 
+reporter: Sean Russell <ser@ser1.net>
+status: :unstarted
+disposition: 
+creation_time: 2008-11-23 02:46:20.079259 Z
+references: []
+
+id: 796699d26902ca5d634bba454c5177f5d195e17f
+log_events: 
+- - 2008-11-23 02:46:20.941591 Z
+  - Sean Russell <ser@ser1.net>
+  - created
+  - ""

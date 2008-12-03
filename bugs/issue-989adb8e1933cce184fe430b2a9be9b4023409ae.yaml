@@ -1,0 +1,18 @@
+--- !ditz.rubyforge.org,2008-03-06/issue 
+title: Export to CSV
+desc: ""
+type: :feature
+component: TimeTracker
+release: 
+reporter: Sean Russell <ser@ser1.net>
+status: :unstarted
+disposition: 
+creation_time: 2008-12-02 11:53:59.633559 Z
+references: []
+
+id: 989adb8e1933cce184fe430b2a9be9b4023409ae
+log_events: 
+- - 2008-12-02 11:53:59.826826 Z
+  - Sean Russell <ser@ser1.net>
+  - created
+  - ""
