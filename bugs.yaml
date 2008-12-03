@@ -7,7 +7,7 @@ issues:
   desc: ""
   type: :feature
   component: TimeTracker
-  release: "1.0"
+  release: "2008.2"
   reporter: Sean Russell <ser@ser1.net>
   status: :closed
   disposition: :fixed
@@ -37,7 +37,7 @@ issues:
   desc: Rather than keeping a list of ranges per task, collapse the ranges to improve memory use.
   type: :feature
   component: TimeTracker
-  release: "1.0"
+  release: "2008.2"
   reporter: Sean Russell <ser@ser1.net>
   status: :closed
   disposition: :fixed
@@ -52,7 +52,7 @@ issues:
     - This will be tricky when the ability to select the displayed range is added.
   - - 2008-11-20 20:16:37.631808 -05:00
     - Sean Russell <ser@ser1.net>
-    - assigned to release 1.0 from unassigned
+    - assigned to release 2008.2 from unassigned
     - ""
   - - 2008-11-20 21:40:58.487243 -05:00
     - Sean Russell <ser@ser1.net>
@@ -63,7 +63,7 @@ issues:
   desc: ""
   type: :feature
   component: TimeTracker
-  release: "1.0"
+  release: "2008.2"
   reporter: Sean Russell <ser@ser1.net>
   status: :closed
   disposition: :fixed
@@ -85,7 +85,7 @@ issues:
   desc: ""
   type: :feature
   component: TimeTracker
-  release: "1.1"
+  release: "2008.3"
   reporter: Sean Russell <ser@ser1.net>
   status: :closed
   disposition: :fixed
@@ -104,7 +104,7 @@ issues:
     - ""
   - - 2008-11-23 15:34:48.734419 -05:00
     - Sean Russell <ser@ser1.net>
-    - assigned to release 1.1 from 2008.4
+    - assigned to release 2008.3 from 2008.4
     - ""
   - - 2008-11-28 17:00:38.337754 -05:00
     - Sean Russell <ser@ser1.net>
@@ -115,7 +115,7 @@ issues:
   desc: ""
   type: :feature
   component: TimeTracker
-  release: "1.1"
+  release: "2008.3"
   reporter: Sean Russell <ser@ser1.net>
   status: :closed
   disposition: :fixed
@@ -130,7 +130,7 @@ issues:
     - ""
   - - 2008-11-23 12:40:03.537182 -05:00
     - Sean Russell <ser@ser1.net>
-    - assigned to release 1.1 from unassigned
+    - assigned to release 2008.3 from unassigned
     - ""
   - - 2008-11-25 09:03:06.012383 -05:00
     - Sean Russell <ser@ser1.net>
@@ -145,7 +145,7 @@ issues:
   desc: ""
   type: :feature
   component: TimeTracker
-  release: "1.0"
+  release: "2008.2"
   reporter: Sean Russell <ser@ser1.net>
   status: :closed
   disposition: :fixed
@@ -160,7 +160,7 @@ issues:
     - ""
   - - 2008-11-23 12:28:45.618677 -05:00
     - Sean Russell <ser@ser1.net>
-    - assigned to release 1.0 from unassigned
+    - assigned to release 2008.2 from unassigned
     - ""
   - - 2008-11-23 12:28:53.852229 -05:00
     - Sean Russell <ser@ser1.net>
@@ -171,7 +171,7 @@ issues:
   desc: Add a class-level 'step'
   type: :feature
   component: TimeTracker
-  release: "1.0"
+  release: "2008.2"
   reporter: Sean Russell <ser@ser1.net>
   status: :closed
   disposition: :fixed
@@ -190,7 +190,7 @@ issues:
     - ""
   - - 2008-11-20 22:07:17.800085 -05:00
     - Sean Russell <ser@ser1.net>
-    - assigned to release 1.0 from unassigned
+    - assigned to release 2008.2 from unassigned
     - ""
   - - 2008-11-22 21:46:38.621174 -05:00
     - Sean Russell <ser@ser1.net>
@@ -201,7 +201,7 @@ issues:
   desc: ""
   type: :feature
   component: TimeTracker
-  release: "1.0"
+  release: "2008.2"
   reporter: Sean Russell <ser@ser1.net>
   status: :closed
   disposition: :fixed
@@ -216,7 +216,7 @@ issues:
     - ""
   - - 2008-11-20 22:07:27.799285 -05:00
     - Sean Russell <ser@ser1.net>
-    - assigned to release 1.0 from unassigned
+    - assigned to release 2008.2 from unassigned
     - ""
   - - 2008-11-20 22:59:17.981445 -05:00
     - Sean Russell <ser@ser1.net>
@@ -227,7 +227,7 @@ issues:
   desc: ""
   type: :feature
   component: TimeTracker
-  release: "1.0"
+  release: "2008.2"
   reporter: Sean Russell <ser@ser1.net>
   status: :closed
   disposition: :fixed
@@ -249,7 +249,7 @@ issues:
   desc: ""
   type: :feature
   component: TimeTracker
-  release: "1.0"
+  release: "2008.2"
   reporter: Sean Russell <ser@ser1.net>
   status: :closed
   disposition: :fixed
@@ -264,7 +264,7 @@ issues:
     - ""
   - - 2008-11-22 21:45:41.435837 -05:00
     - Sean Russell <ser@ser1.net>
-    - assigned to release 1.0 from unassigned
+    - assigned to release 2008.2 from unassigned
     - ""
   - - 2008-11-22 22:57:07.080081 -05:00
     - Sean Russell <ser@ser1.net>
@@ -294,15 +294,15 @@ issues:
     - ""
   - - 2008-11-23 12:39:00.491897 -05:00
     - Sean Russell <ser@ser1.net>
-    - unassigned from release 1.0
+    - unassigned from release 2008.2
     - ""
   - - 2008-11-23 12:40:08.096102 -05:00
     - Sean Russell <ser@ser1.net>
-    - assigned to release 1.1 from unassigned
+    - assigned to release 2008.3 from unassigned
     - ""
   - - 2008-11-23 17:50:28.386923 -05:00
     - Sean Russell <ser@ser1.net>
-    - assigned to release 2008.4 from 1.1
+    - assigned to release 2008.4 from 2008.3
     - ""
   - - 2008-11-25 09:24:53.153615 -05:00
     - Sean Russell <ser@ser1.net>
@@ -339,7 +339,7 @@ issues:
   desc: ""
   type: :feature
   component: TimeTracker
-  release: "1.1"
+  release: "2008.3"
   reporter: Sean Russell <ser@ser1.net>
   status: :closed
   disposition: :fixed
@@ -354,7 +354,7 @@ issues:
     - ""
   - - 2008-11-23 12:40:12.094058 -05:00
     - Sean Russell <ser@ser1.net>
-    - assigned to release 1.1 from unassigned
+    - assigned to release 2008.3 from unassigned
     - ""
   - - 2008-11-23 14:55:29.393092 -05:00
     - Sean Russell <ser@ser1.net>
@@ -383,7 +383,7 @@ issues:
   desc: Currently, if the device is rotated, you can't see all of the options in the dialog.
   type: :feature
   component: TimeTracker
-  release: "1.1"
+  release: "2008.3"
   reporter: Sean Russell <ser@ser1.net>
   status: :closed
   disposition: :wontfix
@@ -407,7 +407,7 @@ issues:
   desc: ""
   type: :feature
   component: TimeTracker
-  release: "1.1"
+  release: "2008.3"
   reporter: Sean Russell <ser@ser1.net>
   status: :closed
   disposition: :fixed
@@ -429,7 +429,7 @@ issues:
   desc: ""
   type: :feature
   component: TimeTracker
-  release: "1.1"
+  release: "2008.3"
   reporter: Sean Russell <ser@ser1.net>
   status: :closed
   disposition: :fixed
@@ -451,7 +451,7 @@ issues:
   desc: ""
   type: :feature
   component: TimeTracker
-  release: "1.1"
+  release: "2008.3"
   reporter: Sean Russell <ser@ser1.net>
   status: :closed
   disposition: :fixed
@@ -473,7 +473,7 @@ issues:
   desc: Duh.  Just, duh.
   type: :feature
   component: TimeTracker
-  release: "1.1"
+  release: "2008.3"
   reporter: Sean Russell <ser@ser1.net>
   status: :closed
   disposition: :fixed
@@ -501,7 +501,7 @@ issues:
     * Select range
   type: :feature
   component: TimeTracker
-  release: "1.1"
+  release: "2008.3"
   reporter: Sean Russell <ser@ser1.net>
   status: :closed
   disposition: :fixed
@@ -520,7 +520,7 @@ issues:
     - ""
   - - 2008-11-23 15:34:58.360997 -05:00
     - Sean Russell <ser@ser1.net>
-    - assigned to release 1.1 from 2008.4
+    - assigned to release 2008.3 from 2008.4
     - ""
   - - 2008-11-23 17:50:09.216093 -05:00
     - Sean Russell <ser@ser1.net>
@@ -537,7 +537,7 @@ issues:
   desc: The name text edit widget needs more space!
   type: :feature
   component: TimeTracker
-  release: "1.1"
+  release: "2008.3"
   reporter: Sean Russell <ser@ser1.net>
   status: :closed
   disposition: :fixed
@@ -610,11 +610,11 @@ issues:
     - ""
   - - 2008-11-24 20:16:58.440651 -05:00
     - Sean Russell <ser@ser1.net>
-    - assigned to release 1.1 from unassigned
+    - assigned to release 2008.3 from unassigned
     - ""
   - - 2008-11-28 09:43:43.330077 -05:00
     - Sean Russell <ser@ser1.net>
-    - assigned to release 2008.4 from 1.1
+    - assigned to release 2008.4 from 2008.3
     - ""
 - !ditz.rubyforge.org,2008-03-06/issue 
   title: Add documentation
@@ -636,18 +636,18 @@ issues:
     - ""
   - - 2008-11-24 20:17:07.642733 -05:00
     - Sean Russell <ser@ser1.net>
-    - assigned to release 1.1 from unassigned
+    - assigned to release 2008.3 from unassigned
     - ""
   - - 2008-11-28 09:43:52.826579 -05:00
     - Sean Russell <ser@ser1.net>
-    - assigned to release 2008.4 from 1.1
+    - assigned to release 2008.4 from 2008.3
     - ""
 - !ditz.rubyforge.org,2008-03-06/issue 
   title: Fix the background color issue
   desc: The way I'm highlighting active tasks interferes with the scroll wheel selection of tasks.
   type: :feature
   component: TimeTracker
-  release: "1.1"
+  release: "2008.3"
   reporter: Sean Russell <ser@ser1.net>
   status: :closed
   disposition: :fixed
@@ -662,7 +662,7 @@ issues:
     - ""
   - - 2008-11-24 20:17:16.417045 -05:00
     - Sean Russell <ser@ser1.net>
-    - assigned to release 1.1 from unassigned
+    - assigned to release 2008.3 from unassigned
     - ""
   - - 2008-11-24 20:33:56.339247 -05:00
     - Sean Russell <ser@ser1.net>
@@ -677,7 +677,7 @@ issues:
   desc: ""
   type: :feature
   component: TimeTracker
-  release: "1.1"
+  release: "2008.3"
   reporter: Sean Russell <ser@ser1.net>
   status: :closed
   disposition: :fixed
@@ -692,7 +692,7 @@ issues:
     - ""
   - - 2008-11-24 20:17:20.649639 -05:00
     - Sean Russell <ser@ser1.net>
-    - assigned to release 1.1 from unassigned
+    - assigned to release 2008.3 from unassigned
     - ""
   - - 2008-11-24 20:58:58.318877 -05:00
     - Sean Russell <ser@ser1.net>
@@ -707,7 +707,7 @@ issues:
   desc: Suspect the need to ignore the time zone, or force-use UTC
   type: :feature
   component: TimeTracker
-  release: "1.1"
+  release: "2008.3"
   reporter: Sean Russell <ser@ser1.net>
   status: :closed
   disposition: :fixed
@@ -781,7 +781,7 @@ issues:
   desc: ""
   type: :feature
   component: TimeTracker
-  release: "1.1"
+  release: "2008.3"
   reporter: Sean Russell <ser@ser1.net>
   status: :closed
   disposition: :fixed
@@ -803,7 +803,7 @@ issues:
   desc: ""
   type: :feature
   component: TimeTracker
-  release: "1.1"
+  release: "2008.3"
   reporter: Sean Russell <ser@ser1.net>
   status: :closed
   disposition: :fixed
@@ -825,7 +825,7 @@ issues:
   desc: ""
   type: :feature
   component: TimeTracker
-  release: "1.1"
+  release: "2008.3"
   reporter: Sean Russell <ser@ser1.net>
   status: :closed
   disposition: :fixed
@@ -847,7 +847,7 @@ issues:
   desc: ""
   type: :feature
   component: TimeTracker
-  release: "1.1"
+  release: "2008.3"
   reporter: Sean Russell <ser@ser1.net>
   status: :closed
   disposition: :fixed
@@ -869,7 +869,7 @@ issues:
   desc: ""
   type: :feature
   component: TimeTracker
-  release: "1.1"
+  release: "2008.3"
   reporter: Sean Russell <ser@ser1.net>
   status: :closed
   disposition: :fixed
@@ -891,7 +891,7 @@ issues:
   desc: ""
   type: :feature
   component: TimeTracker
-  release: "1.1"
+  release: "2008.3"
   reporter: Sean Russell <ser@ser1.net>
   status: :closed
   disposition: :fixed
@@ -913,7 +913,7 @@ issues:
   desc: ""
   type: :feature
   component: TimeTracker
-  release: "1.1"
+  release: "2008.3"
   reporter: Sean Russell <ser@ser1.net>
   status: :closed
   disposition: :fixed
@@ -935,7 +935,7 @@ issues:
   desc: ""
   type: :feature
   component: TimeTracker
-  release: "2008.4"
+  release: 
   reporter: Sean Russell <ser@ser1.net>
   status: :unstarted
   disposition: 
@@ -947,6 +947,10 @@ issues:
   - - 2008-11-26 08:26:26.784637 -05:00
     - Sean Russell <ser@ser1.net>
     - created
+    - ""
+  - - 2008-12-02 22:10:41.600130 -05:00
+    - Sean Russell <ser@ser1.net>
+    - unassigned from release 2008.4
     - ""
 - !ditz.rubyforge.org,2008-03-06/issue 
   title: Times are still f'ed up
@@ -972,7 +976,7 @@ issues:
     - ""
   - - 2008-11-28 19:01:36.900252 -05:00
     - Sean Russell <ser@ser1.net>
-    - assigned to release 2008.4 from 1.1
+    - assigned to release 2008.4 from 2008.3
     - ""
   - - 2008-11-29 23:07:11.610727 -05:00
     - Sean Russell <ser@ser1.net>
@@ -1019,7 +1023,7 @@ issues:
   desc: ""
   type: :feature
   component: TimeTracker
-  release: "1.1"
+  release: "2008.3"
   reporter: Sean Russell <ser@ser1.net>
   status: :closed
   disposition: :fixed
@@ -1059,7 +1063,7 @@ issues:
   desc: ""
   type: :feature
   component: TimeTracker
-  release: "1.1"
+  release: "2008.3"
   reporter: Sean Russell <ser@ser1.net>
   status: :closed
   disposition: :fixed
@@ -1083,8 +1087,8 @@ issues:
   component: TimeTracker
   release: "2008.4"
   reporter: Sean Russell <ser@ser1.net>
-  status: :unstarted
-  disposition: 
+  status: :closed
+  disposition: :reorg
   creation_time: 2008-11-28 10:47:59.101214 -05:00
   references: []
 
@@ -1094,12 +1098,16 @@ issues:
     - Sean Russell <ser@ser1.net>
     - created
     - ""
+  - - 2008-12-02 22:12:10.907977 -05:00
+    - Sean Russell <ser@ser1.net>
+    - closed issue with disposition reorg
+    - Dupe of timetracker-37
 - !ditz.rubyforge.org,2008-03-06/issue 
   title: Add ability to pick week to view (report)
   desc: ""
   type: :feature
   component: TimeTracker
-  release: "1.1"
+  release: "2008.3"
   reporter: Sean Russell <ser@ser1.net>
   status: :closed
   disposition: :fixed
@@ -1165,7 +1173,7 @@ issues:
   desc: While I'm at it, give the task name a minimum size
   type: :feature
   component: TimeTracker
-  release: "1.1"
+  release: "2008.3"
   reporter: Sean Russell <ser@ser1.net>
   status: :closed
   disposition: :fixed
@@ -1205,7 +1213,7 @@ issues:
   desc: ""
   type: :feature
   component: TimeTracker
-  release: "1.1"
+  release: "2008.3"
   reporter: Sean Russell <ser@ser1.net>
   status: :closed
   disposition: :fixed
@@ -1610,8 +1618,8 @@ issues:
   component: TimeTracker
   release: "2008.4"
   reporter: Sean Russell <ser@ser1.net>
-  status: :unstarted
-  disposition: 
+  status: :closed
+  disposition: :fixed
   creation_time: 2008-12-02 11:06:00.758239 -05:00
   references: []
 
@@ -1624,6 +1632,10 @@ issues:
   - - 2008-12-02 14:28:31.022224 -05:00
     - Sean Russell <ser@ser1.net>
     - assigned to release 2008.4 from unassigned
+    - ""
+  - - 2008-12-02 22:12:29.618401 -05:00
+    - Sean Russell <ser@ser1.net>
+    - closed issue with disposition fixed
     - ""
 - !ditz.rubyforge.org,2008-03-06/issue 
   title: Ant build file, with rules for signing and installing
@@ -1648,7 +1660,7 @@ components:
   name: TimeTracker
 releases: 
 - !ditz.rubyforge.org,2008-03-06/release 
-  name: "1.0"
+  name: "2008.2"
   status: :released
   release_time: 2008-11-23 12:43:46.204831 -05:00
   log_events: 
@@ -1661,7 +1673,7 @@ releases:
     - released
     - ""
 - !ditz.rubyforge.org,2008-03-06/release 
-  name: "1.1"
+  name: "2008.3"
   status: :released
   release_time: 2008-11-29 12:05:49.222064 -05:00
   log_events: 

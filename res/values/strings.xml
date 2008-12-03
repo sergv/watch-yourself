@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="hello">Hello World, TimeTracker</string>
     <string name="app_name">TimeTracker</string>
+    
     <string name="start">Start</string>
     <string name="task_name">Task name</string>
     <string name="add_task_ok">Add task</string>
@@ -19,7 +19,7 @@
     <string name="delete_task_message">Are you sure you want to delete '%s' and all of it's time records?</string>
     <string name="add_task_title">Add task</string>
     <string name="change_view_title">Change view</string>
-    <string name="generate_report_title">Generate report</string>
+    <string name="generate_report_title">Report</string>
     <string name="select_range">Select range...</string>
     <string name="done">Return to tasks</string>
     <string name="add_time_title">Add a new time range</string>
@@ -34,4 +34,34 @@
     <string name="report_title">Report for the week %s to %s </string>
     <string name="week">Week %s</string>
     <string name="title">TimeTracker (%s)</string>
+    
+    <!-- About dialog strings -->
+    <string name="version">Version %s (r%s)</string>
+    <string name="author">Sean E. Russell</string>
+    <string name="donate">If you like this app, please donate and support future development!</string>
+    <string name="purpose">TimeTracker helps you record the amount of time you spend on
+    activities, for example, for recording time in a time sheet at work.  It provides
+    ways to view, edit, and filter times, as well as providing a time sheet report.</string>
+    <string name="usage">Create some tasks using the main task view's <i>Add Task</i> menu item.
+    Tap a task to start timing; tap it again to stop timing, or tap a different task
+    to switch timing to the other task.  Two tasks can not be running at the same time.
+    Use the <i>Change View</i> menu item to filter the time display by a date range, such as
+    viewing times for <i>Today</i>, <i>Yesterday</i>, <i>This Week</i>, etc.
+    Use the <i>Report</i> menu item to view a report of the daily time sums per task
+    for an entire week.
+    
+    The task context menu allows you to edit tasks (change their names), delete tasks
+    (including all of the time history for that task!), or view the time log for that
+    task.
+    
+    The time log for a task is filtered on the same range that you selected for the
+    main task view, so if you filtered the task view for <i>This Week</i> and you open
+    the time log, then you'll only see times for this week.  Use the <i>Add Time</i> to
+    manually insert times into the time log.  <b>Note</b> that TimeTracker will not
+    prevent you from creating times that overlap with times in other (or the same) task.
+    Use the context menu for a time to edit the time range, or simply click
+    on a time to do the same thing.  The context dialog for a time also includes
+    the option of deleting the time.
+    
+    </string>
 </resources>

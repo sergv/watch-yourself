@@ -37,7 +37,7 @@ public class EditTime extends Activity implements OnClickListener {
         DatePicker endDate = (DatePicker)findViewById(R.id.end_date);
         TimePicker startTime = (TimePicker)findViewById(R.id.start_time);
         TimePicker endTime = (TimePicker)findViewById(R.id.end_time);
-
+        
         Calendar sd = Calendar.getInstance(), 
                  ed = Calendar.getInstance();
         if (getIntent().getExtras().getBoolean(CLEAR)) {
