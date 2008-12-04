@@ -12,6 +12,7 @@ import java.util.Date;
 public class TimeRange implements Comparable<TimeRange> {
     private long start;
     private long end;
+    public static final long NULL = -1;
     
     public TimeRange( long start, long end ) {
         this.start = start;
@@ -30,16 +31,20 @@ public class TimeRange implements Comparable<TimeRange> {
         this.end = end;
     }
     public long getTotal() {
+        if (end == NULL) return System.currentTimeMillis() - start;
         return end - start;
     }
     
     private static final DateFormat FORMAT = new SimpleDateFormat("HH:mm");
     public String toString() {
         Date s = new Date(start);
-        Date e = new Date(end);
         StringBuffer b = new StringBuffer(FORMAT.format(s));
         b.append(" - ");
-        b.append(FORMAT.format(e));
+        if (end != NULL) {
+            b.append(FORMAT.format(new Date(end)));
+        } else {
+            b.append( "..." );
+        }
         return b.toString();
     }
     
@@ -49,6 +54,8 @@ public class TimeRange implements Comparable<TimeRange> {
         } else if (start > another.start) {
             return 1;
         } else {
+            if (end == NULL) return 1;
+            if (another.end == NULL) return -1;
             if (end < another.end) {
                 return -1;
             } else if (end > another.end) {

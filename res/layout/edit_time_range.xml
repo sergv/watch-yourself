@@ -43,13 +43,13 @@
              android:layout_height="wrap_content"
              android:layout_marginLeft="40px"
              android:layout_marginRight="40px"
-             android:text="@string/accept"/>
+             android:text="@android:string/ok"/>
          <Button android:id="@+id/time_edit_cancel" 
              android:layout_width="fill_parent"
              android:layout_height="wrap_content"
              android:layout_marginLeft="40px"
              android:layout_marginRight="40px"
-             android:text="@string/cancel"/>
+             android:text="@android:string/cancel"/>
      </LinearLayout>
  </LinearLayout>
 </ScrollView>

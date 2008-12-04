@@ -15,7 +15,7 @@ import static net.ser1.timetracker.DBHelper.TASK_ID;
 import static net.ser1.timetracker.DBHelper.TASK_TABLE;
 import static net.ser1.timetracker.Report.weekEnd;
 import static net.ser1.timetracker.Report.weekStart;
-import static net.ser1.timetracker.Task.NULL;
+import static net.ser1.timetracker.TimeRange.NULL;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -99,8 +99,9 @@ public class Tasks extends ListActivity {
     /**
      * A list of menu options, including both context and options menu items 
      */
-    enum TaskMenu { AddTask, EditTask, DeleteTask, Report, 
-        ShowTimes, ChangeView, SelectStartDate, SelectEndDate }
+    enum TaskMenu { ADD_TASK, EDIT_TASK, DELETE_TASK, REPORT, 
+        SHOW_TIMES, CHANGE_VIEW, SELECT_START_DATE, SELECT_END_DATE,
+        HELP }
 
     
     @Override
@@ -115,7 +116,6 @@ public class Tasks extends ListActivity {
             adapter = new TaskAdapter(this);
             setListAdapter(adapter);
             switchView(which);
-            currentlySelected = adapter.findCurrentlyActive();
         }
         if (timer == null) {
             timer = new Handler();
@@ -160,12 +160,14 @@ public class Tasks extends ListActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         super.onCreateOptionsMenu(menu);
-        menu.add(0, TaskMenu.AddTask.ordinal(), 0, R.string.add_task_title)
+        menu.add(0, TaskMenu.ADD_TASK.ordinal(), 0, R.string.add_task_title)
             .setIcon(android.R.drawable.ic_menu_add);
-        menu.add(0, TaskMenu.ChangeView.ordinal(), 1, R.string.change_view_title)
+        menu.add(0, TaskMenu.CHANGE_VIEW.ordinal(), 1, R.string.change_view_title)
             .setIcon(android.R.drawable.ic_menu_compass);
-        menu.add(0, TaskMenu.Report.ordinal(), 2, R.string.generate_report_title)
+        menu.add(0, TaskMenu.REPORT.ordinal(), 2, R.string.generate_report_title)
             .setIcon(android.R.drawable.ic_menu_info_details);
+        menu.add(0, TaskMenu.HELP.ordinal(), 3, R.string.help)
+            .setIcon(android.R.drawable.ic_dialog_info);
         return true;
     }
 
@@ -173,9 +175,9 @@ public class Tasks extends ListActivity {
     public void onCreateContextMenu(ContextMenu menu, View v,
             ContextMenuInfo menuInfo) {
         menu.setHeaderTitle("Task menu");
-        menu.add(0, TaskMenu.EditTask.ordinal(), 0, "Edit Task");
-        menu.add(0, TaskMenu.DeleteTask.ordinal(), 0, "Delete Task");
-        menu.add(0, TaskMenu.ShowTimes.ordinal(), 0, "Show times");
+        menu.add(0, TaskMenu.EDIT_TASK.ordinal(), 0, "Edit Task");
+        menu.add(0, TaskMenu.DELETE_TASK.ordinal(), 0, "Delete Task");
+        menu.add(0, TaskMenu.SHOW_TIMES.ordinal(), 0, "Show times");
     }
 
     @Override
@@ -184,7 +186,7 @@ public class Tasks extends ListActivity {
         selectedTask = (Task)adapter.getItem((int) info.id);
         TaskMenu m = TaskMenu.values()[item.getItemId()];
         switch (m) {
-        case ShowTimes:
+        case SHOW_TIMES:
             Intent intent = new Intent(this, TaskTimes.class);
             intent.putExtra(TASK_ID, selectedTask.getId());
             if (adapter.currentRangeStart != -1) {
@@ -204,13 +206,14 @@ public class Tasks extends ListActivity {
     public boolean onMenuItemSelected(int featureId, MenuItem item) {
         TaskMenu t = TaskMenu.values()[item.getItemId()];
         switch (t) {
-        case AddTask:
-        case ChangeView:
+        case ADD_TASK:
+        case CHANGE_VIEW:
+        case HELP:
             showDialog(item.getItemId());
             break;
-        case Report:
+        case REPORT:
             Intent intent = new Intent(this, Report.class);
-            intent.putExtra("report-date", new Date().getTime());
+            intent.putExtra("report-date", System.currentTimeMillis());
             startActivity(intent);
             break;
         default:
@@ -224,15 +227,17 @@ public class Tasks extends ListActivity {
     protected Dialog onCreateDialog(int id) {
         TaskMenu action = TaskMenu.values()[id];
         switch (action) {
-        case AddTask:
+        case ADD_TASK:
             return openNewTaskDialog();
-        case EditTask:
+        case EDIT_TASK:
             return openEditTaskDialog();
-        case DeleteTask:
+        case DELETE_TASK:
             return openDeleteTaskDialog();
-        case ChangeView:
+        case CHANGE_VIEW:
             return openChangeViewDialog();
-        case SelectStartDate:
+        case HELP:
+            return openAboutDialog();
+        case SELECT_START_DATE:
             Calendar today_s = Calendar.getInstance();
             // An ad-hoc date picker for the start date, which in turn
             // invokes another dialog (the "pick end date" dialog) when it is 
@@ -244,13 +249,13 @@ public class Tasks extends ListActivity {
                             sYear = year;
                             sMonth = monthOfYear;
                             sDay = dayOfMonth;
-                            showDialog(TaskMenu.SelectEndDate.ordinal());
+                            showDialog(TaskMenu.SELECT_END_DATE.ordinal());
                         }
                     }, 
                     today_s.get(Calendar.YEAR), 
                     today_s.get(Calendar.MONTH), 
                     today_s.get(Calendar.DAY_OF_MONTH));
-        case SelectEndDate:
+        case SELECT_END_DATE:
             // Another ad-hoc date picker for the end date.  This is invoked by
             // the start-date dialog.  When complete, loads a new list of tasks
             // filtered by the date range.
@@ -319,7 +324,7 @@ public class Tasks extends ListActivity {
             adapter.loadTasks();
             break;
         case 5: // select range
-            showDialog(TaskMenu.SelectStartDate.ordinal());
+            showDialog(TaskMenu.SELECT_START_DATE.ordinal());
             break;
         default: // Unknown
             break;
@@ -349,7 +354,7 @@ public class Tasks extends ListActivity {
                     Tasks.this.getListView().invalidate();
                 }
             })
-            .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+            .setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
                 public void onClick(DialogInterface dialog, int whichButton) {
                     // NADA
                 }
@@ -368,7 +373,7 @@ public class Tasks extends ListActivity {
         final View textEntryView = factory.inflate(R.layout.edit_task, null);
         return new AlertDialog.Builder(Tasks.this)
             .setView(textEntryView)
-            .setPositiveButton(R.string.edit_task_ok, new DialogInterface.OnClickListener() {
+            .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
                 public void onClick(DialogInterface dialog, int whichButton) {
                     EditText textView = (EditText)textEntryView.findViewById(R.id.task_edit_name_edit);
                     String name = textView.getText().toString();
@@ -379,7 +384,7 @@ public class Tasks extends ListActivity {
                     Tasks.this.getListView().invalidate();
                 }
             })
-            .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+            .setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
                 public void onClick(DialogInterface dialog, int whichButton) {
                     // NADA
                 }
@@ -406,7 +411,7 @@ public class Tasks extends ListActivity {
                     Tasks.this.getListView().invalidate();
                 }
             })
-            .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+            .setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
                 public void onClick(DialogInterface dialog, int whichButton) {
                     // NADA
                 }
@@ -415,7 +420,17 @@ public class Tasks extends ListActivity {
     }
     
     private Dialog openAboutDialog() {
-        return null; 
+        String formattedVersion = getString(R.string.version, "2008.4");
+
+        LayoutInflater factory = LayoutInflater.from(this);
+        View about = factory.inflate(R.layout.about, null);
+
+        TextView version = (TextView)about.findViewById(R.id.version);
+        version.setText(formattedVersion);
+        
+        return new AlertDialog.Builder(Tasks.this)
+            .setView(about)
+            .create();
     }
 
     @Override
@@ -423,11 +438,11 @@ public class Tasks extends ListActivity {
         TaskMenu action = TaskMenu.values()[id];
         EditText textView;
         switch (action) {
-        case AddTask:
+        case ADD_TASK:
             textView = (EditText)d.findViewById(R.id.task_edit_name_edit);
             textView.setText("");
             break;
-        case EditTask:
+        case EDIT_TASK:
             textView = (EditText)d.findViewById(R.id.task_edit_name_edit);
             textView.setText(selectedTask.getTaskName());
             break;
@@ -578,12 +593,14 @@ public class Tasks extends ListActivity {
                 } while (c.moveToNext());
             }
             c.close();
+            currentlySelected = findCurrentlyActive();
             notifyDataSetChanged();
         }
         
         public Task findCurrentlyActive() {
             for (Task cur : tasks) {
-                if (cur.getEndTime() == NULL && cur.getStartTime() != NULL) 
+                if (cur.getEndTime() == NULL 
+                        && cur.getStartTime() != NULL) 
                     return cur;
             }
             return null;

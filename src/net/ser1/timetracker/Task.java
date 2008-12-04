@@ -5,12 +5,13 @@
  */
 package net.ser1.timetracker;
 
+import static net.ser1.timetracker.TimeRange.NULL;
+
 import java.util.Date;
 
 public class Task implements Comparable<Task>{
     private String taskName;
     private int id;
-    public static final long NULL = -1;
     private long startTime = NULL;
     private long endTime = NULL;
     private long collapsed;
@@ -41,7 +42,7 @@ public class Task implements Comparable<Task>{
     public long getTotal() {
         long sum = 0;
         if (startTime != NULL && endTime == NULL) {
-            sum += new Date().getTime() - startTime;
+            sum += System.currentTimeMillis() - startTime;
         }
         return sum + collapsed;
     }
@@ -56,14 +57,14 @@ public class Task implements Comparable<Task>{
     
     public void start() {
         if (endTime != NULL || startTime == NULL) {
-            startTime = new Date().getTime();
+            startTime = System.currentTimeMillis();
             endTime = NULL;
         }
     }
 
     public void stop() {
         if (endTime == NULL) {
-            endTime = new Date().getTime();
+            endTime = System.currentTimeMillis();
             collapsed += endTime - startTime;
         }
     }

@@ -12,6 +12,7 @@ import static net.ser1.timetracker.DBHelper.START;
 import static net.ser1.timetracker.DBHelper.TASK_ID;
 import static net.ser1.timetracker.EditTime.END_DATE;
 import static net.ser1.timetracker.EditTime.START_DATE;
+import static net.ser1.timetracker.TimeRange.NULL;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -53,6 +54,7 @@ public class TaskTimes extends ListActivity {
     private static int FONT_SIZE;
     private enum TimeMenu { AddTime, DeleteTime, EditTime }
     private static final SimpleDateFormat FORMAT = new SimpleDateFormat("HH:mm");
+    private static final int SEP = -99;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -151,7 +153,7 @@ public class TaskTimes extends ListActivity {
                     TaskTimes.this.getListView().invalidate();
                 }
             })
-            .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+            .setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
                 public void onClick(DialogInterface dialog, int whichButton) {
                     // NADA
                 }
@@ -181,36 +183,47 @@ public class TaskTimes extends ListActivity {
         
         @Override
         public boolean isEnabled( int position ) {
-            return times.get(position).getEnd() != -1;
+            return times.get(position).getEnd() != SEP;
         }
         
         public void deleteTimeRange(TimeRange range) {
             SQLiteDatabase db = dbHelper.getWritableDatabase();
-            db.delete(RANGES_TABLE, 
-                    START+" = ? AND "+END+" = ? AND "+TASK_ID+" = ?", 
-                    new String[]{ 
+            
+            String whereClause = START+" = ? AND "+TASK_ID+" = ?";
+            String[] whereValues;
+            if (range.getEnd() == NULL) {
+                whereClause += " AND "+END+" ISNULL";
+                whereValues = new String[]{ 
                         String.valueOf(range.getStart()), 
-                        String.valueOf(range.getEnd()), 
                         String.valueOf(getIntent().getExtras().getInt(DBHelper.TASK_ID))
-            });
+                    };
+            } else {
+                whereClause += " AND "+END+" = ?"; 
+                whereValues = new String[]{ 
+                        String.valueOf(range.getStart()), 
+                        String.valueOf(getIntent().getExtras().getInt(DBHelper.TASK_ID)),
+                        String.valueOf(range.getEnd())
+                    };
+            }
+            db.delete(RANGES_TABLE, whereClause, whereValues);
             int pos = times.indexOf(range);
             times.remove(pos);
             if (pos != 0 
-                    && times.get(pos-1).getEnd() == -1 
+                    && times.get(pos-1).getEnd() == SEP 
                     && (pos == times.size() || 
-                            times.get(pos-1).getEnd() == -1)) {
+                            times.get(pos-1).getEnd() == SEP)) {
                 times.remove(pos-1);
             }
             notifyDataSetChanged();
         }
         
         protected void loadTimes(int selectedTaskId) {
-            loadTimes(TASK_ID+" = ? AND end NOTNULL",
+            loadTimes(TASK_ID+" = ?",
                     new String[] { String.valueOf(selectedTaskId) });
         }
 
         protected void loadTimes(int selectedTaskId, long start, long end) {
-            loadTimes(TASK_ID+" = ? AND end NOTNULL AND "+START+" < ? AND "+END+" > ?",
+            loadTimes(TASK_ID+" = ? AND "+START+" < ? AND ( "+END+" NULL OR "+END+" > ?",
                     new String[] { String.valueOf(selectedTaskId),
                     String.valueOf(end),
                     String.valueOf(start)});
@@ -222,7 +235,8 @@ public class TaskTimes extends ListActivity {
                     null, null, START+","+END);
             if (c.moveToFirst()) {
                 do {
-                    times.add( new TimeRange(c.getLong(0), c.getLong(1)) );
+                    times.add( new TimeRange(c.getLong(0), 
+                            c.isNull(1) ? NULL : c.getLong(1)) );
                 } while (c.moveToNext());
             }
             c.close();
@@ -234,7 +248,7 @@ public class TaskTimes extends ListActivity {
             Object item = getItem(position);
             if (item == null) return convertView;
             TimeRange range = (TimeRange)item;
-            if (range.getEnd() == -1)  {
+            if (range.getEnd() == SEP)  {
                 TextView headerText;
                 if (convertView == null || !(convertView instanceof TextView)) {
                     headerText = new TextView(savedContext);
@@ -280,7 +294,6 @@ public class TaskTimes extends ListActivity {
                 setPadding(5,10,5,10);
                 
                 dateRange = new TextView(context);
-                dateRange.setText(t.toString());
                 dateRange.setTextSize(FONT_SIZE);
                 addView(dateRange, new LinearLayout.LayoutParams(
                         LayoutParams.WRAP_CONTENT, LayoutParams.FILL_PARENT, 1f));
@@ -289,14 +302,25 @@ public class TaskTimes extends ListActivity {
                 total.setTextSize(FONT_SIZE);
                 total.setGravity(Gravity.RIGHT);
                 total.setTransformationMethod(SingleLineTransformationMethod.getInstance());
-                total.setText(FORMAT.format(new Date(t.getTotal())));
                 addView(total, new LinearLayout.LayoutParams(
                         LayoutParams.WRAP_CONTENT, LayoutParams.FILL_PARENT, 0.0f));
+                
+                setTimeRange(t);
             }
 
             public void setTimeRange(TimeRange t) {
                 dateRange.setText(t.toString());
-                total.setText(FORMAT.format(new Date(t.getTotal())));                    
+                total.setText(FORMAT.format(new Date(t.getTotal())));
+                /* If the following is added, then the timer to update the
+                 * display must also be added
+                if (t.getEnd() == NULL) {
+                    dateRange.getPaint().setShadowLayer(1, 1, 1,Color.YELLOW);
+                    total.getPaint().setShadowLayer(1, 1, 1, Color.YELLOW);
+                } else {
+                    dateRange.getPaint().clearShadowLayer();
+                    total.getPaint().clearShadowLayer();
+                }
+                */
             }
         }
 
@@ -334,10 +358,10 @@ public class TaskTimes extends ListActivity {
                 c.setTimeInMillis(item.getStart());
                 if (pday != c.get(Calendar.DAY_OF_YEAR) ||
                     pyear != c.get(Calendar.YEAR)) {
-                    times.add(insertPoint, new TimeRange(startOfDay(item.getStart()), -1));                    
+                    times.add(insertPoint, new TimeRange(startOfDay(item.getStart()), SEP));                    
                 }
             } else {
-                times.add(insertPoint, new TimeRange(startOfDay(item.getStart()), -1));                    
+                times.add(insertPoint, new TimeRange(startOfDay(item.getStart()), SEP));                    
             }
         }
 
@@ -362,7 +386,7 @@ public class TaskTimes extends ListActivity {
                 if (doy != dayOfYear || y != year) {
                     dayOfYear = doy;
                     year = y;
-                    times.add(i, new TimeRange(startOfDay(tr.getStart()), -1));
+                    times.add(i, new TimeRange(startOfDay(tr.getStart()), SEP));
                     i++;
                 }
             }
@@ -372,14 +396,25 @@ public class TaskTimes extends ListActivity {
             SQLiteDatabase db = dbHelper.getWritableDatabase();
             ContentValues values = new ContentValues();
             values.put(START, sd);
-            values.put(END, ed);
             int currentTaskId = getIntent().getExtras().getInt(TASK_ID);
+            String whereClause = START+"=? AND "+TASK_ID+"=?";
+            String[] whereValues;
+            if (ed != NULL) {
+                values.put(END, ed);
+                whereClause += " AND "+END+"=?";
+                whereValues = new String[] { String.valueOf(old.getStart()), 
+                        String.valueOf(currentTaskId),
+                        String.valueOf(old.getEnd())
+                      };
+            } else {
+                whereClause += " AND "+END+" ISNULL";
+                whereValues = new String[] { String.valueOf(old.getStart()), 
+                        String.valueOf(currentTaskId)
+                      };
+            }
             db.update(RANGES_TABLE, values, 
-                    START+"=? AND "+END+"=? AND "+TASK_ID+"=?", 
-                    new String[] { String.valueOf(old.getStart()), 
-                                   String.valueOf(old.getEnd()), 
-                                   String.valueOf(currentTaskId) 
-                                 });
+                    whereClause, 
+                    whereValues);
             if (newTaskId != currentTaskId) {
                 times.remove(old);
             } else {
