@@ -219,7 +219,7 @@ public class TaskTimes extends ListActivity {
         }
 
         protected void loadTimes(int selectedTaskId, long start, long end) {
-            loadTimes(TASK_ID+" = ? AND "+START+" < ? AND ( "+END+" NULL OR "+END+" > ?",
+            loadTimes(TASK_ID+" = ? AND "+START+" < ? AND ( "+END+" ISNULL OR "+END+" > ? )",
                     new String[] { String.valueOf(selectedTaskId),
                     String.valueOf(end),
                     String.valueOf(start)});
