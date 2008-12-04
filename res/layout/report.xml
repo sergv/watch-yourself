@@ -25,7 +25,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:gravity="left"
-            android:src="@android:drawable/btn_minus" />
+            android:src="@android:drawable/ic_media_rew" />
         <TextView android:id="@+id/week"
             android:layout_width="wrap_content"
             android:layout_height="fill_parent"
@@ -38,6 +38,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:gravity="right"
-            android:src="@android:drawable/btn_plus" />
+            android:src="@android:drawable/ic_media_ff" />
     </LinearLayout>
 </LinearLayout>

@@ -12,7 +12,6 @@ import java.util.Calendar;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
-import android.content.DialogInterface;
 import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -105,10 +104,7 @@ public class EditTime extends Activity implements OnClickListener {
             .setIcon(android.R.drawable.stat_sys_warning)
             .setCancelable(true)
             .setMessage(R.string.end_not_greater_than_start)
-            .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
-                public void onClick(DialogInterface dialog, int whichButton) {
-                }
-            })
+            .setPositiveButton(android.R.string.ok, null)
             .create();
     }
 }

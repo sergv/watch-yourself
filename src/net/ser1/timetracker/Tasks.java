@@ -165,9 +165,9 @@ public class Tasks extends ListActivity {
         menu.add(0, TaskMenu.CHANGE_VIEW.ordinal(), 1, R.string.change_view_title)
             .setIcon(android.R.drawable.ic_menu_compass);
         menu.add(0, TaskMenu.REPORT.ordinal(), 2, R.string.generate_report_title)
-            .setIcon(android.R.drawable.ic_menu_info_details);
+            .setIcon(android.R.drawable.ic_menu_week);
         menu.add(0, TaskMenu.HELP.ordinal(), 3, R.string.help)
-            .setIcon(android.R.drawable.ic_dialog_info);
+            .setIcon(android.R.drawable.ic_menu_help);
         return true;
     }
 
@@ -354,11 +354,7 @@ public class Tasks extends ListActivity {
                     Tasks.this.getListView().invalidate();
                 }
             })
-            .setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
-                public void onClick(DialogInterface dialog, int whichButton) {
-                    // NADA
-                }
-            })
+            .setNegativeButton(android.R.string.cancel, null)
             .create();
     }
 
@@ -384,11 +380,7 @@ public class Tasks extends ListActivity {
                     Tasks.this.getListView().invalidate();
                 }
             })
-            .setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
-                public void onClick(DialogInterface dialog, int whichButton) {
-                    // NADA
-                }
-            })
+            .setNegativeButton(android.R.string.cancel, null)
             .create();
     }
     
@@ -411,11 +403,7 @@ public class Tasks extends ListActivity {
                     Tasks.this.getListView().invalidate();
                 }
             })
-            .setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
-                public void onClick(DialogInterface dialog, int whichButton) {
-                    // NADA
-                }
-            })
+            .setNegativeButton(android.R.string.cancel, null)
             .create();
     }
     
@@ -430,6 +418,7 @@ public class Tasks extends ListActivity {
         
         return new AlertDialog.Builder(Tasks.this)
             .setView(about)
+            .setPositiveButton(android.R.string.ok, null)
             .create();
     }
 

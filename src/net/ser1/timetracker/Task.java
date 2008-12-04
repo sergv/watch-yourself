@@ -7,8 +7,6 @@ package net.ser1.timetracker;
 
 import static net.ser1.timetracker.TimeRange.NULL;
 
-import java.util.Date;
-
 public class Task implements Comparable<Task>{
     private String taskName;
     private int id;

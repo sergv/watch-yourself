@@ -24,3 +24,14 @@ log_events:
   - Sean Russell <ser@ser1.net>
   - assigned to release 2008.4 from 2008.3
   - ""
+- - 2008-12-04 03:15:57.359976 Z
+  - Sean Russell <ser@ser1.net>
+  - commented
+  - |-
+    The "OK" button doesn't work
+    Need some more formatting in the instructions
+    Add a donate URL
+- - 2008-12-04 03:25:28.979110 Z
+  - Sean Russell <ser@ser1.net>
+  - commented
+  - Change the icon
