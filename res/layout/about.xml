@@ -26,13 +26,31 @@
                
     <ScrollView android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="1">  
-        <TextView android:text="@string/usage"
-                  android:layout_height="wrap_content"
-                  android:layout_width="fill_parent"/>
+                android:layout_weight="1">
+        <LinearLayout android:orientation="vertical"
+                      android:layout_width="fill_parent"
+                      android:layout_height="fill_parent">
+            <TextView android:text="@string/usage_1"
+                      android:layout_height="wrap_content"
+                      android:layout_width="fill_parent"/>
+            <TextView android:text="@string/usage_2"
+                      android:paddingTop="10px"
+                      android:layout_height="wrap_content"
+                      android:layout_width="fill_parent"/>
+            <TextView android:text="@string/usage_3"
+                      android:paddingTop="10px"
+                      android:layout_height="wrap_content"
+                      android:layout_width="fill_parent"/>
+            <TextView android:id="@+id/usage_4"
+                      android:text="@string/usage_4"
+                      android:paddingTop="10px"
+                      android:layout_height="wrap_content"
+                      android:layout_width="fill_parent"/>
+        </LinearLayout>
     </ScrollView>
 
-    <TextView android:text="@string/donate"
+    <TextView android:id="@+id/donate"
+              android:text="@string/donate"
               android:layout_height="wrap_content"
               android:layout_width="wrap_content"
               android:gravity="center_horizontal"

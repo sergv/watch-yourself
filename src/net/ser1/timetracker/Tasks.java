@@ -37,9 +37,11 @@ import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Color;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.text.method.SingleLineTransformationMethod;
+import android.text.util.Linkify;
 import android.view.ContextMenu;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -48,6 +50,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ContextMenu.ContextMenuInfo;
+import android.view.View.OnClickListener;
 import android.widget.BaseAdapter;
 import android.widget.DatePicker;
 import android.widget.EditText;
@@ -408,6 +411,7 @@ public class Tasks extends ListActivity {
     }
     
     private Dialog openAboutDialog() {
+        // FIXME: Get this string from the manifest
         String formattedVersion = getString(R.string.version, "2008.4");
 
         LayoutInflater factory = LayoutInflater.from(this);
@@ -415,6 +419,16 @@ public class Tasks extends ListActivity {
 
         TextView version = (TextView)about.findViewById(R.id.version);
         version.setText(formattedVersion);
+        TextView donate = (TextView)about.findViewById(R.id.donate);
+        donate.setClickable(true);
+        donate.setOnClickListener(new OnClickListener() {
+            public void onClick(View v) {
+                Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("http://www.google.com"));
+                startActivity(intent);
+            }
+        });
+        TextView links = (TextView)about.findViewById(R.id.usage_4);
+        Linkify.addLinks(links, Linkify.ALL);
         
         return new AlertDialog.Builder(Tasks.this)
             .setView(about)
@@ -521,7 +535,7 @@ public class Tasks extends ListActivity {
         }
         
         protected void loadTasks( Calendar start, Calendar end ) {
-            String query = "AND start < %d AND end >= %d";
+            String query = "AND "+START+" < %d AND "+START+" >= %d";
             Calendar today = Calendar.getInstance();
             today.set(Calendar.HOUR_OF_DAY, 12);
             for (int field : new int[] { Calendar.HOUR_OF_DAY, Calendar.MINUTE, 
@@ -532,12 +546,11 @@ public class Tasks extends ListActivity {
                 }
             }
             end.add(Calendar.DAY_OF_MONTH, 1);
-            currentRangeStart = start.getTime().getTime();
-            currentRangeEnd = end.getTime().getTime();
+            currentRangeStart = start.getTimeInMillis();
+            currentRangeEnd = end.getTimeInMillis();
             boolean loadCurrentTask = today.compareTo(start) != -1 &&
                                       today.compareTo(end) != 1;
-            query = String.format( query, end.getTime().getTime(), 
-                    start.getTime().getTime());
+            query = String.format( query, end.getTimeInMillis(), start.getTimeInMillis());
             loadTasks(query, loadCurrentTask);
         }
         
