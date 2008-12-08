@@ -298,16 +298,21 @@ public class Report extends Activity implements OnClickListener {
                 TextView[] arryForDay = dateViews.get(tid);
                 
                 Cursor r = db.query(RANGES_TABLE, RANGE_COLUMNS, TASK_ID+" = ? AND "
-                        +START+" < ? AND "+END+" > ? AND "+END+" NOTNULL",
+                        +START+" < ? AND ( "+END+" > ? OR "+END+" ISNULL )",
                         new String[] { tid_s, 
-                                       String.valueOf(weekEnd.getTime().getTime()),
-                                       String.valueOf(week.getTime().getTime())},
+                                       String.valueOf(weekEnd.getTimeInMillis()),
+                                       String.valueOf(week.getTimeInMillis())},
                         null,null,null);
 
                 if (r.moveToFirst()) {
                     do {
                         long start = r.getLong(0);
-                        long end = r.getLong(1);
+                        long end;
+                        if (r.isNull(1)) {
+                            end = System.currentTimeMillis();
+                        } else {
+                            end = r.getLong(1);
+                        }
                         
                         day.setTimeInMillis(end);
                         int endWeekDay = 
