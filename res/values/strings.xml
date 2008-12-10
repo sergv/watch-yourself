@@ -33,8 +33,9 @@
     <string name="author">Sean E. Russell</string>
     <string name="donate"><b>If you like this app, please donate and support future development! (Click Me)</b></string>
     <string name="purpose">TimeTracker helps you record the amount of time you spend on
-    activities, for example, for recording time in a time sheet at work.  It provides
-    ways to view, edit, and filter times, as well as providing a time sheet report.</string>
+        activities; for example, for recording time in a time sheet at work.  It
+        provides ways to view, edit, and filter times, and provides a 
+        time sheet report as well.</string>
     <string name="usage_1">Create some tasks using the main task view's <i>Add Task</i> menu item.
     Tap a task to start timing; tap it again to stop timing, or tap a different task
     to switch timing to the other task.  Two tasks can not be running at the same time.
@@ -55,4 +56,6 @@
     the option of deleting the time.</string>
     <string name="usage_4">You can visit http://ditz.germane-software.com/TimeTracker 
     to see a list of known bugs and future enhancements.</string>
+    <string name="credits_1">The TimeTracker application icon was borrowed from
+    the excellent glyFX icon library by PerthWeb Pty Ltd (www.glyfx.com).</string>
 </resources>

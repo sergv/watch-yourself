@@ -46,6 +46,11 @@
                       android:paddingTop="10px"
                       android:layout_height="wrap_content"
                       android:layout_width="fill_parent"/>
+            <TextView android:id="@+id/credits_1"
+                      android:text="@string/credits_1"
+                      android:paddingTop="10px"
+                      android:layout_height="wrap_content"
+                      android:layout_width="fill_parent"/>
         </LinearLayout>
     </ScrollView>
 

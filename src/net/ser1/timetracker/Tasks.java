@@ -429,6 +429,8 @@ public class Tasks extends ListActivity {
         });
         TextView links = (TextView)about.findViewById(R.id.usage_4);
         Linkify.addLinks(links, Linkify.ALL);
+        links = (TextView)about.findViewById(R.id.credits_1);
+        Linkify.addLinks(links, Linkify.ALL);
         
         return new AlertDialog.Builder(Tasks.this)
             .setView(about)
