@@ -423,7 +423,7 @@ public class Tasks extends ListActivity {
         donate.setClickable(true);
         donate.setOnClickListener(new OnClickListener() {
             public void onClick(View v) {
-                Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("http://www.ser1.net/donate.html"));
+                Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("http://www.germane-software.com/donate.html"));
                 startActivity(intent);
             }
         });
