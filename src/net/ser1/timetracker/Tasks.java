@@ -54,6 +54,7 @@ import android.view.View.OnClickListener;
 import android.widget.BaseAdapter;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -468,6 +469,7 @@ public class Tasks extends ListActivity {
          * The view of the total time of the task.
          */
         private TextView total;
+        private ImageView checkMark;
         
         public TaskView( Context context, Task t ) {
             super(context);
@@ -480,14 +482,21 @@ public class Tasks extends ListActivity {
             addView(taskName, new LinearLayout.LayoutParams(
                     LayoutParams.WRAP_CONTENT, LayoutParams.FILL_PARENT, 1f));
 
+            checkMark = new ImageView(context);
+            checkMark.setImageResource(R.drawable.ic_check_mark_dark);
+            checkMark.setVisibility(View.INVISIBLE);
+            addView(checkMark, new LinearLayout.LayoutParams(
+                    LayoutParams.WRAP_CONTENT, LayoutParams.FILL_PARENT, 0f));
+            
             total = new TextView(context);
             total.setTextSize(FONT_SIZE);
             total.setGravity(Gravity.RIGHT);
             total.setTransformationMethod(SingleLineTransformationMethod.getInstance());
             total.setText(FORMAT.format(new Date(t.getTotal())));
             addView(total, new LinearLayout.LayoutParams(
-                    LayoutParams.WRAP_CONTENT, LayoutParams.FILL_PARENT, 0.0f));
-            
+                    LayoutParams.WRAP_CONTENT, LayoutParams.FILL_PARENT, 0f));
+
+            setGravity( Gravity.TOP );
             markupSelectedTask(t);
         }
 
@@ -499,11 +508,9 @@ public class Tasks extends ListActivity {
 
         private void markupSelectedTask(Task t) {
             if (t.equals(currentlySelected)) {
-                taskName.getPaint().setShadowLayer(1, 1, 1,Color.YELLOW);
-                total.getPaint().setShadowLayer(1, 1, 1, Color.YELLOW);
+                checkMark.setVisibility(View.VISIBLE);
             } else {
-                taskName.getPaint().clearShadowLayer();
-                total.getPaint().clearShadowLayer();
+                checkMark.setVisibility(View.INVISIBLE);
             }
         }
     }
