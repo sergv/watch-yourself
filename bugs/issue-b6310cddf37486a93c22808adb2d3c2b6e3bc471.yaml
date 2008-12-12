@@ -5,8 +5,8 @@ type: :bugfix
 component: TimeTracker
 release: "2008.5"
 reporter: Sean Russell <ser@ser1.net>
-status: :unstarted
-disposition: 
+status: :closed
+disposition: :fixed
 creation_time: 2008-12-10 13:56:50.762941 Z
 references: []
 
@@ -15,4 +15,8 @@ log_events:
 - - 2008-12-10 13:56:51.108368 Z
   - Sean Russell <ser@ser1.net>
   - created
+  - ""
+- - 2008-12-12 03:19:56.191960 Z
+  - Sean Russell <ser@ser1.net>
+  - closed with disposition fixed
   - ""

@@ -19,7 +19,6 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.TimeZone;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -53,13 +52,11 @@ public class TaskTimes extends ListActivity {
     private TimesAdapter adapter;
     private static int FONT_SIZE;
     private enum TimeMenu { AddTime, DeleteTime, EditTime }
-    private static final SimpleDateFormat FORMAT = new SimpleDateFormat("HH:mm");
     private static final int SEP = -99;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        FORMAT.setTimeZone(TimeZone.getTimeZone("UTC"));
         SharedPreferences preferences = getSharedPreferences("timetracker.pref", MODE_PRIVATE);
         FONT_SIZE = preferences.getInt("font-size", 16);
         if (adapter == null) {
@@ -306,7 +303,7 @@ public class TaskTimes extends ListActivity {
 
             public void setTimeRange(TimeRange t) {
                 dateRange.setText(t.toString());
-                total.setText(FORMAT.format(new Date(t.getTotal())));
+                Tasks.formatTotal(total, t.getTotal());
                 /* If the following is added, then the timer to update the
                  * display must also be added
                 if (t.getEnd() == NULL) {

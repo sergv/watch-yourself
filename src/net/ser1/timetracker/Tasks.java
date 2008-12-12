@@ -17,12 +17,9 @@ import static net.ser1.timetracker.Report.weekEnd;
 import static net.ser1.timetracker.Report.weekStart;
 import static net.ser1.timetracker.TimeRange.NULL;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
-import java.util.Date;
-import java.util.TimeZone;
 import java.util.TimerTask;
 
 import android.app.AlertDialog;
@@ -36,7 +33,6 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
@@ -70,7 +66,7 @@ public class Tasks extends ListActivity {
     /**
      * Defines how each task's time is displayed 
      */
-    private static final SimpleDateFormat FORMAT = new SimpleDateFormat("HH:mm");
+    private static final String FORMAT = "%02d:%02d";
     /**
      * How often to refresh the display, in milliseconds
      */
@@ -111,7 +107,6 @@ public class Tasks extends ListActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        FORMAT.setTimeZone(TimeZone.getTimeZone("UTC"));
         preferences = getSharedPreferences("timetracker.pref", MODE_PRIVATE);
         FONT_SIZE = preferences.getInt("font-size", 16);
 
@@ -492,7 +487,7 @@ public class Tasks extends ListActivity {
             total.setTextSize(FONT_SIZE);
             total.setGravity(Gravity.RIGHT);
             total.setTransformationMethod(SingleLineTransformationMethod.getInstance());
-            total.setText(FORMAT.format(new Date(t.getTotal())));
+            formatTotal( total, t.getTotal() );
             addView(total, new LinearLayout.LayoutParams(
                     LayoutParams.WRAP_CONTENT, LayoutParams.FILL_PARENT, 0f));
 
@@ -502,7 +497,7 @@ public class Tasks extends ListActivity {
 
         public void setTask(Task t) {
             taskName.setText(t.getTaskName());
-            total.setText(FORMAT.format(new Date(t.getTotal())));
+            formatTotal( total, t.getTotal() );
             markupSelectedTask(t);
         }
 
@@ -516,6 +511,19 @@ public class Tasks extends ListActivity {
     }
 
     
+    private static final long MS_H = 3600000;
+    private static final long MS_M = 60000;
+    private static final long MS_S = 1000;
+    protected static void formatTotal( TextView total, long ttl ) {
+        long hours = ttl / MS_H;
+        long hours_in_ms = hours * MS_H;
+        long minutes = (ttl - hours_in_ms) / MS_M;
+        long minutes_in_ms = minutes * MS_M;
+        long seconds = (ttl - hours_in_ms - minutes_in_ms) / MS_S;
+        String fmt = String.format(FORMAT, hours, minutes, seconds);
+        total.setText(fmt);
+    }
+
     
     private class TaskAdapter extends BaseAdapter {
         private DBHelper dbHelper;
