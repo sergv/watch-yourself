@@ -63,6 +63,7 @@ import android.widget.AdapterView.AdapterContextMenuInfo;
  * @author ser
  */
 public class Tasks extends ListActivity {
+    private static final String VERSION = "2008.5";
     /**
      * Defines how each task's time is displayed 
      */
@@ -408,7 +409,7 @@ public class Tasks extends ListActivity {
     
     private Dialog openAboutDialog() {
         // FIXME: Get this string from the manifest
-        String formattedVersion = getString(R.string.version, "2008.4");
+        String formattedVersion = getString(R.string.version, VERSION);
 
         LayoutInflater factory = LayoutInflater.from(this);
         View about = factory.inflate(R.layout.about, null);
