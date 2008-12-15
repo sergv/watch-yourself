@@ -46,10 +46,23 @@ releases:
     - ""
 - !ditz.rubyforge.org,2008-03-06/release 
   name: "2008.5"
+  status: :released
+  release_time: 2008-12-15 13:27:25.306533 Z
+  log_events: 
+  - - 2008-12-05 12:47:32.782162 Z
+    - Sean Russell <ser@ser1.net>
+    - created
+    - ""
+  - - 2008-12-15 13:27:25.306561 Z
+    - Sean Russell <ser@ser1.net>
+    - released
+    - ""
+- !ditz.rubyforge.org,2008-03-06/release 
+  name: "2008.6"
   status: :unreleased
   release_time: 
   log_events: 
-  - - 2008-12-05 12:47:32.782162 Z
+  - - 2008-12-15 02:08:21.977827 Z
     - Sean Russell <ser@ser1.net>
     - created
     - ""
