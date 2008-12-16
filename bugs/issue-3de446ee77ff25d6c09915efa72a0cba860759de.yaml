@@ -3,7 +3,7 @@ title: More formatting in Help
 desc: ""
 type: :feature
 component: TimeTracker
-release: "2008.5"
+release: "2008.6"
 reporter: Sean Russell <ser@ser1.net>
 status: :unstarted
 disposition: 
@@ -19,4 +19,8 @@ log_events:
 - - 2008-12-10 14:11:17.099420 Z
   - Sean Russell <ser@ser1.net>
   - assigned to release 2008.5 from unassigned
+  - ""
+- - 2008-12-15 02:10:30.438861 Z
+  - Sean Russell <ser@ser1.net>
+  - assigned to release 2008.6 from 2008.5
   - ""

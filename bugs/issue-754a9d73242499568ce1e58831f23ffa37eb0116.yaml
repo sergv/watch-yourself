@@ -3,7 +3,7 @@ title: Add ability to specify which day the week starts on
 desc: ""
 type: :feature
 component: TimeTracker
-release: 
+release: "2008.6"
 reporter: Sean Russell <ser@ser1.net>
 status: :unstarted
 disposition: 
@@ -19,4 +19,8 @@ log_events:
 - - 2008-12-02 19:27:46.508556 Z
   - Sean Russell <ser@ser1.net>
   - unassigned from release 2008.4
+  - ""
+- - 2008-12-15 02:08:47.242906 Z
+  - Sean Russell <ser@ser1.net>
+  - assigned to release 2008.6 from unassigned
   - ""
