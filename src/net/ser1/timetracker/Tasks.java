@@ -1,6 +1,6 @@
 /**
  * TimeTracker 
- * ©2008 Sean Russell
+ * ©2008, 2009 Sean Russell
  * @author Sean Russell <ser@germane-software.com>
  */
 package net.ser1.timetracker;
@@ -63,7 +63,7 @@ import android.widget.AdapterView.AdapterContextMenuInfo;
  * @author ser
  */
 public class Tasks extends ListActivity {
-    private static final String VERSION = "2008.5";
+    private static final String VERSION = "2009.1";
     /**
      * Defines how each task's time is displayed 
      */

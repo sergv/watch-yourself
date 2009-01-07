@@ -1,0 +1,22 @@
+--- !ditz.rubyforge.org,2008-03-06/issue 
+title: Add a sound when a time is started or stopped
+desc: Suggested by Jesse Henriques
+type: :feature
+component: TimeTracker
+release: "2009.2"
+reporter: Sean Russell <ser@ser1.net>
+status: :unstarted
+disposition: 
+creation_time: 2009-01-07 01:31:50.875738 Z
+references: []
+
+id: 7d51e38adcbb1ae79eb35a6c7186fe35afecb079
+log_events: 
+- - 2009-01-07 01:31:51.491006 Z
+  - Sean Russell <ser@ser1.net>
+  - created
+  - ""
+- - 2009-01-07 01:39:56.162961 Z
+  - Sean Russell <ser@ser1.net>
+  - assigned to release 2009.2 from unassigned
+  - ""

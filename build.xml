@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="TimeTracker" default="apk" xmlns:android="antlib:com.googlecode.autoandroid.ant">
+    <taskdef uri="antlib:com.googlecode.autoandroid.ant" classpath="/opt/android-ant-rc2.jar"/>
+    <android:home/>
+    <property name="src" location="src"/>
+    <property name="dest" location="bin"/>
+    <path id="classpath">
+        <pathelement path="${android-home}/android.jar"/>
+        <pathelement location="${dest}"/>
+    </path>
+    
+    <!-- ---------------------------------------------------------- -->
+    <!-- You have to create this yourself if you want a signed apk. -->
+    <!-- It should consist of at least a target named "sign" that   -->
+    <!-- runs a jarsigner task on the APK                           -->
+    <import file="sign.xml"/>
+    <!-- ---------------------------------------------------------- -->
+    
+    <target name="resource-src" description="Generate the R.java file for this project's resources.">
+        <android:aapt>
+                <arg value="package"/>
+                <arg value="-m"/>
+                <arg value="-J"/>
+                <arg file="src"/> <!-- Create R.java in the source directory -->
+                <arg value="-M"/>
+                <arg file="AndroidManifest.xml"/>
+                <arg value="-S"/>
+                <arg file="res"/>
+                <arg value="-I"/>
+                <arg file="${android-home}/android.jar"/>
+        </android:aapt>
+    </target>
+    
+    <target name="dex" depends="build" description="Convert the .class files into .dex files.">
+        <property name="classes.dex" location="bin/classes.dex"/>
+        <android:dx inputref="main.jars">
+                <arg value="--dex"/>
+                <arg value="--output=${classes.dex}"/>
+                <arg path="bin"/>
+        </android:dx>
+    </target>
+
+    <target name="build" depends="resource-src">
+        <javac classpathref="classpath"
+            srcdir="${src}"
+            destdir="${dest}"/>
+    </target>
+    
+    <target name='apk' depends="build,dex">
+        <android:aapt>
+                <arg value="package"/>
+                <arg value="-m"/>
+                <arg value="-F"/>
+                <arg file="TimeTracker.apk"/>
+                <arg value="-M"/>
+                <arg file="AndroidManifest.xml"/>
+                <arg value="-S"/>
+                <arg file="res"/>
+                <arg value="-f"/>
+                <arg value="-I"/>
+                <arg file="${android-home}/android.jar"/>
+        </android:aapt>
+    </target>
+
+    <!-- Yet to do:
+         Release task, which...
+            Is a release ready? (ditz status)
+            Find release #
+            ditz release #
+            Update version #s
+            exec sign task (which builds, packages, and signs)
+            Check in HG
+            Tag HG
+            Upload to android market!
+     -->
+            
+</project>

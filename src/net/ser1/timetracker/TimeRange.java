@@ -1,6 +1,6 @@
 /**
  * TimeTracker 
- * ©2008 Sean Russell
+ * ©2008, 2009 Sean Russell
  * @author Sean Russell <ser@germane-software.com>
  */
 package net.ser1.timetracker;
