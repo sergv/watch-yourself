@@ -32,3 +32,12 @@ log_events:
   - Sean Russell <ser@ser1.net>
   - changed status from unstarted to in_progress
   - ""
+- - 2009-01-07 02:44:38.885700 Z
+  - Sean Russell <ser@ser1.net>
+  - commented
+  - |-
+    Use cases:
+    1. Export the report for a week
+    2. Export the entire database
+    3. Export times for a task
+    4. Export the times for a date range (for all tasks)

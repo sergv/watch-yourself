@@ -31,6 +31,8 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager.NameNotFoundException;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
@@ -63,7 +65,6 @@ import android.widget.AdapterView.AdapterContextMenuInfo;
  * @author ser
  */
 public class Tasks extends ListActivity {
-    private static final String VERSION = "2009.1";
     /**
      * Defines how each task's time is displayed 
      */
@@ -408,8 +409,15 @@ public class Tasks extends ListActivity {
     }
     
     private Dialog openAboutDialog() {
-        // FIXME: Get this string from the manifest
-        String formattedVersion = getString(R.string.version, VERSION);
+        String versionName = "";
+        try {
+            PackageInfo pkginfo = this.getPackageManager().getPackageInfo("net.ser1.timetracker", 0);
+            versionName = pkginfo.versionName;
+        } catch (NameNotFoundException nnfe) {
+            // Denada
+        }
+        
+        String formattedVersion = getString(R.string.version, versionName );
 
         LayoutInflater factory = LayoutInflater.from(this);
         View about = factory.inflate(R.layout.about, null);
