@@ -17,6 +17,9 @@ import static net.ser1.timetracker.Report.weekEnd;
 import static net.ser1.timetracker.Report.weekStart;
 import static net.ser1.timetracker.TimeRange.NULL;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
@@ -38,6 +41,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
+import android.provider.MediaStore.Audio.Media;
 import android.text.method.SingleLineTransformationMethod;
 import android.text.util.Linkify;
 import android.view.ContextMenu;
@@ -103,7 +107,7 @@ public class Tasks extends ListActivity {
      */
     enum TaskMenu { ADD_TASK, EDIT_TASK, DELETE_TASK, REPORT, 
         SHOW_TIMES, CHANGE_VIEW, SELECT_START_DATE, SELECT_END_DATE,
-        HELP }
+        HELP, EXPORT_VIEW }
 
     
     @Override
@@ -167,7 +171,9 @@ public class Tasks extends ListActivity {
             .setIcon(android.R.drawable.ic_menu_compass);
         menu.add(0, TaskMenu.REPORT.ordinal(), 2, R.string.generate_report_title)
             .setIcon(android.R.drawable.ic_menu_week);
-        menu.add(0, TaskMenu.HELP.ordinal(), 3, R.string.help)
+        menu.add(0, TaskMenu.EXPORT_VIEW.ordinal(), 3, R.string.export_view)
+            .setIcon(android.R.drawable.ic_menu_save);
+        menu.add(0, TaskMenu.HELP.ordinal(), 4, R.string.help)
             .setIcon(android.R.drawable.ic_menu_help);
         return true;
     }
@@ -210,6 +216,7 @@ public class Tasks extends ListActivity {
         case ADD_TASK:
         case CHANGE_VIEW:
         case HELP:
+        case EXPORT_VIEW:
             showDialog(item.getItemId());
             break;
         case REPORT:
@@ -238,6 +245,8 @@ public class Tasks extends ListActivity {
             return openChangeViewDialog();
         case HELP:
             return openAboutDialog();
+        case EXPORT_VIEW:
+            return openExportDialog();
         case SELECT_START_DATE:
             Calendar today_s = Calendar.getInstance();
             // An ad-hoc date picker for the start date, which in turn
@@ -408,6 +417,35 @@ public class Tasks extends ListActivity {
             .create();
     }
     
+    private Dialog openExportDialog() {
+        // Export, then show a dialog
+        CSVExporter exporter = new CSVExporter();
+        Uri pathToCsv = Media.EXTERNAL_CONTENT_URI;
+        File fout = new File("/sdcard/"+getRangeName()+".csv" );
+        if (fout.exists()) {
+            // Show a warning dialog.
+            // If cancelled, return a cancellation dialog
+            // If continue, export and show success dialog
+        }
+        try {
+            OutputStream out = new FileOutputStream(fout);
+            exporter.exportRows(out, getRangeData());
+            // Show success dialog
+        } catch (FileNotFoundException fnfe) {
+            // Show error dialog
+        }
+    }
+    
+    private Cursor getRangeData() {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    private String getRangeName() {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
     private Dialog openAboutDialog() {
         String versionName = "";
         try {

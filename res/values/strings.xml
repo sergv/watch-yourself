@@ -27,6 +27,7 @@
     <string name="week">Week %s</string>
     <string name="title">TimeTracker (%s)</string>
     <string name="help">Help</string>
+    <string name="export_view">Export</string>
     
     <!-- About dialog strings -->
     <string name="version">Version %s</string>
