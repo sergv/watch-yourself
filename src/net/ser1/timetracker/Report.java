@@ -7,16 +7,27 @@ import static net.ser1.timetracker.DBHelper.RANGE_COLUMNS;
 import static net.ser1.timetracker.DBHelper.START;
 import static net.ser1.timetracker.DBHelper.TASK_COLUMNS;
 import static net.ser1.timetracker.DBHelper.TASK_ID;
+import static net.ser1.timetracker.DBHelper.TASK_NAME;
 import static net.ser1.timetracker.DBHelper.TASK_TABLE;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.OutputStream;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.TimeZone;
 import java.util.TreeMap;
 
+import net.ser1.timetracker.Tasks.TaskMenu;
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.app.Dialog;
 import android.content.pm.ActivityInfo;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
@@ -24,6 +35,8 @@ import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.view.Gravity;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.ImageButton;
@@ -113,6 +126,145 @@ public class Report extends Activity implements OnClickListener {
         fillInTasksAndRanges();
     }
     
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        super.onCreateOptionsMenu(menu);
+        menu.add(0, TaskMenu.EXPORT_VIEW.ordinal(), 0, R.string.export_view)
+            .setIcon(android.R.drawable.ic_menu_save);
+        return true;
+    }
+
+    private AlertDialog exportSucceed;
+    private String exportMessage;
+    @Override
+    public boolean onMenuItemSelected(int featureId, MenuItem item) {
+        TaskMenu t = TaskMenu.values()[item.getItemId()];
+        switch (t) {
+        case EXPORT_VIEW:
+            String fname = export();
+            if (fname != null) {
+                exportMessage = getString(R.string.export_csv_success, fname);
+                if (exportSucceed != null) exportSucceed.setMessage(exportMessage);
+                showDialog(TaskMenu.EXPORT_VIEW_SUCCEED.ordinal());
+            } else {
+                showDialog(TaskMenu.EXPORT_VIEW_FAIL.ordinal());
+            }
+            break;
+        default:
+            // Ignore the other menu items; they're context menu
+            break;
+        }
+        return super.onMenuItemSelected(featureId, item);
+    }
+    
+    @Override
+    protected Dialog onCreateDialog(int id) {
+        TaskMenu action = TaskMenu.values()[id];
+        switch (action) {
+        case EXPORT_VIEW_SUCCEED:
+            exportSucceed = new AlertDialog.Builder(this)
+            .setTitle(R.string.success)
+            .setIcon(android.R.drawable.stat_notify_sdcard)
+            .setMessage(exportMessage)
+            .setPositiveButton(android.R.string.ok, null)
+            .create();
+            return exportSucceed;
+        case EXPORT_VIEW_FAIL:
+            return new AlertDialog.Builder(this)
+            .setTitle(R.string.failure)
+            .setIcon(android.R.drawable.stat_notify_sdcard)
+            .setMessage(R.string.export_csv_fail)
+            .setPositiveButton(android.R.string.ok, null)
+            .create();
+        default:
+            break;
+        }
+        return null;
+    }
+
+    /**
+     * Yes, this _is_ a duplicate of the exact same code in Tasks.  Java doesn't 
+     * support mix-ins, which leads to bad programming practices out of 
+     * necessity.
+     */
+    final static String SDCARD = "/sdcard/";
+    private String export() {
+        // Export, then show a dialog
+        String rangeName = getRangeName();
+        String fname = "report_"+rangeName+".csv";
+        File fout = new File( SDCARD+fname );
+        // Change the file name until there's no conflict
+        int counter = 0;
+        while (fout.exists()) {
+            fname = "report_"+rangeName+"_"+counter+".csv";
+            fout = new File( SDCARD+fname );
+            counter++;
+        }
+        try {
+            OutputStream out = new FileOutputStream(fout);
+            CSVExporter.exportRows(out, getCurrentRange());
+            
+            return fname;
+        } catch (FileNotFoundException fnfe) {
+            fnfe.printStackTrace(System.err);
+            return null;
+        }
+    }
+    
+    private String[][] getCurrentRange() {
+        List<String[]> tasks = new ArrayList<String[]>();
+
+        Map<Integer,String> taskNames = new TreeMap<Integer,String>();
+        Cursor c = db.query(TASK_TABLE, new String[] {"ROWID",TASK_NAME}, null, null, null, null, "ROWID");
+        if (c.moveToFirst()) {
+            do {
+                int tid = c.getInt(0);
+                String tname = c.getString(1);
+                taskNames.put(tid, tname);
+            } while (c.moveToNext());
+        }
+        c.close();
+        
+        // Add the headers
+        String[] headers = new String[9];
+        headers[0] = "Task name";
+        for (int i = week.getMinimum(Calendar.DAY_OF_WEEK); 
+                 i <= week.getMaximum(Calendar.DAY_OF_WEEK);
+                 i++) {
+            Day s = Day.fromCalEnum(i);
+            headers[i] = s.header;
+        }
+        headers[8] = "Total";
+        tasks.add(headers);
+        
+        for (int tid : dateViews.keySet()) {
+            if (tid == -1) continue;
+            String[] rowForTask = new String[9];
+            tasks.add(rowForTask);
+            rowForTask[0] = taskNames.get(tid);
+            TextView[] arryForDay = dateViews.get(tid);
+            for (int i = 0 ; i < 8; i++) {
+                rowForTask[i+1] = arryForDay[i].getText().toString();
+            }
+        }            
+        
+        TextView[] totals = dateViews.get(-1);
+        String[] totalsRow = new String[9];
+        tasks.add(totalsRow);
+        totalsRow[0] = "Day total";
+        for (int i = 0; i < 8; i++) {
+            totalsRow[i+1] = totals[i].getText().toString();
+        }
+        
+        String[][] k = {{}};
+        return tasks.toArray(k);
+    }
+
+    private String getRangeName() {
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+        return formatter.format(week.getTime());
+    }
+
     private static final int DKDKYELLOW = Color.argb(100, 75, 75, 0);
     private void createTotals(TableLayout mainReport) {
         TextView[] totals = new TextView[8];
@@ -287,54 +439,15 @@ public class Report extends Activity implements OnClickListener {
         Cursor c = db.query(TASK_TABLE, TASK_COLUMNS, null, null, null, null, NAME);
         // This is a re-usable instance for the overlap method, which changes 
         // the instance data.  This is here for optimization.
-        Calendar day = Calendar.getInstance();
 
         long dayTotals[] = {0,0,0,0,0,0,0,0};
         if (c.moveToFirst()) {
             do {
                 int tid = c.getInt(0);
                 String tid_s = String.valueOf(tid);
-                long days[] = {0,0,0,0,0,0,0};
                 TextView[] arryForDay = dateViews.get(tid);
                 
-                Cursor r = db.query(RANGES_TABLE, RANGE_COLUMNS, TASK_ID+" = ? AND "
-                        +START+" < ? AND ( "+END+" > ? OR "+END+" ISNULL )",
-                        new String[] { tid_s, 
-                                       String.valueOf(weekEnd.getTimeInMillis()),
-                                       String.valueOf(week.getTimeInMillis())},
-                        null,null,null);
-
-                if (r.moveToFirst()) {
-                    do {
-                        long start = r.getLong(0);
-                        long end;
-                        if (r.isNull(1)) {
-                            end = System.currentTimeMillis();
-                        } else {
-                            end = r.getLong(1);
-                        }
-                        
-                        day.setTimeInMillis(end);
-                        int endWeekDay = 
-                            day.get(Calendar.WEEK_OF_YEAR) == week.get(Calendar.WEEK_OF_YEAR) ?
-                            day.get(Calendar.DAY_OF_WEEK) : 
-                            day.getMaximum(Calendar.DAY_OF_WEEK);
-                        day.setTimeInMillis(start);
-                        int startWeekDay = 
-                            day.get(Calendar.WEEK_OF_YEAR) == week.get(Calendar.WEEK_OF_YEAR) ?
-                            day.get(Calendar.DAY_OF_WEEK) :
-                            day.getMinimum(Calendar.DAY_OF_WEEK);
-                        
-                        // At this point, "day" must be set to the start time
-                        for (int i = startWeekDay-1 ; i < endWeekDay; i++ ) {
-                            Day d = Day.fromCalEnum(i+1);
-                            day.set(Calendar.DAY_OF_WEEK, d.calEnum);
-                            days[i] += overlap(day, start, end);
-                        }
-                        
-                    } while (r.moveToNext());
-                } 
-                r.close();
+                long[] days = getDays(tid_s);
 
                 int weekTotal = 0;
                 for (int i = 0 ; i < 7; i++) {
@@ -359,24 +472,48 @@ public class Report extends Activity implements OnClickListener {
         int mins = (int)((dayTotals[7] - hours*3600000) / 60000);
         totals[7].setText(String.format("%02d:%02d", hours, mins));
     }
-    
-    private static final int[] FIELDS = {
-        Calendar.HOUR_OF_DAY,
-        Calendar.MINUTE,
-        Calendar.SECOND,
-        Calendar.MILLISECOND
-      };
-    private long overlap( Calendar day, long start, long end ) {
-        for (int x : FIELDS) day.set(x, day.getMinimum(x));
-        long ms_start = day.getTime().getTime();
-        day.add(Calendar.DAY_OF_MONTH, 1);
-        long ms_end = day.getTime().getTime();
-        
-        if (ms_end < start || end < ms_start) return 0;
-        
-        long off_start = ms_start > start ? ms_start : start;
-        long off_end   = ms_end < end ? ms_end : end;
-        long off_diff  = off_end - off_start;
-        return off_diff;
+
+    private long[] getDays(String tid_s) {
+        Calendar day = Calendar.getInstance();
+        long days[] = {0,0,0,0,0,0,0};
+        Cursor r = db.query(RANGES_TABLE, RANGE_COLUMNS, TASK_ID+" = ? AND "
+                +START+" < ? AND ( "+END+" > ? OR "+END+" ISNULL )",
+                new String[] { tid_s, 
+                               String.valueOf(weekEnd.getTimeInMillis()),
+                               String.valueOf(week.getTimeInMillis())},
+                null,null,null);
+
+        if (r.moveToFirst()) {
+            do {
+                long start = r.getLong(0);
+                long end;
+                if (r.isNull(1)) {
+                    end = System.currentTimeMillis();
+                } else {
+                    end = r.getLong(1);
+                }
+                
+                day.setTimeInMillis(end);
+                int endWeekDay = 
+                    day.get(Calendar.WEEK_OF_YEAR) == week.get(Calendar.WEEK_OF_YEAR) ?
+                    day.get(Calendar.DAY_OF_WEEK) : 
+                    day.getMaximum(Calendar.DAY_OF_WEEK);
+                day.setTimeInMillis(start);
+                int startWeekDay = 
+                    day.get(Calendar.WEEK_OF_YEAR) == week.get(Calendar.WEEK_OF_YEAR) ?
+                    day.get(Calendar.DAY_OF_WEEK) :
+                    day.getMinimum(Calendar.DAY_OF_WEEK);
+                
+                // At this point, "day" must be set to the start time
+                for (int i = startWeekDay-1 ; i < endWeekDay; i++ ) {
+                    Day d = Day.fromCalEnum(i+1);
+                    day.set(Calendar.DAY_OF_WEEK, d.calEnum);
+                    days[i] += TimeRange.overlap(day, start, end);
+                }
+                
+            } while (r.moveToNext());
+        } 
+        r.close();
+        return days;
     }
 }

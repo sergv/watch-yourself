@@ -7,6 +7,7 @@ package net.ser1.timetracker;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 
 public class TimeRange implements Comparable<TimeRange> {
@@ -64,5 +65,34 @@ public class TimeRange implements Comparable<TimeRange> {
                 return 0;
             }
         }
+    }
+    
+    private static final int[] FIELDS = {
+        Calendar.HOUR_OF_DAY,
+        Calendar.MINUTE,
+        Calendar.SECOND,
+        Calendar.MILLISECOND
+      };
+    
+    /**
+     * Finds the amount of time from a range that overlaps with a day
+     * @param day The day on which the time must overlap to be counted
+     * @param start The range start
+     * @param end The range end
+     * @return The number of milliseconds of the range that overlaps with the 
+     * day
+     */
+    public static long overlap( Calendar day, long start, long end ) {
+        for (int x : FIELDS) day.set(x, day.getMinimum(x));
+        long ms_start = day.getTime().getTime();
+        day.add(Calendar.DAY_OF_MONTH, 1);
+        long ms_end = day.getTime().getTime();
+        
+        if (ms_end < start || end < ms_start) return 0;
+        
+        long off_start = ms_start > start ? ms_start : start;
+        long off_end   = ms_end < end ? ms_end : end;
+        long off_diff  = off_end - off_start;
+        return off_diff;
     }
 }

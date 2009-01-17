@@ -17,7 +17,7 @@ public class DBHelper extends SQLiteOpenHelper {
     public static final String NAME = "name";
     public static final String[] TASK_COLUMNS = new String[] { "ROWID", NAME };
     public static final String TIMETRACKER_DB_NAME = "timetracker.db";
-    public static final int DBVERSION = 3;
+    public static final int DBVERSION = 4;
     public static final String RANGES_TABLE = "ranges";
     public static final String TASK_TABLE = "tasks";
     public static final String TASK_NAME = "name";

@@ -1,0 +1,18 @@
+--- !ditz.rubyforge.org,2008-03-06/issue 
+title: Range select appears to be broken
+desc: ""
+type: :bugfix
+component: TimeTracker
+release: 
+reporter: Sean Russell <ser@ser1.net>
+status: :unstarted
+disposition: 
+creation_time: 2009-01-17 13:24:21.013258 Z
+references: []
+
+id: 7dccd2b29ed6f477ec2b9032c06c5bd146128288
+log_events: 
+- - 2009-01-17 13:24:21.013929 Z
+  - Sean Russell <ser@ser1.net>
+  - created
+  - ""

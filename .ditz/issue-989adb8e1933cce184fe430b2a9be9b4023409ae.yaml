@@ -47,3 +47,7 @@ log_events:
   - |-
     * Cases 2 and 4 are done
     * Need to change timestamps to dates in CSV
+- - 2009-01-17 16:06:42.851577 Z
+  - Sean Russell <ser@ser1.net>
+  - commented
+  - "Adds case #1"

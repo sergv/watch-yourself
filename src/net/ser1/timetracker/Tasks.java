@@ -224,7 +224,6 @@ public class Tasks extends ListActivity {
             break;
         case EXPORT_VIEW:
             String fname = export();
-            AlertDialog dialog = null;
             if (fname != null) {
                 exportMessage = getString(R.string.export_csv_success, fname);
                 if (exportSucceed != null) exportSucceed.setMessage(exportMessage);
@@ -453,13 +452,13 @@ public class Tasks extends ListActivity {
         // Change the file name until there's no conflict
         int counter = 0;
         while (fout.exists()) {
-            fname = rangeName+"-"+counter+".csv";
+            fname = rangeName+"_"+counter+".csv";
             fout = new File( SDCARD+fname );
             counter++;
         }
         try {
             OutputStream out = new FileOutputStream(fout);
-            Cursor currentRange = adapter.getCurrentRange();
+            Cursor currentRange = getCurrentRange();
             CSVExporter.exportRows(out, currentRange);
             currentRange.close();
             
@@ -470,6 +469,10 @@ public class Tasks extends ListActivity {
         }
     }
     
+    private Cursor getCurrentRange() {
+        return adapter.getCurrentRange();
+    }
+
     private String getRangeName() {
         if (adapter.currentRangeStart == -1)
             return "all";
