@@ -3,10 +3,10 @@ title: Ant build file, with rules for signing and installing
 desc: ""
 type: :feature
 component: TimeTracker
-release: 
+release: "2009.1"
 reporter: Sean Russell <ser@ser1.net>
-status: :unstarted
-disposition: 
+status: :closed
+disposition: :fixed
 creation_time: 2008-12-02 19:11:13.932070 Z
 references: []
 
@@ -15,4 +15,12 @@ log_events:
 - - 2008-12-02 19:11:14.152779 Z
   - Sean Russell <ser@ser1.net>
   - created
+  - ""
+- - 2009-01-17 16:18:48.720245 Z
+  - Sean Russell <ser@ser1.net>
+  - assigned to release 2009.1 from unassigned
+  - ""
+- - 2009-01-17 16:18:55.498065 Z
+  - Sean Russell <ser@ser1.net>
+  - closed with disposition fixed
   - ""

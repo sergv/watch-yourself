@@ -7,7 +7,7 @@ desc: |-
   in half and bounding the new task.
 type: :feature
 component: TimeTracker
-release: 
+release: "2009.2"
 reporter: Sean Russell <ser@ser1.net>
 status: :unstarted
 disposition: 
@@ -19,4 +19,8 @@ log_events:
 - - 2009-01-11 12:42:25.586905 Z
   - Sean Russell <ser@ser1.net>
   - created
+  - ""
+- - 2009-01-17 16:19:20.973963 Z
+  - Sean Russell <ser@ser1.net>
+  - assigned to release 2009.2 from unassigned
   - ""
