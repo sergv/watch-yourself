@@ -29,6 +29,7 @@
     <string name="help">Help</string>
     <string name="export_view">Export</string>
     
+    
     <!-- About dialog strings -->
     <string name="version">Version %s</string>
     <string name="author">Sean E. Russell</string>
@@ -59,4 +60,8 @@
     to see a list of known bugs and future enhancements.</string>
     <string name="credits_1">The TimeTracker application icon was borrowed from
     the excellent glyFX icon library by PerthWeb Pty Ltd (www.glyfx.com).</string>
+<string name="export_csv_success">Successfully exported CSV to memory card as %s</string>
+<string name="export_csv_fail">Failed to export CSV.  Couldn't create the file.  Is an SD card inserted?</string>
+<string name="success">Success</string>
+<string name="failure">Fail</string>
 </resources>

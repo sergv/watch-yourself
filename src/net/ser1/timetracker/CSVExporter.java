@@ -23,13 +23,16 @@ public class CSVExporter {
             prepend = ",";
         }
         if (c.moveToFirst()) {
-            outputStream.println();
-            prepend = "";
-            for (int i=0; i<c.getColumnCount(); i++) {
-                outputStream.print(prepend);
-                outputStream.print(escape(c.getString(i)));
-                prepend = ",";
-            }
+            do {
+                outputStream.println();
+                prepend = "";
+                for (int i=0; i<c.getColumnCount(); i++) {
+                    outputStream.print(prepend);
+                    outputStream.print(escape(c.getString(i)));
+                    prepend = ",";
+                }
+            } while (c.moveToNext());
         }
+        outputStream.print("\n");
     }
 }

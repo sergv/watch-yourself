@@ -41,3 +41,9 @@ log_events:
     2. Export the entire database
     3. Export times for a task
     4. Export the times for a date range (for all tasks)
+- - 2009-01-17 03:15:42.704002 Z
+  - Sean Russell <ser@ser1.net>
+  - commented
+  - |-
+    * Cases 2 and 4 are done
+    * Need to change timestamps to dates in CSV

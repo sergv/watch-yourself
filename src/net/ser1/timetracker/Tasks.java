@@ -18,11 +18,14 @@ import static net.ser1.timetracker.Report.weekStart;
 import static net.ser1.timetracker.TimeRange.NULL;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.OutputStream;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
+import java.util.Date;
 import java.util.TimerTask;
 
 import android.app.AlertDialog;
@@ -41,7 +44,6 @@ import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
-import android.provider.MediaStore.Audio.Media;
 import android.text.method.SingleLineTransformationMethod;
 import android.text.util.Linkify;
 import android.view.ContextMenu;
@@ -107,7 +109,7 @@ public class Tasks extends ListActivity {
      */
     enum TaskMenu { ADD_TASK, EDIT_TASK, DELETE_TASK, REPORT, 
         SHOW_TIMES, CHANGE_VIEW, SELECT_START_DATE, SELECT_END_DATE,
-        HELP, EXPORT_VIEW }
+        HELP, EXPORT_VIEW, EXPORT_VIEW_SUCCEED, EXPORT_VIEW_FAIL }
 
     
     @Override
@@ -209,6 +211,8 @@ public class Tasks extends ListActivity {
         return super.onContextItemSelected(item);
     }
     
+    private AlertDialog exportSucceed;
+    private String exportMessage;
     @Override
     public boolean onMenuItemSelected(int featureId, MenuItem item) {
         TaskMenu t = TaskMenu.values()[item.getItemId()];
@@ -216,8 +220,18 @@ public class Tasks extends ListActivity {
         case ADD_TASK:
         case CHANGE_VIEW:
         case HELP:
-        case EXPORT_VIEW:
             showDialog(item.getItemId());
+            break;
+        case EXPORT_VIEW:
+            String fname = export();
+            AlertDialog dialog = null;
+            if (fname != null) {
+                exportMessage = getString(R.string.export_csv_success, fname);
+                if (exportSucceed != null) exportSucceed.setMessage(exportMessage);
+                showDialog(TaskMenu.EXPORT_VIEW_SUCCEED.ordinal());
+            } else {
+                showDialog(TaskMenu.EXPORT_VIEW_FAIL.ordinal());
+            }
             break;
         case REPORT:
             Intent intent = new Intent(this, Report.class);
@@ -245,8 +259,21 @@ public class Tasks extends ListActivity {
             return openChangeViewDialog();
         case HELP:
             return openAboutDialog();
-        case EXPORT_VIEW:
-            return openExportDialog();
+        case EXPORT_VIEW_SUCCEED:
+            exportSucceed = new AlertDialog.Builder(Tasks.this)
+            .setTitle(R.string.success)
+            .setIcon(android.R.drawable.stat_notify_sdcard)
+            .setMessage(exportMessage)
+            .setPositiveButton(android.R.string.ok, null)
+            .create();
+            return exportSucceed;
+        case EXPORT_VIEW_FAIL:
+            return new AlertDialog.Builder(Tasks.this)
+            .setTitle(R.string.failure)
+            .setIcon(android.R.drawable.stat_notify_sdcard)
+            .setMessage(R.string.export_csv_fail)
+            .setPositiveButton(android.R.string.ok, null)
+            .create();
         case SELECT_START_DATE:
             Calendar today_s = Calendar.getInstance();
             // An ad-hoc date picker for the start date, which in turn
@@ -417,33 +444,39 @@ public class Tasks extends ListActivity {
             .create();
     }
     
-    private Dialog openExportDialog() {
+    final static String SDCARD = "/sdcard/";
+    private String export() {
         // Export, then show a dialog
-        CSVExporter exporter = new CSVExporter();
-        Uri pathToCsv = Media.EXTERNAL_CONTENT_URI;
-        File fout = new File("/sdcard/"+getRangeName()+".csv" );
-        if (fout.exists()) {
-            // Show a warning dialog.
-            // If cancelled, return a cancellation dialog
-            // If continue, export and show success dialog
+        String rangeName = getRangeName();
+        String fname = rangeName+".csv";
+        File fout = new File( SDCARD+fname );
+        // Change the file name until there's no conflict
+        int counter = 0;
+        while (fout.exists()) {
+            fname = rangeName+"-"+counter+".csv";
+            fout = new File( SDCARD+fname );
+            counter++;
         }
         try {
             OutputStream out = new FileOutputStream(fout);
-            exporter.exportRows(out, getRangeData());
-            // Show success dialog
+            Cursor currentRange = adapter.getCurrentRange();
+            CSVExporter.exportRows(out, currentRange);
+            currentRange.close();
+            
+            return fname;
         } catch (FileNotFoundException fnfe) {
-            // Show error dialog
+            fnfe.printStackTrace(System.err);
+            return null;
         }
     }
     
-    private Cursor getRangeData() {
-        // TODO Auto-generated method stub
-        return null;
-    }
-
     private String getRangeName() {
-        // TODO Auto-generated method stub
-        return null;
+        if (adapter.currentRangeStart == -1)
+            return "all";
+        SimpleDateFormat f = new SimpleDateFormat("yyyy-MM-dd");
+        Date d = new Date();
+        d.setTime(adapter.currentRangeStart);
+        return f.format(d);
     }
 
     private Dialog openAboutDialog() {
@@ -599,6 +632,19 @@ public class Tasks extends ListActivity {
         }
         
         protected void loadTasks( Calendar start, Calendar end ) {
+            String[] res = makeWhereClause( start, end );
+            loadTasks(res[0], res[1] == null ? false : true );
+        }
+
+        /**
+         * Java doesn't understand tuples, so the return value
+         * of this is a hack.
+         * @param start
+         * @param end
+         * @return a String pair hack, where the second item is null
+         * for false, and non-null for true
+         */
+        private String[] makeWhereClause( Calendar start, Calendar end ) {
             String query = "AND "+START+" < %d AND "+START+" >= %d";
             Calendar today = Calendar.getInstance();
             today.set(Calendar.HOUR_OF_DAY, 12);
@@ -615,7 +661,7 @@ public class Tasks extends ListActivity {
             boolean loadCurrentTask = today.compareTo(start) != -1 &&
                                       today.compareTo(end) != 1;
             query = String.format( query, end.getTimeInMillis(), start.getTimeInMillis());
-            loadTasks(query, loadCurrentTask);
+            return new String[] { query, loadCurrentTask ? query : null };
         }
         
         /**
@@ -661,6 +707,26 @@ public class Tasks extends ListActivity {
             c.close();
             currentlySelected = findCurrentlyActive();
             notifyDataSetChanged();
+        }
+        
+        /**
+         * Don't forget to close the cursor!!
+         * @return
+         */
+        protected Cursor getCurrentRange() {
+            String[] res = { "" };
+            if (currentRangeStart != -1 && currentRangeEnd != -1) {
+                Calendar start = Calendar.getInstance();
+                start.setTimeInMillis(currentRangeStart);
+                Calendar end = Calendar.getInstance();
+                end.setTimeInMillis(currentRangeEnd);
+                res = makeWhereClause(start, end);
+            }
+            SQLiteDatabase db = dbHelper.getReadableDatabase();
+            Cursor r = db.rawQuery("SELECT t.name, r.start, r.end "+
+                    " FROM " + TASK_TABLE + " t, " + RANGES_TABLE + " r "+
+                    " WHERE r." + TASK_ID + " = t.ROWID " + res[0], null );
+            return r;
         }
         
         public Task findCurrentlyActive() {
