@@ -36,7 +36,8 @@ public class DBHelper extends SQLiteOpenHelper {
     }
 
     private static final String CREATE_TASK_TABLE = 
-        "CREATE TABLE %s ("
+        "CREATE TABLE %s (" +
+        "PID INTEGER PRIMARY KEY AUTOINCREMENT,"
         + TASK_NAME+" TEXT COLLATE LOCALIZED NOT NULL"
         + ");";
     @Override
@@ -50,8 +51,8 @@ public class DBHelper extends SQLiteOpenHelper {
     }
 
     @Override
-    public void onUpgrade(SQLiteDatabase arg0, int arg1, int arg2) {
-        if (arg1 == 2) {
+    public void onUpgrade(SQLiteDatabase arg0, int oldVersion, int newVersion) {
+        if (oldVersion < 4) {
             arg0.execSQL(String.format(CREATE_TASK_TABLE, "temp"));
             arg0.execSQL("insert into temp(rowid,"+TASK_NAME+") select rowid,"
                     +TASK_NAME+" from "+TASK_TABLE+";");
@@ -59,6 +60,6 @@ public class DBHelper extends SQLiteOpenHelper {
             arg0.execSQL(String.format(CREATE_TASK_TABLE, TASK_TABLE));
             arg0.execSQL("insert into "+TASK_TABLE+"(rowid,"+TASK_NAME+") select rowid,"+TASK_NAME+" from temp;");
             arg0.execSQL("drop table temp;");
-        }
+        } 
     }
 }
