@@ -344,6 +344,7 @@ public class TaskTimes extends ListActivity {
             list.add(insertPoint,item);
             if (insertPoint > 0) {
                 Calendar c = Calendar.getInstance();
+                c.setFirstDayOfWeek( Calendar.MONDAY );
                 TimeRange prev = list.get(insertPoint - 1);
                 c.setTimeInMillis(prev.getStart());
                 int pyear = c.get(Calendar.YEAR), 
@@ -360,6 +361,7 @@ public class TaskTimes extends ListActivity {
 
         private long startOfDay(long start) {
             Calendar cal = Calendar.getInstance();
+            cal.setFirstDayOfWeek( Calendar.MONDAY );
             cal.setTimeInMillis(start);
             cal.set(Calendar.HOUR_OF_DAY, cal.getMinimum(Calendar.HOUR_OF_DAY));
             cal.set(Calendar.MINUTE, cal.getMinimum(Calendar.MINUTE));
@@ -371,6 +373,7 @@ public class TaskTimes extends ListActivity {
         private void addSeparators() {
             int dayOfYear = -1, year = -1;
             Calendar curDay = Calendar.getInstance();
+            curDay.setFirstDayOfWeek( Calendar.MONDAY );
             for (int i = 0; i < times.size(); i++) {
                 TimeRange tr = times.get(i);
                 curDay.setTimeInMillis(tr.getStart());

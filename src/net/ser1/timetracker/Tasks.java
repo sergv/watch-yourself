@@ -109,7 +109,8 @@ public class Tasks extends ListActivity {
      */
     enum TaskMenu { ADD_TASK, EDIT_TASK, DELETE_TASK, REPORT, 
         SHOW_TIMES, CHANGE_VIEW, SELECT_START_DATE, SELECT_END_DATE,
-        HELP, EXPORT_VIEW, EXPORT_VIEW_SUCCEED, EXPORT_VIEW_FAIL }
+        HELP, EXPORT_VIEW, EXPORT_VIEW_SUCCEED, EXPORT_VIEW_FAIL,
+        SET_WEEK_START_DAY }
 
     
     @Override
@@ -275,6 +276,7 @@ public class Tasks extends ListActivity {
             .create();
         case SELECT_START_DATE:
             Calendar today_s = Calendar.getInstance();
+            today_s.setFirstDayOfWeek( Calendar.MONDAY );
             // An ad-hoc date picker for the start date, which in turn
             // invokes another dialog (the "pick end date" dialog) when it is 
             // finished
@@ -300,10 +302,12 @@ public class Tasks extends ListActivity {
                         public void onDateSet(DatePicker view, int year, 
                                 int monthOfYear, int dayOfMonth) {
                             Calendar start = Calendar.getInstance();
+                            start.setFirstDayOfWeek( Calendar.MONDAY );
                             start.set(Calendar.YEAR, sYear);
                             start.set(Calendar.MONTH, sMonth);
                             start.set(Calendar.DAY_OF_MONTH, sDay);
                             Calendar end = Calendar.getInstance();
+                            end.setFirstDayOfWeek( Calendar.MONDAY );
                             end.set(Calendar.YEAR, sYear);
                             end.set(Calendar.MONTH, sMonth);
                             end.set(Calendar.DAY_OF_MONTH, sDay);
@@ -338,23 +342,22 @@ public class Tasks extends ListActivity {
     }
     
     private void switchView(int which) {
+        Calendar tw = Calendar.getInstance();
+        tw.setFirstDayOfWeek( Calendar.MONDAY );
         switch (which) {
         case 0: // today
-            adapter.loadTasks( Calendar.getInstance() );
+            adapter.loadTasks( tw );
             break;
         case 1: // this week
-            Calendar tw = Calendar.getInstance();
             adapter.loadTasks( weekStart( tw ), weekEnd( tw ) );
             break;
         case 2: // yesterday
-            Calendar y = Calendar.getInstance();
-            y.add(Calendar.DAY_OF_MONTH, -1);
-            adapter.loadTasks( y );
+            tw.add(Calendar.DAY_OF_MONTH, -1);
+            adapter.loadTasks( tw );
             break;
         case 3: // last week
-            Calendar lw = Calendar.getInstance();
-            lw.add(Calendar.WEEK_OF_YEAR, -1);
-            adapter.loadTasks( weekStart( lw ), weekEnd( lw ) );
+            tw.add(Calendar.WEEK_OF_YEAR, -1);
+            adapter.loadTasks( weekStart( tw ), weekEnd( tw ) );
             break;
         case 4: // all
             adapter.loadTasks();
@@ -650,6 +653,7 @@ public class Tasks extends ListActivity {
         private String[] makeWhereClause( Calendar start, Calendar end ) {
             String query = "AND "+START+" < %d AND "+START+" >= %d";
             Calendar today = Calendar.getInstance();
+            today.setFirstDayOfWeek( Calendar.MONDAY );
             today.set(Calendar.HOUR_OF_DAY, 12);
             for (int field : new int[] { Calendar.HOUR_OF_DAY, Calendar.MINUTE, 
                                          Calendar.SECOND, 
@@ -720,8 +724,10 @@ public class Tasks extends ListActivity {
             String[] res = { "" };
             if (currentRangeStart != -1 && currentRangeEnd != -1) {
                 Calendar start = Calendar.getInstance();
+                start.setFirstDayOfWeek( Calendar.MONDAY );
                 start.setTimeInMillis(currentRangeStart);
                 Calendar end = Calendar.getInstance();
+                end.setFirstDayOfWeek( Calendar.MONDAY );
                 end.setTimeInMillis(currentRangeEnd);
                 res = makeWhereClause(start, end);
             }

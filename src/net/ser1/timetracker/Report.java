@@ -18,7 +18,6 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.TimeZone;
@@ -101,6 +100,7 @@ public class Report extends Activity implements OnClickListener {
         TableLayout mainReport = (TableLayout)findViewById(R.id.report);
         
         Calendar c = Calendar.getInstance();
+        c.setFirstDayOfWeek( Calendar.MONDAY );
         c.setTimeInMillis(getIntent().getExtras().getLong("report-date"));
         week = weekStart(c);
         weekEnd = weekEnd(c);
@@ -390,6 +390,7 @@ public class Report extends Activity implements OnClickListener {
      */
     public static Calendar weekStart(Calendar tw) {
         Calendar ws = (Calendar)tw.clone();
+        ws.setFirstDayOfWeek( Calendar.MONDAY );
         ws.set(Calendar.DAY_OF_WEEK, ws.getMinimum(Calendar.DAY_OF_WEEK));
         ws.set(Calendar.HOUR_OF_DAY, ws.getMinimum(Calendar.HOUR_OF_DAY));
         ws.set(Calendar.MINUTE, ws.getMinimum(Calendar.MINUTE));
@@ -406,6 +407,7 @@ public class Report extends Activity implements OnClickListener {
      */
     public static Calendar weekEnd(Calendar tw) {
         Calendar ws = (Calendar)tw.clone();
+        ws.setFirstDayOfWeek( Calendar.MONDAY );
         ws.set(Calendar.DAY_OF_WEEK, ws.getMaximum(Calendar.DAY_OF_WEEK));
         ws.set(Calendar.HOUR_OF_DAY, ws.getMaximum(Calendar.HOUR_OF_DAY));
         ws.set(Calendar.MINUTE, ws.getMaximum(Calendar.MINUTE));
@@ -475,6 +477,7 @@ public class Report extends Activity implements OnClickListener {
 
     private long[] getDays(String tid_s) {
         Calendar day = Calendar.getInstance();
+        day.setFirstDayOfWeek( Calendar.MONDAY );
         long days[] = {0,0,0,0,0,0,0};
         Cursor r = db.query(RANGES_TABLE, RANGE_COLUMNS, TASK_ID+" = ? AND "
                 +START+" < ? AND ( "+END+" > ? OR "+END+" ISNULL )",

@@ -44,9 +44,8 @@ public class EditTime extends Activity implements OnClickListener {
         TimePicker startTime = (TimePicker)findViewById(R.id.start_time);
         
         Calendar sd = Calendar.getInstance();
-        if (getIntent().getExtras().getBoolean(CLEAR)) {
-            sd = Calendar.getInstance();
-        } else {
+        sd.setFirstDayOfWeek( Calendar.MONDAY );
+        if (!getIntent().getExtras().getBoolean(CLEAR)) {
             sd.setTimeInMillis(getIntent().getExtras().getLong(START_DATE));
         }
         startDate.updateDate(sd.get(Calendar.YEAR), sd.get(Calendar.MONTH),
@@ -58,6 +57,7 @@ public class EditTime extends Activity implements OnClickListener {
             DatePicker endDate = (DatePicker)findViewById(R.id.end_date);
             TimePicker endTime = (TimePicker)findViewById(R.id.end_time);
             Calendar ed = Calendar.getInstance();
+            ed.setFirstDayOfWeek( Calendar.MONDAY );
             if (getIntent().getExtras().getBoolean(CLEAR)) {
                 ed = sd;
             } else {
@@ -76,6 +76,7 @@ public class EditTime extends Activity implements OnClickListener {
         DatePicker startDate = (DatePicker)findViewById(R.id.start_date);
         TimePicker startTime = (TimePicker)findViewById(R.id.start_time);
         Calendar s = Calendar.getInstance();
+        s.setFirstDayOfWeek( Calendar.MONDAY );
         s.set(startDate.getYear(), startDate.getMonth(), startDate.getDayOfMonth(),
                 startTime.getCurrentHour(), startTime.getCurrentMinute());
         getIntent().putExtra(START_DATE, s.getTime().getTime());
@@ -84,6 +85,7 @@ public class EditTime extends Activity implements OnClickListener {
             DatePicker endDate = (DatePicker)findViewById(R.id.end_date);
             TimePicker endTime = (TimePicker)findViewById(R.id.end_time);
             Calendar e = Calendar.getInstance();
+            e.setFirstDayOfWeek( Calendar.MONDAY );
             e.set(endDate.getYear(), endDate.getMonth(), endDate.getDayOfMonth(),
                     endTime.getCurrentHour(), endTime.getCurrentMinute());
             if (e.compareTo(s) < 1) {
