@@ -3,7 +3,7 @@ title: Add ability to move times between tasks
 desc: ""
 type: :feature
 component: TimeTracker
-release: "2009.2"
+release: "2009.3"
 reporter: Sean Russell <ser@ser1.net>
 status: :unstarted
 disposition: 
@@ -27,4 +27,8 @@ log_events:
 - - 2009-01-07 01:40:37.948507 Z
   - Sean Russell <ser@ser1.net>
   - assigned to release 2009.2 from 2009.1
+  - ""
+- - 2009-01-18 00:59:21.065482 Z
+  - Sean Russell <ser@ser1.net>
+  - assigned to release 2009.3 from 2009.2
   - ""

@@ -3,7 +3,7 @@ title: Range select appears to be broken
 desc: ""
 type: :bugfix
 component: TimeTracker
-release: "2009.2"
+release: "2009.3"
 reporter: Sean Russell <ser@ser1.net>
 status: :unstarted
 disposition: 
@@ -19,4 +19,8 @@ log_events:
 - - 2009-01-17 16:19:45.231613 Z
   - Sean Russell <ser@ser1.net>
   - assigned to release 2009.2 from unassigned
+  - ""
+- - 2009-01-18 00:59:25.325298 Z
+  - Sean Russell <ser@ser1.net>
+  - assigned to release 2009.3 from 2009.2
   - ""

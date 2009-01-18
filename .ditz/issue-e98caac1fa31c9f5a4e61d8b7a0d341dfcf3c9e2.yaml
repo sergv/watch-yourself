@@ -3,7 +3,7 @@ title: Totals in report are wrong (looks like roll-over problem again)
 desc: ""
 type: :bugfix
 component: TimeTracker
-release: "2009.1"
+release: "2009.2"
 reporter: Sean Russell <ser@ser1.net>
 status: :unstarted
 disposition: 
@@ -15,4 +15,8 @@ log_events:
 - - 2009-01-17 13:22:49.881100 Z
   - Sean Russell <ser@ser1.net>
   - created
+  - ""
+- - 2009-01-18 01:03:03.957298 Z
+  - Sean Russell <ser@ser1.net>
+  - assigned to release 2009.2 from 2009.1
   - ""

@@ -75,3 +75,21 @@ releases:
     - Sean Russell <ser@ser1.net>
     - created
     - ""
+- !ditz.rubyforge.org,2008-03-06/release 
+  name: "2009.3"
+  status: :unreleased
+  release_time: 
+  log_events: 
+  - - 2009-01-18 00:56:47.245699 Z
+    - Sean Russell <ser@ser1.net>
+    - created
+    - ""
+- !ditz.rubyforge.org,2008-03-06/release 
+  name: Promoted
+  status: :unreleased
+  release_time: 
+  log_events: 
+  - - 2009-01-18 01:00:37.389474 Z
+    - Sean Russell <ser@ser1.net>
+    - created
+    - ""
