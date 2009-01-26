@@ -1,0 +1,18 @@
+--- !ditz.rubyforge.org,2008-03-06/issue 
+title: 12/24 hour mode selection
+desc: ""
+type: :feature
+component: TimeTracker
+release: 
+reporter: Sean Russell <ser@ser1.net>
+status: :unstarted
+disposition: 
+creation_time: 2009-01-18 13:45:53.263397 Z
+references: []
+
+id: bcb30af1afb4f67cc9be10a5f6b91b1298b30ea7
+log_events: 
+- - 2009-01-18 13:45:53.263785 Z
+  - Sean Russell <ser@ser1.net>
+  - created
+  - ""
