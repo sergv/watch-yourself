@@ -9,12 +9,12 @@
         <pathelement location="${dest}"/>
     </path>
     
-    <!-- ---------------------------------------------------------- -->
+    <!-- ########################################################## -->
     <!-- You have to create this yourself if you want a signed apk. -->
     <!-- It should consist of at least a target named "sign" that   -->
     <!-- runs a jarsigner task on the APK                           -->
     <import file="sign.xml"/>
-    <!-- ---------------------------------------------------------- -->
+    <!-- ########################################################## -->
     
     <target name="resource-src" description="Generate the R.java file for this project's resources.">
         <android:aapt>
