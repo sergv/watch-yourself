@@ -54,11 +54,11 @@ public class CSVExporter {
                         outValue = formatter.format(d);                        
                     } else if (columnNames[i].equals("end")) {
                         if (c.isNull(i)) {
-                            d.setTime(System.currentTimeMillis());
+                            outValue = "";
                         } else {
                             d.setTime(c.getLong(i));
+                            outValue = formatter.format(d);                        
                         }
-                        outValue = formatter.format(d);                        
                     } else {
                         outValue = escape(c.getString(i));
                     }
