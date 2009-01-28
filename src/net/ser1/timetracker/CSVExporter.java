@@ -48,7 +48,7 @@ public class CSVExporter {
                 prepend = "";
                 for (int i=0; i<c.getColumnCount(); i++) {
                     outputStream.print(prepend);
-                    String outValue = escape(c.getString(i));
+                    String outValue;
                     if (columnNames[i].equals("start")) {
                         d.setTime(c.getLong(i));
                         outValue = formatter.format(d);                        
@@ -59,6 +59,8 @@ public class CSVExporter {
                             d.setTime(c.getLong(i));
                         }
                         outValue = formatter.format(d);                        
+                    } else {
+                        outValue = escape(c.getString(i));
                     }
                     outputStream.print(outValue);
                     prepend = ",";
