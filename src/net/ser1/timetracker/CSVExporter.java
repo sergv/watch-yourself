@@ -9,6 +9,7 @@ import android.database.Cursor;
 
 public class CSVExporter {
     private static String escape( String s ) {
+        if (s == null) return "";
         if (s.contains(",") || s.contains("\"")) {
             s = s.replaceAll("\"", "\"\"");
             s = "\"" + s + "\"";

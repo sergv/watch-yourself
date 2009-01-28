@@ -71,6 +71,9 @@ import android.widget.AdapterView.AdapterContextMenuInfo;
  * @author ser
  */
 public class Tasks extends ListActivity {
+    protected static final String START_DAY = "start_day";
+    private static final String VIEW_MODE = "view_mode";
+    protected static final String REPORT_DATE = "report_date";
     /**
      * Defines how each task's time is displayed 
      */
@@ -107,10 +110,20 @@ public class Tasks extends ListActivity {
     /**
      * A list of menu options, including both context and options menu items 
      */
-    enum TaskMenu { ADD_TASK, EDIT_TASK, DELETE_TASK, REPORT, 
-        SHOW_TIMES, CHANGE_VIEW, SELECT_START_DATE, SELECT_END_DATE,
-        HELP, EXPORT_VIEW, EXPORT_VIEW_SUCCEED, EXPORT_VIEW_FAIL,
-        SET_WEEK_START_DAY }
+    protected static final int 
+        ADD_TASK=0,
+        EDIT_TASK=1,
+        DELETE_TASK=2,
+        REPORT=3,
+        SHOW_TIMES=4,
+        CHANGE_VIEW=5,
+        SELECT_START_DATE=6,
+        SELECT_END_DATE=7,
+        HELP=8,
+        EXPORT_VIEW=9,
+        EXPORT_VIEW_SUCCEED=10,
+        EXPORT_VIEW_FAIL=11,
+        SET_WEEK_START_DAY=12;
 
     
     @Override
@@ -119,7 +132,7 @@ public class Tasks extends ListActivity {
         preferences = getSharedPreferences("timetracker.pref", MODE_PRIVATE);
         FONT_SIZE = preferences.getInt("font-size", 16);
 
-        int which = preferences.getInt("view_mode", 0);
+        int which = preferences.getInt(VIEW_MODE, 0);
         if (adapter == null) {
             adapter = new TaskAdapter(this);
             setListAdapter(adapter);
@@ -156,7 +169,7 @@ public class Tasks extends ListActivity {
     protected void onResume() {
         // This is only to cause the view to reload, so that we catch 
         // updates to the time list.
-        int which = preferences.getInt("view_mode", 0);
+        int which = preferences.getInt(VIEW_MODE, 0);
         switchView(which);
 
         if (timer != null && currentlySelected != null) {
@@ -168,15 +181,17 @@ public class Tasks extends ListActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         super.onCreateOptionsMenu(menu);
-        menu.add(0, TaskMenu.ADD_TASK.ordinal(), 0, R.string.add_task_title)
+        menu.add(0, ADD_TASK, 0, R.string.add_task_title)
             .setIcon(android.R.drawable.ic_menu_add);
-        menu.add(0, TaskMenu.CHANGE_VIEW.ordinal(), 1, R.string.change_view_title)
+        menu.add(0, CHANGE_VIEW, 1, R.string.change_view_title)
             .setIcon(android.R.drawable.ic_menu_compass);
-        menu.add(0, TaskMenu.REPORT.ordinal(), 2, R.string.generate_report_title)
+        menu.add(0, REPORT, 2, R.string.generate_report_title)
             .setIcon(android.R.drawable.ic_menu_week);
-        menu.add(0, TaskMenu.EXPORT_VIEW.ordinal(), 3, R.string.export_view)
+        menu.add(0, EXPORT_VIEW, 3, R.string.export_view)
             .setIcon(android.R.drawable.ic_menu_save);
-        menu.add(0, TaskMenu.HELP.ordinal(), 4, R.string.help)
+        menu.add(0, SET_WEEK_START_DAY, 4, R.string.set_start_day_of_week)
+            .setIcon(android.R.drawable.ic_menu_day);
+        menu.add(0, HELP, 5, R.string.help)
             .setIcon(android.R.drawable.ic_menu_help);
         return true;
     }
@@ -185,17 +200,16 @@ public class Tasks extends ListActivity {
     public void onCreateContextMenu(ContextMenu menu, View v,
             ContextMenuInfo menuInfo) {
         menu.setHeaderTitle("Task menu");
-        menu.add(0, TaskMenu.EDIT_TASK.ordinal(), 0, "Edit Task");
-        menu.add(0, TaskMenu.DELETE_TASK.ordinal(), 0, "Delete Task");
-        menu.add(0, TaskMenu.SHOW_TIMES.ordinal(), 0, "Show times");
+        menu.add(0, EDIT_TASK, 0, "Edit Task");
+        menu.add(0, DELETE_TASK, 0, "Delete Task");
+        menu.add(0, SHOW_TIMES, 0, "Show times");
     }
 
     @Override
     public boolean onContextItemSelected(MenuItem item) {
         AdapterContextMenuInfo info = (AdapterContextMenuInfo)item.getMenuInfo();
         selectedTask = (Task)adapter.getItem((int) info.id);
-        TaskMenu m = TaskMenu.values()[item.getItemId()];
-        switch (m) {
+        switch (item.getItemId()) {
         case SHOW_TIMES:
             Intent intent = new Intent(this, TaskTimes.class);
             intent.putExtra(TASK_ID, selectedTask.getId());
@@ -216,8 +230,7 @@ public class Tasks extends ListActivity {
     private String exportMessage;
     @Override
     public boolean onMenuItemSelected(int featureId, MenuItem item) {
-        TaskMenu t = TaskMenu.values()[item.getItemId()];
-        switch (t) {
+        switch (item.getItemId()) {
         case ADD_TASK:
         case CHANGE_VIEW:
         case HELP:
@@ -228,16 +241,19 @@ public class Tasks extends ListActivity {
             if (fname != null) {
                 exportMessage = getString(R.string.export_csv_success, fname);
                 if (exportSucceed != null) exportSucceed.setMessage(exportMessage);
-                showDialog(TaskMenu.EXPORT_VIEW_SUCCEED.ordinal());
+                showDialog(EXPORT_VIEW_SUCCEED);
             } else {
-                showDialog(TaskMenu.EXPORT_VIEW_FAIL.ordinal());
+                showDialog(EXPORT_VIEW_FAIL);
             }
             break;
         case REPORT:
             Intent intent = new Intent(this, Report.class);
-            intent.putExtra("report-date", System.currentTimeMillis());
+            intent.putExtra(REPORT_DATE, System.currentTimeMillis());
+            intent.putExtra(START_DAY, preferences.getInt(START_DAY, 0)+1);
             startActivity(intent);
             break;
+        case SET_WEEK_START_DAY:
+            showDialog(SET_WEEK_START_DAY);
         default:
             // Ignore the other menu items; they're context menu
             break;
@@ -247,8 +263,7 @@ public class Tasks extends ListActivity {
 
     @Override
     protected Dialog onCreateDialog(int id) {
-        TaskMenu action = TaskMenu.values()[id];
-        switch (action) {
+        switch (id) {
         case ADD_TASK:
             return openNewTaskDialog();
         case EDIT_TASK:
@@ -276,7 +291,6 @@ public class Tasks extends ListActivity {
             .create();
         case SELECT_START_DATE:
             Calendar today_s = Calendar.getInstance();
-            today_s.setFirstDayOfWeek( Calendar.MONDAY );
             // An ad-hoc date picker for the start date, which in turn
             // invokes another dialog (the "pick end date" dialog) when it is 
             // finished
@@ -287,7 +301,7 @@ public class Tasks extends ListActivity {
                             sYear = year;
                             sMonth = monthOfYear;
                             sDay = dayOfMonth;
-                            showDialog(TaskMenu.SELECT_END_DATE.ordinal());
+                            showDialog(SELECT_END_DATE);
                         }
                     }, 
                     today_s.get(Calendar.YEAR), 
@@ -314,10 +328,25 @@ public class Tasks extends ListActivity {
                             adapter.loadTasks( start, end );
                         }
                     }, sYear, sMonth, sDay);
+        case SET_WEEK_START_DAY:
+            return openSetStartDayDialog();
         }
         return null;
     }
     
+    private Dialog openSetStartDayDialog() {
+        return new AlertDialog.Builder(Tasks.this)
+        .setItems(R.array.startDays, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int which) {                
+                SharedPreferences.Editor ed = preferences.edit();
+                ed.putInt(START_DAY, which);
+                ed.commit();
+                switchView(preferences.getInt(VIEW_MODE, 0));
+                Tasks.this.getListView().invalidate();
+            }            
+        }).create();
+    }
+
     /**
      * Creates a dialog to change the dates for which task times are shown.
      * Offers a short selection of pre-defined defaults, and the option to
@@ -333,7 +362,7 @@ public class Tasks extends ListActivity {
                 switchView(which);
                 if (which < 5) {
                     SharedPreferences.Editor ed = preferences.edit();
-                    ed.putInt("view_mode", which);
+                    ed.putInt(VIEW_MODE, which);
                     ed.commit();
                 }
                 Tasks.this.getListView().invalidate();
@@ -343,27 +372,30 @@ public class Tasks extends ListActivity {
     
     private void switchView(int which) {
         Calendar tw = Calendar.getInstance();
-        tw.setFirstDayOfWeek( Calendar.MONDAY );
+        tw.setFirstDayOfWeek( preferences.getInt(START_DAY, 0)+1 );
+        int startDay;
         switch (which) {
         case 0: // today
             adapter.loadTasks( tw );
             break;
         case 1: // this week
-            adapter.loadTasks( weekStart( tw ), weekEnd( tw ) );
+            startDay = preferences.getInt(START_DAY, 0)+1;
+            adapter.loadTasks( weekStart( tw, startDay ), weekEnd( tw, startDay ) );
             break;
         case 2: // yesterday
             tw.add(Calendar.DAY_OF_MONTH, -1);
             adapter.loadTasks( tw );
             break;
         case 3: // last week
+            startDay = preferences.getInt(START_DAY, 0)+1;
             tw.add(Calendar.WEEK_OF_YEAR, -1);
-            adapter.loadTasks( weekStart( tw ), weekEnd( tw ) );
+            adapter.loadTasks( weekStart( tw, startDay ), weekEnd( tw, startDay ) );
             break;
         case 4: // all
             adapter.loadTasks();
             break;
         case 5: // select range
-            showDialog(TaskMenu.SELECT_START_DATE.ordinal());
+            showDialog(SELECT_START_DATE);
             break;
         default: // Unknown
             break;
@@ -461,7 +493,7 @@ public class Tasks extends ListActivity {
         }
         try {
             OutputStream out = new FileOutputStream(fout);
-            Cursor currentRange = getCurrentRange();
+            Cursor currentRange = adapter.getCurrentRange();
             CSVExporter.exportRows(out, currentRange);
             currentRange.close();
             
@@ -472,10 +504,6 @@ public class Tasks extends ListActivity {
         }
     }
     
-    private Cursor getCurrentRange() {
-        return adapter.getCurrentRange();
-    }
-
     private String getRangeName() {
         if (adapter.currentRangeStart == -1)
             return "all";
@@ -522,9 +550,8 @@ public class Tasks extends ListActivity {
 
     @Override
     protected void onPrepareDialog( int id, Dialog d ) {
-        TaskMenu action = TaskMenu.values()[id];
         EditText textView;
-        switch (action) {
+        switch (id) {
         case ADD_TASK:
             textView = (EditText)d.findViewById(R.id.task_edit_name_edit);
             textView.setText("");
@@ -653,7 +680,7 @@ public class Tasks extends ListActivity {
         private String[] makeWhereClause( Calendar start, Calendar end ) {
             String query = "AND "+START+" < %d AND "+START+" >= %d";
             Calendar today = Calendar.getInstance();
-            today.setFirstDayOfWeek( Calendar.MONDAY );
+            today.setFirstDayOfWeek( preferences.getInt(START_DAY, 0)+1 );
             today.set(Calendar.HOUR_OF_DAY, 12);
             for (int field : new int[] { Calendar.HOUR_OF_DAY, Calendar.MINUTE, 
                                          Calendar.SECOND, 
@@ -724,10 +751,10 @@ public class Tasks extends ListActivity {
             String[] res = { "" };
             if (currentRangeStart != -1 && currentRangeEnd != -1) {
                 Calendar start = Calendar.getInstance();
-                start.setFirstDayOfWeek( Calendar.MONDAY );
+                start.setFirstDayOfWeek( preferences.getInt(START_DAY, 0)+1 );
                 start.setTimeInMillis(currentRangeStart);
                 Calendar end = Calendar.getInstance();
-                end.setFirstDayOfWeek( Calendar.MONDAY );
+                end.setFirstDayOfWeek( preferences.getInt(START_DAY, 0)+1 );
                 end.setTimeInMillis(currentRangeEnd);
                 res = makeWhereClause(start, end);
             }

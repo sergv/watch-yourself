@@ -64,4 +64,5 @@
 <string name="export_csv_fail">Failed to export CSV.  Couldn't create the file.  Is an SD card inserted?</string>
 <string name="success">Success</string>
 <string name="failure">Fail</string>
+<string name="set_start_day_of_week">Set the day the week starts</string>
 </resources>

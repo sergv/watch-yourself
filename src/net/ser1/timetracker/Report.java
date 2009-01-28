@@ -9,6 +9,8 @@ import static net.ser1.timetracker.DBHelper.TASK_COLUMNS;
 import static net.ser1.timetracker.DBHelper.TASK_ID;
 import static net.ser1.timetracker.DBHelper.TASK_NAME;
 import static net.ser1.timetracker.DBHelper.TASK_TABLE;
+import static net.ser1.timetracker.Tasks.REPORT_DATE;
+import static net.ser1.timetracker.Tasks.START_DAY;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -23,7 +25,6 @@ import java.util.Map;
 import java.util.TimeZone;
 import java.util.TreeMap;
 
-import net.ser1.timetracker.Tasks.TaskMenu;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -79,7 +80,7 @@ public class Report extends Activity implements OnClickListener {
     /**
      * Defines how each task's time is displayed 
      */
-    private Calendar week, weekEnd;
+    private Calendar weekStart, weekEnd;
     private Map<Integer,TextView[]> dateViews = new TreeMap<Integer,TextView[]>();
     private static final int PAD = 2;
     private static final int RPAD = 4;
@@ -89,6 +90,7 @@ public class Report extends Activity implements OnClickListener {
     private static final SimpleDateFormat TITLE_FORMAT = new SimpleDateFormat("EEE, MMM d");
     private DBHelper dbHelper;
     private SQLiteDatabase db;
+    private int startDay;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -101,10 +103,11 @@ public class Report extends Activity implements OnClickListener {
         
         Calendar c = Calendar.getInstance();
         c.setFirstDayOfWeek( Calendar.MONDAY );
-        c.setTimeInMillis(getIntent().getExtras().getLong("report-date"));
-        week = weekStart(c);
-        weekEnd = weekEnd(c);
-        String beginning = TITLE_FORMAT.format(week.getTime());
+        c.setTimeInMillis(getIntent().getExtras().getLong(REPORT_DATE));
+        startDay = getIntent().getExtras().getInt(START_DAY);
+        weekStart = weekStart(c, startDay);
+        weekEnd = weekEnd(c, startDay);
+        String beginning = TITLE_FORMAT.format(weekStart.getTime());
         String ending = TITLE_FORMAT.format(weekEnd.getTime());
         String title = getString(R.string.report_title, beginning, ending);
         setTitle( title );
@@ -129,7 +132,7 @@ public class Report extends Activity implements OnClickListener {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         super.onCreateOptionsMenu(menu);
-        menu.add(0, TaskMenu.EXPORT_VIEW.ordinal(), 0, R.string.export_view)
+        menu.add(0, Tasks.EXPORT_VIEW, 0, R.string.export_view)
             .setIcon(android.R.drawable.ic_menu_save);
         return true;
     }
@@ -138,16 +141,15 @@ public class Report extends Activity implements OnClickListener {
     private String exportMessage;
     @Override
     public boolean onMenuItemSelected(int featureId, MenuItem item) {
-        TaskMenu t = TaskMenu.values()[item.getItemId()];
-        switch (t) {
-        case EXPORT_VIEW:
+        switch (item.getItemId()) {
+        case Tasks.EXPORT_VIEW:
             String fname = export();
             if (fname != null) {
                 exportMessage = getString(R.string.export_csv_success, fname);
                 if (exportSucceed != null) exportSucceed.setMessage(exportMessage);
-                showDialog(TaskMenu.EXPORT_VIEW_SUCCEED.ordinal());
+                showDialog(Tasks.EXPORT_VIEW_SUCCEED);
             } else {
-                showDialog(TaskMenu.EXPORT_VIEW_FAIL.ordinal());
+                showDialog(Tasks.EXPORT_VIEW_FAIL);
             }
             break;
         default:
@@ -159,9 +161,8 @@ public class Report extends Activity implements OnClickListener {
     
     @Override
     protected Dialog onCreateDialog(int id) {
-        TaskMenu action = TaskMenu.values()[id];
-        switch (action) {
-        case EXPORT_VIEW_SUCCEED:
+        switch (id) {
+        case Tasks.EXPORT_VIEW_SUCCEED:
             exportSucceed = new AlertDialog.Builder(this)
             .setTitle(R.string.success)
             .setIcon(android.R.drawable.stat_notify_sdcard)
@@ -169,7 +170,7 @@ public class Report extends Activity implements OnClickListener {
             .setPositiveButton(android.R.string.ok, null)
             .create();
             return exportSucceed;
-        case EXPORT_VIEW_FAIL:
+        case Tasks.EXPORT_VIEW_FAIL:
             return new AlertDialog.Builder(this)
             .setTitle(R.string.failure)
             .setIcon(android.R.drawable.stat_notify_sdcard)
@@ -225,14 +226,16 @@ public class Report extends Activity implements OnClickListener {
         }
         c.close();
         
+        int[] weekDays = new int[7];
+        for (int i = 0; i < 7; i++) {
+            weekDays[i] = ((weekStart.getFirstDayOfWeek()-1+i)%7)+1;
+        }
         // Add the headers
         String[] headers = new String[9];
         headers[0] = "Task name";
-        for (int i = week.getMinimum(Calendar.DAY_OF_WEEK); 
-                 i <= week.getMaximum(Calendar.DAY_OF_WEEK);
-                 i++) {
-            Day s = Day.fromCalEnum(i);
-            headers[i] = s.header;
+        for (int i = 0; i<7; i++) {
+            Day s = Day.fromCalEnum(weekDays[i]);
+            headers[i+1] = s.header;
         }
         headers[8] = "Total";
         tasks.add(headers);
@@ -262,7 +265,7 @@ public class Report extends Activity implements OnClickListener {
 
     private String getRangeName() {
         SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
-        return formatter.format(week.getTime());
+        return formatter.format(weekStart.getTime());
     }
 
     private static final int DKDKYELLOW = Color.argb(100, 75, 75, 0);
@@ -274,14 +277,12 @@ public class Report extends Activity implements OnClickListener {
         TextView blank = new TextView(this);
         blank.setPadding(PAD,PAD*2,RPAD,PAD);
         row.addView(blank, new TableRow.LayoutParams(0));
-        for (int i = week.getMinimum(Calendar.DAY_OF_WEEK); 
-                 i <= week.getMaximum(Calendar.DAY_OF_WEEK);
-                 i++) {
+        for (int i = 0; i < 7; i++) {
             TextView dayTime = new TextView(this);
-            totals[i-1] = dayTime;
+            totals[i] = dayTime;
             dayTime.setPadding(PAD,PAD*2,RPAD,PAD);
             dayTime.setTypeface(Typeface.SANS_SERIF, Typeface.ITALIC);
-            if (i % 2 == 0) 
+            if (i % 2 == 1) 
                 dayTime.setBackgroundColor(DKYELLOW);
             else
                 dayTime.setBackgroundColor(DKDKYELLOW);
@@ -319,17 +320,20 @@ public class Report extends Activity implements OnClickListener {
         blank.setPadding(PAD,PAD,RPAD,PAD);
         blank.setTypeface(Typeface.SANS_SERIF, Typeface.BOLD);
         row.addView(blank, new TableRow.LayoutParams(0));
+        
+        int[] weekDays = new int[7];
+        for (int i = 0; i < 7; i++) {
+            weekDays[i] = ((weekStart.getFirstDayOfWeek()-1+i)%7)+1;
+        }
 
-        for (int i = week.getMinimum(Calendar.DAY_OF_WEEK); 
-                 i <= week.getMaximum(Calendar.DAY_OF_WEEK);
-                 i++) {
-            Day s = Day.fromCalEnum(i);
+        for (int i = 0; i < 7; i++) {
+            Day s = Day.fromCalEnum(weekDays[i]);
             TextView header  = new TextView(this);
             header.setText(s.toString());
             header.setPadding(PAD,PAD,RPAD,PAD);
             header.setGravity(Gravity.CENTER_HORIZONTAL);
             header.setTypeface(Typeface.SANS_SERIF, Typeface.BOLD);
-            if (i % 2 == 0) 
+            if (i % 2 == 1) 
                 header.setBackgroundColor(Color.DKGRAY);
             row.addView(header,new TableRow.LayoutParams());
         }
@@ -360,14 +364,11 @@ public class Report extends Activity implements OnClickListener {
                 taskName.setPadding(PAD,PAD,RPAD,PAD);
                 row.addView(taskName, new TableRow.LayoutParams(0));
                 
-                for (int i = week.getMinimum(Calendar.DAY_OF_WEEK); 
-                         i <= week.getMaximum(Calendar.DAY_OF_WEEK);
-                         i++) {
+                for (int i = 0; i < 7; i++) {
                     TextView dayTime = new TextView(this);
-                    arryForDay[i-1] = dayTime;
+                    arryForDay[i] = dayTime;
                     dayTime.setPadding(PAD,PAD,RPAD,PAD);
-                    if (i % 2 == 0) 
-                        dayTime.setBackgroundColor(Color.DKGRAY);
+                    if (i % 2 == 1) dayTime.setBackgroundColor(Color.DKGRAY);
                     row.addView(dayTime, new TableRow.LayoutParams());
                 }
     
@@ -388,10 +389,10 @@ public class Report extends Activity implements OnClickListener {
      * @param tw the day for which to calculate the week start
      * @return a Calendar marking the start of the week
      */
-    public static Calendar weekStart(Calendar tw) {
+    public static Calendar weekStart(Calendar tw, int startDay) {
         Calendar ws = (Calendar)tw.clone();
-        ws.setFirstDayOfWeek( Calendar.MONDAY );
-        ws.set(Calendar.DAY_OF_WEEK, ws.getMinimum(Calendar.DAY_OF_WEEK));
+        ws.setFirstDayOfWeek( startDay );
+        ws.set(Calendar.DAY_OF_WEEK, startDay);
         ws.set(Calendar.HOUR_OF_DAY, ws.getMinimum(Calendar.HOUR_OF_DAY));
         ws.set(Calendar.MINUTE, ws.getMinimum(Calendar.MINUTE));
         ws.set(Calendar.SECOND, ws.getMinimum(Calendar.SECOND));
@@ -405,10 +406,10 @@ public class Report extends Activity implements OnClickListener {
      * @param tw the day for which to calculate the week end
      * @return a Calendar marking the end of the week
      */
-    public static Calendar weekEnd(Calendar tw) {
+    public static Calendar weekEnd(Calendar tw, int startDay) {
         Calendar ws = (Calendar)tw.clone();
-        ws.setFirstDayOfWeek( Calendar.MONDAY );
-        ws.set(Calendar.DAY_OF_WEEK, ws.getMaximum(Calendar.DAY_OF_WEEK));
+        ws.setFirstDayOfWeek( startDay );
+        ws.set(Calendar.DAY_OF_WEEK, startDay+6);
         ws.set(Calendar.HOUR_OF_DAY, ws.getMaximum(Calendar.HOUR_OF_DAY));
         ws.set(Calendar.MINUTE, ws.getMaximum(Calendar.MINUTE));
         ws.set(Calendar.SECOND, ws.getMaximum(Calendar.SECOND));
@@ -419,22 +420,22 @@ public class Report extends Activity implements OnClickListener {
     public void onClick(View v) {
         switch (v.getId()) {
         case R.id.increment_week:
-            week.add(Calendar.WEEK_OF_YEAR, 1);
+            weekStart.add(Calendar.WEEK_OF_YEAR, 1);
             weekEnd.add(Calendar.WEEK_OF_YEAR, 1);
             break;
         case R.id.decrement_week:
-            week.add(Calendar.WEEK_OF_YEAR, -1);
+            weekStart.add(Calendar.WEEK_OF_YEAR, -1);
             weekEnd.add(Calendar.WEEK_OF_YEAR, -1);
             break;
         default:
             break;
         }
-        String beginning = TITLE_FORMAT.format(week.getTime());
+        String beginning = TITLE_FORMAT.format(weekStart.getTime());
         String ending = TITLE_FORMAT.format(weekEnd.getTime());
         String title = getString(R.string.report_title, beginning, ending);
         setTitle( title );
         fillInTasksAndRanges();
-        weekView.setText(getString(R.string.week,WEEK_FORMAT.format(week.getTime())));
+        weekView.setText(getString(R.string.week,WEEK_FORMAT.format(weekStart.getTime())));
     }
     
     private void fillInTasksAndRanges() {
@@ -455,7 +456,7 @@ public class Report extends Activity implements OnClickListener {
                 for (int i = 0 ; i < 7; i++) {
                     weekTotal += days[i];
                     dayTotals[i] += days[i];
-                    arryForDay[i].setText( FORMAT.format(new Date(days[i])) );                        
+                    arryForDay[i].setText(FORMAT.format(new Date(days[i])));                        
                 }
                 arryForDay[7].setText(FORMAT.format(new Date(weekTotal)));
                 dayTotals[7] += weekTotal;
@@ -477,13 +478,13 @@ public class Report extends Activity implements OnClickListener {
 
     private long[] getDays(String tid_s) {
         Calendar day = Calendar.getInstance();
-        day.setFirstDayOfWeek( Calendar.MONDAY );
+        day.setFirstDayOfWeek( startDay );
         long days[] = {0,0,0,0,0,0,0};
         Cursor r = db.query(RANGES_TABLE, RANGE_COLUMNS, TASK_ID+" = ? AND "
                 +START+" < ? AND ( "+END+" > ? OR "+END+" ISNULL )",
                 new String[] { tid_s, 
                                String.valueOf(weekEnd.getTimeInMillis()),
-                               String.valueOf(week.getTimeInMillis())},
+                               String.valueOf(weekStart.getTimeInMillis())},
                 null,null,null);
 
         if (r.moveToFirst()) {
@@ -497,19 +498,15 @@ public class Report extends Activity implements OnClickListener {
                 }
                 
                 day.setTimeInMillis(end);
-                int endWeekDay = 
-                    day.get(Calendar.WEEK_OF_YEAR) == week.get(Calendar.WEEK_OF_YEAR) ?
-                    day.get(Calendar.DAY_OF_WEEK) : 
-                    day.getMaximum(Calendar.DAY_OF_WEEK);
-                day.setTimeInMillis(start);
-                int startWeekDay = 
-                    day.get(Calendar.WEEK_OF_YEAR) == week.get(Calendar.WEEK_OF_YEAR) ?
-                    day.get(Calendar.DAY_OF_WEEK) :
-                    day.getMinimum(Calendar.DAY_OF_WEEK);
                 
+                int[] weekDays = new int[7];
+                for (int i = 0; i < 7; i++) {
+                    weekDays[i] = ((weekStart.getFirstDayOfWeek()-1+i)%7)+1;
+                }
+
                 // At this point, "day" must be set to the start time
-                for (int i = startWeekDay-1 ; i < endWeekDay; i++ ) {
-                    Day d = Day.fromCalEnum(i+1);
+                for (int i=0; i<7; i++) {
+                    Day d = Day.fromCalEnum(weekDays[i]);
                     day.set(Calendar.DAY_OF_WEEK, d.calEnum);
                     days[i] += TimeRange.overlap(day, start, end);
                 }
