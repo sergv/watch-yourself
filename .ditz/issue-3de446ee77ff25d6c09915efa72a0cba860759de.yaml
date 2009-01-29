@@ -5,8 +5,8 @@ type: :feature
 component: TimeTracker
 release: "2009.2"
 reporter: Sean Russell <ser@ser1.net>
-status: :unstarted
-disposition: 
+status: :closed
+disposition: :fixed
 creation_time: 2008-12-10 12:34:37.891148 Z
 references: []
 
@@ -27,4 +27,8 @@ log_events:
 - - 2009-01-18 01:00:09.694549 Z
   - Sean Russell <ser@ser1.net>
   - assigned to release 2009.2 from 2009.1
+  - ""
+- - 2009-01-29 11:48:04.220658 Z
+  - Sean Russell <ser@ser1.net>
+  - closed with disposition fixed
   - ""

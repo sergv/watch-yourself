@@ -156,6 +156,9 @@ public class Tasks extends ListActivity {
             };
         }
         registerForContextMenu(getListView());
+        if (adapter.tasks.size() == 0) {
+            showDialog(HELP);
+        }
     }
     
     @Override
@@ -545,9 +548,9 @@ public class Tasks extends ListActivity {
                 startActivity(intent);
             }
         });
-        TextView links = (TextView)about.findViewById(R.id.usage_4);
+        TextView links = (TextView)about.findViewById(R.id.usage);
         Linkify.addLinks(links, Linkify.ALL);
-        links = (TextView)about.findViewById(R.id.credits_1);
+        links = (TextView)about.findViewById(R.id.credits);
         Linkify.addLinks(links, Linkify.ALL);
         
         return new AlertDialog.Builder(Tasks.this)

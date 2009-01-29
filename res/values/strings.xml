@@ -33,37 +33,46 @@
     <!-- About dialog strings -->
     <string name="version">Version %s</string>
     <string name="author">Sean E. Russell</string>
-    <string name="donate"><b>If you like this app, please donate and support future development! (Click Me)</b></string>
+    <string name="donate"><b>If you like this app, please donate and support future development! (Click here)</b></string>
     <string name="purpose">TimeTracker helps you record the amount of time you spend on
         activities; for example, for recording time in a time sheet at work.  It
         provides ways to view, edit, and filter times, and provides a 
         time sheet report as well.</string>
-    <string name="usage_1">Create some tasks using the main task view's <i>Add Task</i> menu item.
-    Tap a task to start timing; tap it again to stop timing, or tap a different task
-    to switch timing to the other task.  Two tasks can not be running at the same time.
-    Use the <i>Change View</i> menu item to filter the time display by a date range, such as
-    viewing times for <i>Today</i>, <i>Yesterday</i>, <i>This Week</i>, etc.
-    Use the <i>Report</i> menu item to view a report of the daily time sums per task
-    for an entire week.</string>
-    <string name="usage_2">The task context menu allows you to edit tasks (change their names), delete tasks
+    <string name="usage">
+    Detailed instructions are at http://trac.germane-software.com/TimeTracker\n\n
+    • Create some tasks using the menu\n
+    • Tap a task to start timing; tap it again to stop timing\n
+    • Use the task context menu to list times for the task\n
+    • Change the displayed time range with the menu\n
+    • View a weekly report with the menu\n
+    \n
+    Tapping a different task switches timing to the other task.  Two tasks can 
+    not be running at the same time.\n
+    \n
+    The task context menu allows you to edit tasks (change their names), delete tasks
     (including all of the time history for that task!), or view the time log for that
-    task.</string>
-    <string name="usage_3">The time log for a task is filtered on the same range that you selected for the
+    task.\n
+    \n
+    <b>Time Log view</b>\n
+    \n
+    The time log for a task is filtered on the same range that you selected for the
     main task view, so if you filtered the task view for <i>This Week</i> and you open
-    the time log, then you'll only see times for this week.  Use the <i>Add Time</i> to
-    manually insert times into the time log.  <b>Note</b> that TimeTracker will not
-    prevent you from creating times that overlap with times in other (or the same) task.
-    Use the context menu for a time to edit the time range, or simply click
-    on a time to do the same thing.  The context dialog for a time also includes
-    the option of deleting the time.</string>
-    <string name="usage_4">You can visit http://ditz.germane-software.com/TimeTracker 
-    to see a list of known bugs and future enhancements.</string>
-    <string name="credits_1">The TimeTracker application icon was borrowed from
-    the excellent glyFX icon library by PerthWeb Pty Ltd (www.glyfx.com).</string>
-<string name="export_csv_success">Successfully exported CSV to memory card as %s</string>
-<string name="export_csv_fail">Failed to export CSV.  Couldn't create the file.  Is an SD card inserted?</string>
-<string name="success">Success</string>
-<string name="failure">Fail</string>
-<string name="set_start_day_of_week">Set the day the week starts</string>
-<string name="more">More...</string>
+    the time log, then you'll only see times for this week.  Use the <i>Add Time</i> 
+    menu item to manually insert times into the time log.  Use the context menu
+    for a time to delete or edit a time range.\n
+    \n
+    <b>Note</b> that TimeTracker will not prevent you from creating times that overlap
+    with times in other (or the same) task.
+    </string>
+    <string name="credits"><b>Credits</b>\n
+    \n
+    The TimeTracker application icon was borrowed from
+    the excellent glyFX icon library by PerthWeb Pty Ltd (www.glyfx.com).
+    </string>
+    <string name="export_csv_success">Successfully exported CSV to memory card as %s</string>
+    <string name="export_csv_fail">Failed to export CSV.  Couldn't create the file.  Is an SD card inserted?</string>
+    <string name="success">Success</string>
+    <string name="failure">Fail</string>
+    <string name="set_start_day_of_week">Set the day the week starts</string>
+    <string name="more">More...</string>
 </resources>
