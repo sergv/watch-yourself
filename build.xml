@@ -8,6 +8,9 @@
         <pathelement path="${android-home}/android.jar"/>
         <pathelement location="${dest}"/>
     </path>
+    <fileset dir="bin" id="main.jars">
+      <!--<include name="positron.jar"/>-->
+    </fileset>
     
     <!-- ########################################################## -->
     <!-- You have to create this yourself if you want a signed apk. -->
