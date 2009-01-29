@@ -3,7 +3,7 @@ title: Auto-adjust end time if start time advances beyond; auto-adjust start tim
 desc: ""
 type: :feature
 component: TimeTracker
-release: "2009.2"
+release: 
 reporter: Sean Russell <ser@ser1.net>
 status: :unstarted
 disposition: 
@@ -28,3 +28,7 @@ log_events:
   - Sean Russell <ser@ser1.net>
   - assigned to release 2009.2 from 2009.1
   - ""
+- - 2009-01-29 02:45:35.147610 Z
+  - Sean Russell <ser@ser1.net>
+  - unassigned from release 2009.2
+  - Not really that important.

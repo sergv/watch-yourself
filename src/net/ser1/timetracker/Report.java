@@ -439,26 +439,30 @@ public class Report extends Activity implements OnClickListener {
     }
     
     private void fillInTasksAndRanges() {
+        // Iterate over each task and set the day values, and accumulate the day 
+        // and week totals
         Cursor c = db.query(TASK_TABLE, TASK_COLUMNS, null, null, null, null, NAME);
-        // This is a re-usable instance for the overlap method, which changes 
-        // the instance data.  This is here for optimization.
-
+        // The totals for all tasks for each day, plus one for the week total.
         long dayTotals[] = {0,0,0,0,0,0,0,0};
         if (c.moveToFirst()) {
             do {
                 int tid = c.getInt(0);
                 String tid_s = String.valueOf(tid);
                 TextView[] arryForDay = dateViews.get(tid);
-                
+                // Fetch an array of times (per day) for the task
                 long[] days = getDays(tid_s);
-
+                // The total for this task, for the whole week
                 int weekTotal = 0;
                 for (int i = 0 ; i < 7; i++) {
                     weekTotal += days[i];
                     dayTotals[i] += days[i];
                     arryForDay[i].setText(FORMAT.format(new Date(days[i])));                        
                 }
-                arryForDay[7].setText(FORMAT.format(new Date(weekTotal)));
+                // Set the week total.  Since this value can be more than 24 hours,
+                // we have to format it by hand:
+                long hours = weekTotal / 3600000;
+                long minutes = (weekTotal - hours*3600000) / 60000;
+                arryForDay[7].setText(String.format("%02d:%02d", hours, minutes));
                 dayTotals[7] += weekTotal;
             } while (c.moveToNext());
         }

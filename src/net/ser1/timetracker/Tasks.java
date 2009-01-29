@@ -468,6 +468,7 @@ public class Tasks extends ListActivity {
      * @return the dialog to display
      */
     private Dialog openDeleteTaskDialog() {
+        if (selectedTask == null) return null;
         String formattedMessage = getString(R.string.delete_task_message, 
                 selectedTask.getTaskName());
         return new AlertDialog.Builder(Tasks.this)
