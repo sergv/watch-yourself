@@ -123,7 +123,8 @@ public class Tasks extends ListActivity {
         EXPORT_VIEW=9,
         EXPORT_VIEW_SUCCEED=10,
         EXPORT_VIEW_FAIL=11,
-        SET_WEEK_START_DAY=12;
+        SET_WEEK_START_DAY=12,
+        MORE=13;
 
     
     @Override
@@ -183,19 +184,13 @@ public class Tasks extends ListActivity {
         super.onCreateOptionsMenu(menu);
         menu.add(0, ADD_TASK, 0, R.string.add_task_title)
             .setIcon(android.R.drawable.ic_menu_add);
-        menu.add(0, CHANGE_VIEW, 1, R.string.change_view_title)
-            .setIcon(android.R.drawable.ic_menu_compass);
-        menu.add(0, REPORT, 2, R.string.generate_report_title)
+        menu.add(0, REPORT, 1, R.string.generate_report_title)
             .setIcon(android.R.drawable.ic_menu_week);
-        menu.add(0, EXPORT_VIEW, 3, R.string.export_view)
-            .setIcon(android.R.drawable.ic_menu_save);
-        menu.add(0, SET_WEEK_START_DAY, 4, R.string.set_start_day_of_week)
-            .setIcon(android.R.drawable.ic_menu_day);
-        menu.add(0, HELP, 5, R.string.help)
-            .setIcon(android.R.drawable.ic_menu_help);
+        menu.add(0, MORE, 2, R.string.more)
+            .setIcon(android.R.drawable.ic_menu_more);
         return true;
     }
-
+    
     @Override
     public void onCreateContextMenu(ContextMenu menu, View v,
             ContextMenuInfo menuInfo) {
@@ -232,19 +227,8 @@ public class Tasks extends ListActivity {
     public boolean onMenuItemSelected(int featureId, MenuItem item) {
         switch (item.getItemId()) {
         case ADD_TASK:
-        case CHANGE_VIEW:
-        case HELP:
+        case MORE:
             showDialog(item.getItemId());
-            break;
-        case EXPORT_VIEW:
-            String fname = export();
-            if (fname != null) {
-                exportMessage = getString(R.string.export_csv_success, fname);
-                if (exportSucceed != null) exportSucceed.setMessage(exportMessage);
-                showDialog(EXPORT_VIEW_SUCCEED);
-            } else {
-                showDialog(EXPORT_VIEW_FAIL);
-            }
             break;
         case REPORT:
             Intent intent = new Intent(this, Report.class);
@@ -252,8 +236,6 @@ public class Tasks extends ListActivity {
             intent.putExtra(START_DAY, preferences.getInt(START_DAY, 0)+1);
             startActivity(intent);
             break;
-        case SET_WEEK_START_DAY:
-            showDialog(SET_WEEK_START_DAY);
         default:
             // Ignore the other menu items; they're context menu
             break;
@@ -329,24 +311,49 @@ public class Tasks extends ListActivity {
                         }
                     }, sYear, sMonth, sDay);
         case SET_WEEK_START_DAY:
-            return openSetStartDayDialog();
+            return new AlertDialog.Builder(Tasks.this)
+            .setItems(R.array.startDays, new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int which) {                
+                    SharedPreferences.Editor ed = preferences.edit();
+                    ed.putInt(START_DAY, which);
+                    ed.commit();
+                    switchView(preferences.getInt(VIEW_MODE, 0));
+                    Tasks.this.getListView().invalidate();
+                }            
+            }).create();
+        case MORE:
+            return new AlertDialog.Builder(Tasks.this)
+                .setItems(R.array.moreMenu, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        switch(which) {
+                        case 0: // CHANGE_VIEW:
+                            showDialog(CHANGE_VIEW);
+                            break;
+                        case 1: // EXPORT_VIEW:
+                            String fname = export();
+                            if (fname != null) {
+                                exportMessage = getString(R.string.export_csv_success, fname);
+                                if (exportSucceed != null) exportSucceed.setMessage(exportMessage);
+                                showDialog(EXPORT_VIEW_SUCCEED);
+                            } else {
+                                showDialog(EXPORT_VIEW_FAIL);
+                            }
+                            break;
+                        case 2: // SET_WEEK_START_DAY:
+                            showDialog(SET_WEEK_START_DAY);
+                            break;
+                        case 3: // HELP:
+                            showDialog(HELP);
+                            break;
+                        default:
+                            break;
+                        }
+                    }
+                }).create();
         }
         return null;
     }
     
-    private Dialog openSetStartDayDialog() {
-        return new AlertDialog.Builder(Tasks.this)
-        .setItems(R.array.startDays, new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int which) {                
-                SharedPreferences.Editor ed = preferences.edit();
-                ed.putInt(START_DAY, which);
-                ed.commit();
-                switchView(preferences.getInt(VIEW_MODE, 0));
-                Tasks.this.getListView().invalidate();
-            }            
-        }).create();
-    }
-
     /**
      * Creates a dialog to change the dates for which task times are shown.
      * Offers a short selection of pre-defined defaults, and the option to

@@ -65,4 +65,5 @@
 <string name="success">Success</string>
 <string name="failure">Fail</string>
 <string name="set_start_day_of_week">Set the day the week starts</string>
+<string name="more">More...</string>
 </resources>

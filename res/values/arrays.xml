@@ -12,4 +12,10 @@
         <item>Sunday</item>
         <item>Monday</item>
     </string-array>
+    <string-array name="moreMenu">
+        <item>Change view</item>
+        <item>Export view to CSV</item>
+        <item>Set start of week</item>
+        <item>Help</item>
+    </string-array>
 </resources>
