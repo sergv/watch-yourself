@@ -2,8 +2,8 @@
 title: Add ability to list all times for selected view for all tasks
 desc: ""
 type: :feature
-component: TimeTracker
-release: 
+component: tt
+release: Promoted
 reporter: Sean Russell <ser@ser1.net>
 status: :unstarted
 disposition: 
@@ -15,4 +15,16 @@ log_events:
 - - 2009-01-29 02:44:17.975531 Z
   - Sean Russell <ser@ser1.net>
   - created
+  - ""
+- - 2009-01-30 11:25:18.657762 Z
+  - Sean Russell <ser@ser1.net>
+  - assigned to release Promoted from unassigned
+  - ""
+- - 2009-01-30 11:28:07.723590 Z
+  - Sean Russell <ser@ser1.net>
+  - assigned to release 2009.4 from Promoted
+  - ""
+- - 2009-01-30 11:29:02.708327 Z
+  - Sean Russell <ser@ser1.net>
+  - assigned to release Promoted from 2009.4
   - ""

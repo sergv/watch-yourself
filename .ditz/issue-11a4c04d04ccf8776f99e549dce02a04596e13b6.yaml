@@ -4,7 +4,7 @@ desc: |-
   If a TimeRange has been consumed, remove it from the list of ranges
   being iterated over for each day.
 type: :feature
-component: TimeTracker
+component: tt
 release: 
 reporter: Sean Russell <ser@ser1.net>
 status: :closed

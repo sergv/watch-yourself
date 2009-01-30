@@ -2,7 +2,7 @@
 title: Totals in report are wrong (looks like roll-over problem again)
 desc: ""
 type: :bugfix
-component: TimeTracker
+component: tt
 release: "2009.2"
 reporter: Sean Russell <ser@ser1.net>
 status: :closed

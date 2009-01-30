@@ -2,7 +2,7 @@
 title: Find icons for application and menu items
 desc: ""
 type: :feature
-component: TimeTracker
+component: tt
 release: "2008.2"
 reporter: Sean Russell <ser@ser1.net>
 status: :closed

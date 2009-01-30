@@ -2,7 +2,7 @@
 title: Use a checkbox instead of the font highlighting
 desc: Suggested in the comments
 type: :feature
-component: TimeTracker
+component: tt
 release: "2008.5"
 reporter: Sean Russell <ser@ser1.net>
 status: :closed

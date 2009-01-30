@@ -2,7 +2,7 @@
 title: Collapse ranges on loading from DB
 desc: Rather than keeping a list of ranges per task, collapse the ranges to improve memory use.
 type: :feature
-component: TimeTracker
+component: tt
 release: "2008.2"
 reporter: Sean Russell <ser@ser1.net>
 status: :closed

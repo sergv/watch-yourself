@@ -2,7 +2,7 @@
 title: Ant build file, with rules for signing and installing
 desc: ""
 type: :feature
-component: TimeTracker
+component: tt
 release: "2009.1"
 reporter: Sean Russell <ser@ser1.net>
 status: :closed

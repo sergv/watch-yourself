@@ -2,7 +2,7 @@
 title: Start timing when enter a location
 desc: ""
 type: :feature
-component: TimeTracker
+component: tt
 release: 
 reporter: Sean Russell <ser@ser1.net>
 status: :unstarted

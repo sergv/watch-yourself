@@ -2,7 +2,7 @@
 title: Fancify the time display
 desc: Put in date separators
 type: :feature
-component: TimeTracker
+component: tt
 release: "2008.4"
 reporter: Sean Russell <ser@ser1.net>
 status: :closed

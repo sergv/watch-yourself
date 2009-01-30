@@ -2,8 +2,8 @@
 title: Reverse sort order of CSV export
 desc: ""
 type: :feature
-component: TimeTracker
-release: 
+component: tt
+release: "2009.3"
 reporter: Sean Russell <ser@ser1.net>
 status: :unstarted
 disposition: 
@@ -15,4 +15,8 @@ log_events:
 - - 2009-01-28 14:55:20.508983 Z
   - Sean Russell <ser@ser1.net>
   - created
+  - ""
+- - 2009-01-29 12:39:32.315885 Z
+  - Sean Russell <ser@ser1.net>
+  - assigned to release 2009.3 from unassigned
   - ""

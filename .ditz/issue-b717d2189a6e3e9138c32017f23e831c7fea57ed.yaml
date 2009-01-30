@@ -4,7 +4,7 @@ desc: |-
   This is for holding user-defineable attributes, which can then be used in reports.
   E.g., SAP codes.
 type: :feature
-component: TimeTracker
+component: tt
 release: 
 reporter: Sean Russell <ser@ser1.net>
 status: :unstarted

@@ -2,7 +2,7 @@
 title: Auto-adjust end time if start time advances beyond; auto-adjust start time if end time decreases beyond
 desc: ""
 type: :feature
-component: TimeTracker
+component: tt
 release: 
 reporter: Sean Russell <ser@ser1.net>
 status: :unstarted

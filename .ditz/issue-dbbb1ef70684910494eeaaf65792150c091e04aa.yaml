@@ -2,7 +2,7 @@
 title: Add ability to move times between tasks
 desc: ""
 type: :feature
-component: TimeTracker
+component: tt
 release: "2009.3"
 reporter: Sean Russell <ser@ser1.net>
 status: :unstarted

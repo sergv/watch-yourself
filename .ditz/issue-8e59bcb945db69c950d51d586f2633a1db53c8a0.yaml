@@ -2,7 +2,7 @@
 title: Allow sending exported report via email, BT
 desc: ""
 type: :feature
-component: TimeTracker
+component: tt
 release: 
 reporter: Sean Russell <ser@ser1.net>
 status: :unstarted
@@ -16,3 +16,7 @@ log_events:
   - Sean Russell <ser@ser1.net>
   - created
   - ""
+- - 2009-01-29 12:38:43.490841 Z
+  - Sean Russell <ser@ser1.net>
+  - commented
+  - BlueTooth won't be possible until Cupcake

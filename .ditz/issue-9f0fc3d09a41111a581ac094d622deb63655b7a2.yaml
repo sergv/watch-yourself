@@ -2,7 +2,7 @@
 title: Task view, and task times view, don't correctly handle overlapping dates
 desc: ""
 type: :bugfix
-component: TimeTracker
+component: tt
 release: 
 reporter: Sean Russell <ser@ser1.net>
 status: :closed

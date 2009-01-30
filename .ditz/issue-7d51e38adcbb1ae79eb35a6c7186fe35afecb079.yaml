@@ -2,7 +2,7 @@
 title: Add a sound when a time is started or stopped
 desc: Suggested by Jesse Henriques
 type: :feature
-component: TimeTracker
+component: tt
 release: "2009.3"
 reporter: Sean Russell <ser@ser1.net>
 status: :unstarted

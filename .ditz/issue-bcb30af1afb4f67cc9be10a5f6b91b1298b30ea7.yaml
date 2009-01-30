@@ -2,8 +2,8 @@
 title: 12/24 hour mode selection
 desc: ""
 type: :feature
-component: TimeTracker
-release: 
+component: tt
+release: Promoted
 reporter: Sean Russell <ser@ser1.net>
 status: :unstarted
 disposition: 
@@ -15,4 +15,16 @@ log_events:
 - - 2009-01-18 13:45:53.263785 Z
   - Sean Russell <ser@ser1.net>
   - created
+  - ""
+- - 2009-01-29 12:38:57.157154 Z
+  - Sean Russell <ser@ser1.net>
+  - assigned to release Promoted from unassigned
+  - ""
+- - 2009-01-30 11:27:59.186612 Z
+  - Sean Russell <ser@ser1.net>
+  - assigned to release 2009.4 from Promoted
+  - ""
+- - 2009-01-30 11:29:01.089587 Z
+  - Sean Russell <ser@ser1.net>
+  - assigned to release Promoted from 2009.4
   - ""

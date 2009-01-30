@@ -2,7 +2,7 @@
 title: Put table in a scroll view
 desc: While I'm at it, give the task name a minimum size
 type: :feature
-component: TimeTracker
+component: tt
 release: "2008.3"
 reporter: Sean Russell <ser@ser1.net>
 status: :closed

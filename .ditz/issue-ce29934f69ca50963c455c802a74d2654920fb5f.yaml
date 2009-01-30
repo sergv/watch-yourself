@@ -2,7 +2,7 @@
 title: Sync DB to mem card
 desc: Back up tasks to DB on memory card, and clean out history.
 type: :feature
-component: TimeTracker
+component: tt
 release: 
 reporter: Sean Russell <ser@ser1.net>
 status: :unstarted

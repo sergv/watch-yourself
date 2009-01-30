@@ -5,7 +5,7 @@ desc: |-
   (or start outside but end inside).  This needs to be fixed the same way it has been
   for the report.
 type: :feature
-component: TimeTracker
+component: tt
 release: 
 reporter: Sean Russell <ser@ser1.net>
 status: :closed
