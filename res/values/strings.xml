@@ -28,7 +28,7 @@
     <string name="title">TimeTracker (%s)</string>
     <string name="help">Help</string>
     <string name="export_view">Export</string>
-    
+    <string name="move_time">Assign time to other task</string>
     
     <!-- About dialog strings -->
     <string name="version">Version %s</string>

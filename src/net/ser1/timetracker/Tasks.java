@@ -130,6 +130,7 @@ public class Tasks extends ListActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        //android.os.Debug.waitForDebugger();
         preferences = getSharedPreferences("timetracker.pref", MODE_PRIVATE);
         FONT_SIZE = preferences.getInt("font-size", 16);
 
@@ -167,6 +168,12 @@ public class Tasks extends ListActivity {
             timer.removeCallbacks(updater);
         }
         super.onPause();
+    }
+
+    @Override
+    protected void onStop() {
+        adapter.close();
+        super.onStop();
     }
 
     @Override
@@ -638,7 +645,7 @@ public class Tasks extends ListActivity {
     private static final long MS_H = 3600000;
     private static final long MS_M = 60000;
     private static final long MS_S = 1000;
-    protected static void formatTotal( TextView total, long ttl ) {
+    static void formatTotal( TextView total, long ttl ) {
         long hours = ttl / MS_H;
         long hours_in_ms = hours * MS_H;
         long minutes = (ttl - hours_in_ms) / MS_M;
@@ -661,6 +668,10 @@ public class Tasks extends ListActivity {
             dbHelper = new DBHelper(c);
             dbHelper.getWritableDatabase();
             tasks = new ArrayList<Task>();
+        }
+
+        public void close() {
+            dbHelper.close();
         }
         
         /**

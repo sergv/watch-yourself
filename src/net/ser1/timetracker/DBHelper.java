@@ -17,10 +17,11 @@ public class DBHelper extends SQLiteOpenHelper {
     public static final String NAME = "name";
     public static final String[] TASK_COLUMNS = new String[] { "ROWID", NAME };
     public static final String TIMETRACKER_DB_NAME = "timetracker.db";
-    public static final int DBVERSION = 4;
+    public static final int DBVERSION = 5;
     public static final String RANGES_TABLE = "ranges";
     public static final String TASK_TABLE = "tasks";
     public static final String TASK_NAME = "name";
+    public static final String ID_NAME = "_id";
 
     public DBHelper(Context context) {
         super( context, TIMETRACKER_DB_NAME, null, DBVERSION );
@@ -36,8 +37,8 @@ public class DBHelper extends SQLiteOpenHelper {
     }
 
     private static final String CREATE_TASK_TABLE = 
-        "CREATE TABLE %s (" +
-        "PID INTEGER PRIMARY KEY AUTOINCREMENT,"
+        "CREATE TABLE %s ("
+        + ID_NAME +" INTEGER PRIMARY KEY AUTOINCREMENT,"
         + TASK_NAME+" TEXT COLLATE LOCALIZED NOT NULL"
         + ");";
     @Override
@@ -58,8 +59,18 @@ public class DBHelper extends SQLiteOpenHelper {
                     +TASK_NAME+" from "+TASK_TABLE+";");
             arg0.execSQL("drop table "+TASK_TABLE+";");
             arg0.execSQL(String.format(CREATE_TASK_TABLE, TASK_TABLE));
-            arg0.execSQL("insert into "+TASK_TABLE+"(rowid,"+TASK_NAME+") select rowid,"+TASK_NAME+" from temp;");
+            arg0.execSQL("insert into "+TASK_TABLE+"("+ID_NAME+","+TASK_NAME+
+                    ") select rowid,"+TASK_NAME+" from temp;");
             arg0.execSQL("drop table temp;");
-        } 
+        } else if (oldVersion < 5) {
+            arg0.execSQL(String.format(CREATE_TASK_TABLE, "temp"));
+            arg0.execSQL("insert into temp("+ID_NAME+","+TASK_NAME+") select rowid,"
+                    +TASK_NAME+" from "+TASK_TABLE+";");
+            arg0.execSQL("drop table "+TASK_TABLE+";");
+            arg0.execSQL(String.format(CREATE_TASK_TABLE, TASK_TABLE));
+            arg0.execSQL("insert into "+TASK_TABLE+"("+ID_NAME+","+TASK_NAME+
+                    ") select "+ID_NAME+","+TASK_NAME+" from temp;");
+            arg0.execSQL("drop table temp;");
+        }
     }
 }

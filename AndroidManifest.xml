@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android" 
-    android:versionCode="7"
+    android:versionCode="8"
     package="net.ser1.timetracker" android:sharedUserId="net.ser1.timetracker" 
-    android:versionName="2009.2">
+    android:versionName="2009.3">
  <application android:icon="@drawable/icon" android:label="@string/app_name">
 
   <activity android:name=".Tasks" android:label="Time Tracker">
