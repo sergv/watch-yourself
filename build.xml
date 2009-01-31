@@ -112,6 +112,9 @@
   <condition property="apk-builder" value="${android-tools}/apkbuilder.bat" else="${android-tools}/apkbuilder" >
     <os family="windows"/>
   </condition>
+  <condition property="emulator" value="${android-tools}/emulator.exe" else="${android-tools}/emulator" >
+    <os family="windows"/>
+  </condition>
 
   <property name="android-jar" value="${sdk-folder}/android.jar" />
 
@@ -265,7 +268,7 @@
   </target>
 
   <target name="start-emulator" description="Start an emulator.">
-      <exec executable="${emulator}" failonerror="true" spawn="true">
+      <exec executable="${emulator}" spawn="true">
           <arg value="-skin"/>
           <arg value="G1"/>
           <arg value="-sdcard"/>
