@@ -3,7 +3,7 @@ title: Add a sound when a time is started or stopped
 desc: Suggested by Jesse Henriques
 type: :feature
 component: tt
-release: "2009.3"
+release: "2009.4"
 reporter: Sean Russell <ser@ser1.net>
 status: :unstarted
 disposition: 
@@ -23,4 +23,8 @@ log_events:
 - - 2009-01-18 00:59:22.953528 Z
   - Sean Russell <ser@ser1.net>
   - assigned to release 2009.3 from 2009.2
+  - ""
+- - 2009-02-02 14:57:21.195643 Z
+  - Sean Russell <ser@ser1.net>
+  - assigned to release 2009.4 from 2009.3
   - ""

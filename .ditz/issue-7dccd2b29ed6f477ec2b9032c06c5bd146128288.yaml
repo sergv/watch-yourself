@@ -3,7 +3,7 @@ title: Range select appears to be broken
 desc: ""
 type: :bugfix
 component: tt
-release: "2009.3"
+release: "2009.4"
 reporter: Sean Russell <ser@ser1.net>
 status: :in_progress
 disposition: 
@@ -27,4 +27,8 @@ log_events:
 - - 2009-02-02 04:01:00.953656 Z
   - Sean Russell <ser@ser1.net>
   - changed status from unstarted to in_progress
+  - ""
+- - 2009-02-02 14:57:10.932103 Z
+  - Sean Russell <ser@ser1.net>
+  - assigned to release 2009.4 from 2009.3
   - ""

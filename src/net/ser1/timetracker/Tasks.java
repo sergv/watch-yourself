@@ -429,14 +429,13 @@ public class Tasks extends ListActivity {
     
     private void switchView(int which) {
         Calendar tw = Calendar.getInstance();
-        tw.setFirstDayOfWeek( preferences.getInt(START_DAY, 0)+1 );
-        int startDay;
+        int startDay = preferences.getInt(START_DAY, 0)+1;
+        tw.setFirstDayOfWeek( startDay );
         switch (which) {
         case 0: // today
             adapter.loadTasks( tw );
             break;
         case 1: // this week
-            startDay = preferences.getInt(START_DAY, 0)+1;
             adapter.loadTasks( weekStart( tw, startDay ), weekEnd( tw, startDay ) );
             break;
         case 2: // yesterday
@@ -444,7 +443,6 @@ public class Tasks extends ListActivity {
             adapter.loadTasks( tw );
             break;
         case 3: // last week
-            startDay = preferences.getInt(START_DAY, 0)+1;
             tw.add(Calendar.WEEK_OF_YEAR, -1);
             adapter.loadTasks( weekStart( tw, startDay ), weekEnd( tw, startDay ) );
             break;

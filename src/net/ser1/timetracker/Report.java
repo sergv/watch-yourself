@@ -386,14 +386,23 @@ public class Report extends Activity implements OnClickListener {
         
     /**
      * Calculates the date/time of the beginning of the week in 
-     * which the supplied calendar data falls
+     * which the supplied calendar date falls
      * @param tw the day for which to calculate the week start
+     * @param startDay the day on which the week starts.  This must be 1-based
+     * (1 = Sunday).
      * @return a Calendar marking the start of the week
      */
     public static Calendar weekStart(Calendar tw, int startDay) {
         Calendar ws = (Calendar)tw.clone();
         ws.setFirstDayOfWeek( startDay );
-        ws.set(Calendar.DAY_OF_WEEK, startDay);
+        // START ANDROID BUG WORKAROUND
+        // Android has a broken Calendar class, so the if-statement wrapping
+        // the following set() is necessary to keep Android from incorrectly
+        // changing the date:
+        ws.add(Calendar.DATE, startDay - ws.get(Calendar.DAY_OF_WEEK));
+        // END ANDROID BUG WORKAROUND
+        // The above code _should_ be:
+        // ws.set(Calendar.DAY_OF_WEEK, startDay);
         ws.set(Calendar.HOUR_OF_DAY, ws.getMinimum(Calendar.HOUR_OF_DAY));
         ws.set(Calendar.MINUTE, ws.getMinimum(Calendar.MINUTE));
         ws.set(Calendar.SECOND, ws.getMinimum(Calendar.SECOND));
@@ -410,7 +419,15 @@ public class Report extends Activity implements OnClickListener {
     public static Calendar weekEnd(Calendar tw, int startDay) {
         Calendar ws = (Calendar)tw.clone();
         ws.setFirstDayOfWeek( startDay );
-        ws.set(Calendar.DAY_OF_WEEK, startDay+6);
+        // START ANDROID BUG WORKAROUND
+        // Android has a broken Calendar class, so the if-statement wrapping
+        // the following set() is necessary to keep Android from incorrectly
+        // changing the date:
+        ws.add(Calendar.DATE, startDay - ws.get(Calendar.DAY_OF_WEEK));
+        // END ANDROID BUG WORKAROUND
+        // The above code _should_ be:
+        // ws.set(Calendar.DAY_OF_WEEK, startDay);
+        ws.add(Calendar.DAY_OF_WEEK, 6);
         ws.set(Calendar.HOUR_OF_DAY, ws.getMaximum(Calendar.HOUR_OF_DAY));
         ws.set(Calendar.MINUTE, ws.getMaximum(Calendar.MINUTE));
         ws.set(Calendar.SECOND, ws.getMaximum(Calendar.SECOND));
