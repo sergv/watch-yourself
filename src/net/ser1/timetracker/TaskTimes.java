@@ -139,25 +139,47 @@ public class TaskTimes extends ListActivity {
         return super.onContextItemSelected(item);
     }
 
+    private class ClickListener implements DialogInterface.OnClickListener {
+        private TimesAdapter timesAdapter;
+        private TimeRange itemToDelete;
+        private int action;
+        public ClickListener( TimesAdapter adapter, TimeRange itemToDelete, int action ) {
+            this.timesAdapter = adapter;
+            this.itemToDelete = itemToDelete;
+            this.action = action;
+        }
+        public void onClick(DialogInterface dialog, int whichButton) {
+            switch (action) {
+                case DELETE_TIME:
+                    adapter.deleteTimeRange(itemToDelete);
+                    break;
+                case MOVE_TIME:
+                    adapter.assignTimeToTaskAt(selectedRange, whichButton);
+                    break;
+                default:
+                    break;
+            }
+            if (TaskTimes.this != null)
+                TaskTimes.this.getListView().invalidate();
+        }
+    }
+
     @Override
     protected Dialog onCreateDialog(int id) {
+        ClickListener clickListener = new ClickListener(adapter,selectedRange,id);
         switch (id) {
             case DELETE_TIME:
-                return new AlertDialog.Builder(this).setTitle(R.string.delete_task_title).setIcon(android.R.drawable.stat_sys_warning).setCancelable(true).setMessage(R.string.delete_time_message).setPositiveButton(R.string.delete_ok,
-                        new DialogInterface.OnClickListener() {
-
-                            public void onClick(DialogInterface dialog, int whichButton) {
-                                adapter.deleteTimeRange(selectedRange);
-                                TaskTimes.this.getListView().invalidate();
-                            }
-                        }).setNegativeButton(android.R.string.cancel, null).create();
+                return new AlertDialog.Builder(this)
+                        .setTitle(R.string.delete_task_title)
+                        .setIcon(android.R.drawable.stat_sys_warning)
+                        .setCancelable(true)
+                        .setMessage(R.string.delete_time_message)
+                        .setPositiveButton(R.string.delete_ok, clickListener)
+                        .setNegativeButton(android.R.string.cancel, null).create();
             case MOVE_TIME:
-                return new AlertDialog.Builder(this).setCursor(adapter.getTaskNames(),
-                        new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int which) {
-                                adapter.assignTimeToTaskAt(selectedRange, which);
-                            }
-                        }, TASK_NAME).create();
+                return new AlertDialog.Builder(this)
+                        .setCursor(adapter.getTaskNames(), clickListener, TASK_NAME)
+                        .create();
             default:
                 break;
         }

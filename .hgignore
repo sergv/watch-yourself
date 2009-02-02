@@ -5,4 +5,4 @@ bin/*
 .project
 src/net/ser1/timetracker/R.java
 *~
-TimeTracker.apk
+nbproject
