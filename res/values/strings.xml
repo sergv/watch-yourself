@@ -69,10 +69,14 @@
     The TimeTracker application icon was borrowed from
     the excellent glyFX icon library by PerthWeb Pty Ltd (www.glyfx.com).
     </string>
-    <string name="export_csv_success">Successfully exported CSV to memory card as %s</string>
-    <string name="export_csv_fail">Failed to export CSV.  Couldn't create the file.  Is an SD card inserted?</string>
+    <string name="export_csv_success">Successfully exported CSV to memory card 
+        as timetracker.db</string>
+    <string name="export_csv_fail">Failed to export CSV.  Couldn't create the file.
+        Is an SD card inserted?</string>
     <string name="success">Success</string>
     <string name="failure">Fail</string>
     <string name="set_start_day_of_week">Set the day the week starts</string>
     <string name="more">More...</string>
+    <string name="backup_success">Successfully backed up the database to the
+        memory card as %s</string>
 </resources>

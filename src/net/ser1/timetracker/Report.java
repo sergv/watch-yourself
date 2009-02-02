@@ -147,9 +147,10 @@ public class Report extends Activity implements OnClickListener {
             if (fname != null) {
                 exportMessage = getString(R.string.export_csv_success, fname);
                 if (exportSucceed != null) exportSucceed.setMessage(exportMessage);
-                showDialog(Tasks.EXPORT_VIEW_SUCCEED);
+                showDialog(Tasks.SUCCESS_DIALOG);
             } else {
-                showDialog(Tasks.EXPORT_VIEW_FAIL);
+                exportMessage = getString(R.string.export_csv_fail);
+                showDialog(Tasks.ERROR_DIALOG);
             }
             break;
         default:
@@ -162,7 +163,7 @@ public class Report extends Activity implements OnClickListener {
     @Override
     protected Dialog onCreateDialog(int id) {
         switch (id) {
-        case Tasks.EXPORT_VIEW_SUCCEED:
+        case Tasks.SUCCESS_DIALOG:
             exportSucceed = new AlertDialog.Builder(this)
             .setTitle(R.string.success)
             .setIcon(android.R.drawable.stat_notify_sdcard)
@@ -170,11 +171,11 @@ public class Report extends Activity implements OnClickListener {
             .setPositiveButton(android.R.string.ok, null)
             .create();
             return exportSucceed;
-        case Tasks.EXPORT_VIEW_FAIL:
+        case Tasks.ERROR_DIALOG:
             return new AlertDialog.Builder(this)
             .setTitle(R.string.failure)
             .setIcon(android.R.drawable.stat_notify_sdcard)
-            .setMessage(R.string.export_csv_fail)
+            .setMessage(exportMessage)
             .setPositiveButton(android.R.string.ok, null)
             .create();
         default:

@@ -5,6 +5,9 @@
  */
 package net.ser1.timetracker;
 
+import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import static net.ser1.timetracker.DBHelper.END;
 import static net.ser1.timetracker.DBHelper.NAME;
 import static net.ser1.timetracker.DBHelper.RANGES_TABLE;
@@ -63,6 +66,10 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.AdapterView.AdapterContextMenuInfo;
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
+import java.io.FileInputStream;
+import java.io.InputStream;
 
 /**
  * Manages and displays a list of tasks, providing the ability to edit and
@@ -121,10 +128,11 @@ public class Tasks extends ListActivity {
         SELECT_END_DATE=7,
         HELP=8,
         EXPORT_VIEW=9,
-        EXPORT_VIEW_SUCCEED=10,
-        EXPORT_VIEW_FAIL=11,
+        SUCCESS_DIALOG=10,
+        ERROR_DIALOG=11,
         SET_WEEK_START_DAY=12,
-        MORE=13;
+        MORE=13,
+        BACKUP=14;
 
     
     @Override
@@ -266,7 +274,7 @@ public class Tasks extends ListActivity {
             return openChangeViewDialog();
         case HELP:
             return openAboutDialog();
-        case EXPORT_VIEW_SUCCEED:
+        case SUCCESS_DIALOG:
             exportSucceed = new AlertDialog.Builder(Tasks.this)
             .setTitle(R.string.success)
             .setIcon(android.R.drawable.stat_notify_sdcard)
@@ -274,11 +282,11 @@ public class Tasks extends ListActivity {
             .setPositiveButton(android.R.string.ok, null)
             .create();
             return exportSucceed;
-        case EXPORT_VIEW_FAIL:
+        case ERROR_DIALOG:
             return new AlertDialog.Builder(Tasks.this)
             .setTitle(R.string.failure)
             .setIcon(android.R.drawable.stat_notify_sdcard)
-            .setMessage(R.string.export_csv_fail)
+            .setMessage(exportMessage)
             .setPositiveButton(android.R.string.ok, null)
             .create();
         case SELECT_START_DATE:
@@ -344,15 +352,27 @@ public class Tasks extends ListActivity {
                             if (fname != null) {
                                 exportMessage = getString(R.string.export_csv_success, fname);
                                 if (exportSucceed != null) exportSucceed.setMessage(exportMessage);
-                                showDialog(EXPORT_VIEW_SUCCEED);
+                                showDialog(SUCCESS_DIALOG);
                             } else {
-                                showDialog(EXPORT_VIEW_FAIL);
+                                exportMessage = getString(R.string.export_csv_fail);
+                                showDialog(ERROR_DIALOG);
                             }
                             break;
                         case 2: // SET_WEEK_START_DAY:
                             showDialog(SET_WEEK_START_DAY);
                             break;
-                        case 3: // HELP:
+                        case 3: // COPY DB TO SD
+                            try {
+                                copyDbToSd();
+                                exportMessage = getString(R.string.backup_success);
+                                showDialog(SUCCESS_DIALOG);
+                            } catch (Exception ex) {
+                                Logger.getLogger(Tasks.class.getName()).log(Level.SEVERE, null, ex);
+                                exportMessage = ex.getLocalizedMessage();
+                                showDialog(ERROR_DIALOG);
+                            }
+                            break;
+                        case 4: // HELP:
                             showDialog(HELP);
                             break;
                         default:
@@ -364,6 +384,26 @@ public class Tasks extends ListActivity {
         return null;
     }
     
+    // TODO: This could be better...
+    private static final String dbPath = "/data/data/net.ser1.timetracker/databases/timetracker.db";
+    private static final String dbBackup = "/sdcard/timetracker.db";
+    private void copyDbToSd() throws IOException, IllegalArgumentException {
+        InputStream in = null;
+        OutputStream out = null;
+
+        try {
+            in = new BufferedInputStream(new FileInputStream(dbPath));
+            out = new BufferedOutputStream(new FileOutputStream(dbBackup));
+            for (int c = in.read(); c != -1; c = in.read()) out.write(c);
+        } catch (FileNotFoundException e) {
+            throw new IllegalArgumentException(e.getMessage(), e);
+        } finally {
+            in.close();
+            out.close();
+        }
+    }
+
+
     /**
      * Creates a dialog to change the dates for which task times are shown.
      * Offers a short selection of pre-defined defaults, and the option to

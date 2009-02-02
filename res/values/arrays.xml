@@ -16,6 +16,7 @@
         <item>Change view</item>
         <item>Export view to CSV</item>
         <item>Set start of week</item>
+        <item>Copy DB to SD card</item>
         <item>Help</item>
     </string-array>
 </resources>
