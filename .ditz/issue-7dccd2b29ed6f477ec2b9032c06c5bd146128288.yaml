@@ -5,8 +5,8 @@ type: :bugfix
 component: tt
 release: "2009.4"
 reporter: Sean Russell <ser@ser1.net>
-status: :in_progress
-disposition: 
+status: :closed
+disposition: :fixed
 creation_time: 2009-01-17 13:24:21.013258 Z
 references: []
 
@@ -32,3 +32,9 @@ log_events:
   - Sean Russell <ser@ser1.net>
   - assigned to release 2009.4 from 2009.3
   - ""
+- - 2009-02-03 13:29:09.369019 Z
+  - Sean Russell <ser@ser1.net>
+  - closed with disposition fixed
+  - |-
+    The dialog infrastructure of Android (or the documentation thereof) sucks.
+    There's no elegant way to chain dialogs.
