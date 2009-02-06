@@ -47,7 +47,6 @@ import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
-import android.os.Looper;
 import android.text.method.SingleLineTransformationMethod;
 import android.text.util.Linkify;
 import android.view.ContextMenu;

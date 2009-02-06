@@ -1,0 +1,18 @@
+--- !ditz.rubyforge.org,2008-03-06/issue 
+title: Removing the first time STILL removes the label
+desc: ""
+type: :bugfix
+component: tt
+release: "2009.4"
+reporter: Sean Russell <ser@ser1.net>
+status: :unstarted
+disposition: 
+creation_time: 2009-02-06 02:51:04.646547 Z
+references: []
+
+id: f7c3d1d189ed773eb2e30726f817edbfa98caa3d
+log_events: 
+- - 2009-02-06 02:51:04.647196 Z
+  - Sean Russell <ser@ser1.net>
+  - created
+  - ""
