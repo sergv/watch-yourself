@@ -13,10 +13,18 @@
         <item>Monday</item>
     </string-array>
     <string-array name="moreMenu">
-        <item>Change view</item>
+        <item>Change view (%s)</item>
         <item>Export view to CSV</item>
-        <item>Set start of week</item>
         <item>Copy DB to SD card</item>
+        <item>Preferences</item>
         <item>Help</item>
+    </string-array>
+    <string-array name="configuration">
+        <item>Set start of week (%s)</item>
+        <item>Set time format (%s)</item>
+        <item>Audible click (%s)</item>
+        <item>Concurrent task tracking (%s)</item>
+        <item>Font size (%s)</item>
+        <item>DB location (%s)</item>
     </string-array>
 </resources>

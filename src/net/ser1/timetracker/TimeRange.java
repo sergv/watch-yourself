@@ -36,7 +36,7 @@ public class TimeRange implements Comparable<TimeRange> {
         return end - start;
     }
     
-    private static final DateFormat FORMAT = new SimpleDateFormat("HH:mm");
+    protected static DateFormat FORMAT = new SimpleDateFormat("HH:mm");
     public String toString() {
         Date s = new Date(start);
         StringBuffer b = new StringBuffer(FORMAT.format(s));

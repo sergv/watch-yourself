@@ -29,7 +29,27 @@
     <string name="help">Help</string>
     <string name="export_view">Export</string>
     <string name="move_time">Assign time to other task</string>
-    
+
+    <!--    Preferences strings    -->
+    <string name="preferences">Preferences</string>
+    <!-- Preference titles -->
+    <string name="week_start_day">Week start day</string>
+    <string name="hour_mode">12/24 hour mode</string>
+    <string name="font_size">Font size</string>
+    <string name="concurrency">Multiple concurrently running tasks</string>
+    <string name="sound">Sound</string>
+    <!-- Preference values -->
+    <string name="sunday">Sunday</string>
+    <string name="monday">Monday</string>
+    <string name="civilian">1:00 PM</string>
+    <string name="military">13:00</string>
+    <string name="medium_font">Medium</string>
+    <string name="large_font">Large</string>
+    <string name="concurrent">Tasks can run at the same time</string>
+    <string name="exclusive">Only one task can run at a time</string>
+    <string name="sound_enabled">Sound enabled</string>
+    <string name="sound_disabled">Sound disabled</string>
+
     <!-- About dialog strings -->
     <string name="version">Version %s</string>
     <string name="author">Sean E. Russell</string>

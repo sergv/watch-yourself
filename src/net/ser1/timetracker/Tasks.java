@@ -75,15 +75,19 @@ import java.text.DateFormat;
 /**
  * Manages and displays a list of tasks, providing the ability to edit and
  * display individual task items.
- * 
  * @author ser
  */
 public class Tasks extends ListActivity {
+    public static final String TIMETRACKERPREF = "timetracker.pref";
+    protected static final String FONTSIZE = "font-size";
+    protected static final String MILITARY = "military-time";
+    protected static final String CONCURRENT = "concurrent-tasks";
+    protected static final String SOUND = "sound-enabled";
 
     protected static final String START_DAY = "start_day";
     protected static final String START_DATE = "start_date";
     protected static final String END_DATE = "end_date";
-    private static final String VIEW_MODE = "view_mode";
+    protected static final String VIEW_MODE = "view_mode";
     protected static final String REPORT_DATE = "report_date";
     /**
      * Defines how each task's time is displayed 
@@ -116,18 +120,29 @@ public class Tasks extends ListActivity {
     private Task selectedTask;
     private int sYear,  sMonth,  sDay;
     private SharedPreferences preferences;
-    private static int FONT_SIZE = 16;
+    private static int fontSize = 16;
     /**
      * A list of menu options, including both context and options menu items 
      */
-    protected static final int ADD_TASK = 0,  EDIT_TASK = 1,  DELETE_TASK = 2,  REPORT = 3,  SHOW_TIMES = 4,  CHANGE_VIEW = 5,  SELECT_START_DATE = 6,  SELECT_END_DATE = 7,  HELP = 8,  EXPORT_VIEW = 9,  SUCCESS_DIALOG = 10,  ERROR_DIALOG = 11,  SET_WEEK_START_DAY = 12,  MORE = 13,  BACKUP = 14;
+    protected static final int ADD_TASK = 0,
+            EDIT_TASK = 1,  DELETE_TASK = 2,  REPORT = 3,  SHOW_TIMES = 4,
+            CHANGE_VIEW = 5,  SELECT_START_DATE = 6,  SELECT_END_DATE = 7,
+            HELP = 8,  EXPORT_VIEW = 9,  SUCCESS_DIALOG = 10,  ERROR_DIALOG = 11,
+            SET_WEEK_START_DAY = 12,  MORE = 13,  BACKUP = 14, PREFERENCES = 15;
+    private boolean concurrency;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         //android.os.Debug.waitForDebugger();
-        preferences = getSharedPreferences("timetracker.pref", MODE_PRIVATE);
-        FONT_SIZE = preferences.getInt("font-size", 16);
+        preferences = getSharedPreferences( TIMETRACKERPREF,MODE_PRIVATE);
+        fontSize = preferences.getInt(FONTSIZE, 16);
+        concurrency = preferences.getBoolean(CONCURRENT, false);
+        if (preferences.getBoolean(MILITARY, true)) {
+            TimeRange.FORMAT = new SimpleDateFormat("HH:mm");
+        } else {
+            TimeRange.FORMAT = new SimpleDateFormat("hh:mm a");
+        }
 
         int which = preferences.getInt(VIEW_MODE, 0);
         if (adapter == null) {
@@ -263,16 +278,6 @@ public class Tasks extends ListActivity {
                 return exportSucceed;
             case ERROR_DIALOG:
                 return new AlertDialog.Builder(Tasks.this).setTitle(R.string.failure).setIcon(android.R.drawable.stat_notify_sdcard).setMessage(exportMessage).setPositiveButton(android.R.string.ok, null).create();
-            case SET_WEEK_START_DAY:
-                return new AlertDialog.Builder(Tasks.this).setItems(R.array.startDays, new DialogInterface.OnClickListener() {
-
-                    public void onClick(DialogInterface dialog, int which) {
-                        SharedPreferences.Editor ed = preferences.edit();
-                        ed.putInt(START_DAY, which);
-                        ed.commit();
-                        switchView(preferences.getInt(VIEW_MODE, 0));
-                    }
-                }).create();
             case MORE:
                 return new AlertDialog.Builder(Tasks.this).setItems(R.array.moreMenu, new DialogInterface.OnClickListener() {
 
@@ -294,10 +299,7 @@ public class Tasks extends ListActivity {
                                     showDialog(ERROR_DIALOG);
                                 }
                                 break;
-                            case 2: // SET_WEEK_START_DAY:
-                                showDialog(SET_WEEK_START_DAY);
-                                break;
-                            case 3: // COPY DB TO SD
+                            case 2: // COPY DB TO SD
                                 try {
                                     copyDbToSd();
                                     exportMessage = getString(R.string.backup_success);
@@ -307,6 +309,10 @@ public class Tasks extends ListActivity {
                                     exportMessage = ex.getLocalizedMessage();
                                     showDialog(ERROR_DIALOG);
                                 }
+                                break;
+                            case 3: // PREFERENCES
+                                Intent intent = new Intent(Tasks.this, Preferences.class);
+                                startActivityForResult(intent,PREFERENCES);
                                 break;
                             case 4: // HELP:
                                 showDialog(HELP);
@@ -319,7 +325,8 @@ public class Tasks extends ListActivity {
         }
         return null;
     }
-    // TODO: This could be better...
+
+    // TODO: This could be done better...
     private static final String dbPath = "/data/data/net.ser1.timetracker/databases/timetracker.db";
     private static final String dbBackup = "/sdcard/timetracker.db";
 
@@ -624,7 +631,7 @@ public class Tasks extends ListActivity {
             setPadding(5, 10, 5, 10);
 
             taskName = new TextView(context);
-            taskName.setTextSize(FONT_SIZE);
+            taskName.setTextSize(fontSize);
             taskName.setText(t.getTaskName());
             addView(taskName, new LinearLayout.LayoutParams(
                     LayoutParams.WRAP_CONTENT, LayoutParams.FILL_PARENT, 1f));
@@ -636,7 +643,7 @@ public class Tasks extends ListActivity {
                     LayoutParams.WRAP_CONTENT, LayoutParams.FILL_PARENT, 0f));
 
             total = new TextView(context);
-            total.setTextSize(FONT_SIZE);
+            total.setTextSize(fontSize);
             total.setGravity(Gravity.RIGHT);
             total.setTransformationMethod(SingleLineTransformationMethod.getInstance());
             formatTotal(total, t.getTotal());
@@ -648,6 +655,8 @@ public class Tasks extends ListActivity {
         }
 
         public void setTask(Task t) {
+            taskName.setTextSize(fontSize);
+            total.setTextSize(fontSize);
             taskName.setText(t.getTaskName());
             formatTotal(total, t.getTotal());
             markupSelectedTask(t);
@@ -923,6 +932,33 @@ public class Tasks extends ListActivity {
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == PREFERENCES) {
+            Bundle extras = data.getExtras();
+            if (extras.getBoolean(START_DAY)) {
+                System.err.println("Start day changed to "+preferences.getInt(START_DAY, 1));
+                switchView(preferences.getInt(VIEW_MODE, 0));
+            }
+            if (extras.getBoolean(MILITARY)) {
+                System.err.println("Military time changed to "+preferences.getBoolean(MILITARY, true));
+                if (preferences.getBoolean(MILITARY, true)) {
+                    TimeRange.FORMAT = new SimpleDateFormat("HH:mm");
+                } else {
+                    TimeRange.FORMAT = new SimpleDateFormat("hh:mm a");
+                }
+            }
+            if (extras.getBoolean(CONCURRENT)) {
+                concurrency = preferences.getBoolean(CONCURRENT, false);
+                System.err.println("Concurrency changed to "+concurrency);
+            }
+            if (extras.getBoolean(SOUND)) {
+
+            }
+            if (extras.getBoolean(FONTSIZE)) {
+                fontSize = preferences.getInt(FONTSIZE, 16);
+                System.err.println("Font size changed to "+fontSize);
+            }
+        }
+
         if (getListView() != null) {
             getListView().invalidate();
         }
