@@ -399,10 +399,12 @@ public class Report extends Activity implements OnClickListener {
         // Android has a broken Calendar class, so the if-statement wrapping
         // the following set() is necessary to keep Android from incorrectly
         // changing the date:
-        ws.add(Calendar.DATE, startDay - ws.get(Calendar.DAY_OF_WEEK));
-        // END ANDROID BUG WORKAROUND
+        int adjustedDay = ws.get(Calendar.DAY_OF_WEEK);
+        if (adjustedDay < startDay) adjustedDay = 9 - adjustedDay;
+        ws.add(Calendar.DATE, startDay - adjustedDay);
         // The above code _should_ be:
         // ws.set(Calendar.DAY_OF_WEEK, startDay);
+        // END ANDROID BUG WORKAROUND
         ws.set(Calendar.HOUR_OF_DAY, ws.getMinimum(Calendar.HOUR_OF_DAY));
         ws.set(Calendar.MINUTE, ws.getMinimum(Calendar.MINUTE));
         ws.set(Calendar.SECOND, ws.getMinimum(Calendar.SECOND));
@@ -423,10 +425,12 @@ public class Report extends Activity implements OnClickListener {
         // Android has a broken Calendar class, so the if-statement wrapping
         // the following set() is necessary to keep Android from incorrectly
         // changing the date:
-        ws.add(Calendar.DATE, startDay - ws.get(Calendar.DAY_OF_WEEK));
-        // END ANDROID BUG WORKAROUND
+        int adjustedDay = ws.get(Calendar.DAY_OF_WEEK);
+        if (adjustedDay < startDay) adjustedDay = 9 - adjustedDay;
+        ws.add(Calendar.DATE, startDay - adjustedDay);
         // The above code _should_ be:
         // ws.set(Calendar.DAY_OF_WEEK, startDay);
+        // END ANDROID BUG WORKAROUND
         ws.add(Calendar.DAY_OF_WEEK, 6);
         ws.set(Calendar.HOUR_OF_DAY, ws.getMaximum(Calendar.HOUR_OF_DAY));
         ws.set(Calendar.MINUTE, ws.getMaximum(Calendar.MINUTE));

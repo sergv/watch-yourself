@@ -3,7 +3,7 @@ title: Allow multiple concurrently running tasks
 desc: ""
 type: :feature
 component: tt
-release: Promoted
+release: "2009.4"
 reporter: Sean Russell <ser@ser1.net>
 status: :unstarted
 disposition: 
@@ -15,4 +15,8 @@ log_events:
 - - 2009-02-05 12:20:58.924870 Z
   - Sean Russell <ser@ser1.net>
   - created
+  - ""
+- - 2009-02-14 22:23:18.637274 Z
+  - Sean Russell <ser@ser1.net>
+  - assigned to release 2009.4 from Promoted
   - ""

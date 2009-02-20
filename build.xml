@@ -286,6 +286,7 @@
     <exec executable="${adb}" failonerror="true">
       <arg value="-e"/>
       <arg value="install" />
+      <arg value="-r"/>
       <arg value="${out-debug-package}" />
     </exec>
   </target>
