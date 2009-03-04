@@ -49,7 +49,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.AdapterView.AdapterContextMenuInfo;
 
-public class TaskTimes extends ListActivity {
+public class TaskTimes extends ListActivity implements DialogInterface.OnClickListener {
 
     private TimesAdapter adapter;
     private static int FONT_SIZE;
@@ -121,6 +121,7 @@ public class TaskTimes extends ListActivity {
         AdapterContextMenuInfo info = (AdapterContextMenuInfo) item.getMenuInfo();
         selectedRange = (TimeRange) adapter.getItem((int) info.id);
         int id = item.getItemId();
+        action = id;
         switch (id) {
             case DELETE_TIME:
                 showDialog(id);
@@ -139,34 +140,24 @@ public class TaskTimes extends ListActivity {
         return super.onContextItemSelected(item);
     }
 
-    private class ClickListener implements DialogInterface.OnClickListener {
-        private TimesAdapter timesAdapter;
-        private TimeRange itemToDelete;
-        private int action;
-        public ClickListener( TimesAdapter adapter, TimeRange itemToDelete, int action ) {
-            this.timesAdapter = adapter;
-            this.itemToDelete = itemToDelete;
-            this.action = action;
+    private int action;
+    public void onClick(DialogInterface dialog, int whichButton) {
+        switch (action) {
+        case DELETE_TIME:
+            adapter.deleteTimeRange(selectedRange);
+            break;
+        case MOVE_TIME:
+            adapter.assignTimeToTaskAt(selectedRange, whichButton);
+            break;
+        default:
+            break;
         }
-        public void onClick(DialogInterface dialog, int whichButton) {
-            switch (action) {
-                case DELETE_TIME:
-                    adapter.deleteTimeRange(itemToDelete);
-                    break;
-                case MOVE_TIME:
-                    adapter.assignTimeToTaskAt(selectedRange, whichButton);
-                    break;
-                default:
-                    break;
-            }
-            if (TaskTimes.this != null)
-                TaskTimes.this.getListView().invalidate();
-        }
+        if (TaskTimes.this != null)
+            TaskTimes.this.getListView().invalidate();
     }
 
     @Override
     protected Dialog onCreateDialog(int id) {
-        ClickListener clickListener = new ClickListener(adapter,selectedRange,id);
         switch (id) {
             case DELETE_TIME:
                 return new AlertDialog.Builder(this)
@@ -174,11 +165,11 @@ public class TaskTimes extends ListActivity {
                         .setIcon(android.R.drawable.stat_sys_warning)
                         .setCancelable(true)
                         .setMessage(R.string.delete_time_message)
-                        .setPositiveButton(R.string.delete_ok, clickListener)
+                        .setPositiveButton(R.string.delete_ok, this)
                         .setNegativeButton(android.R.string.cancel, null).create();
             case MOVE_TIME:
                 return new AlertDialog.Builder(this)
-                        .setCursor(adapter.getTaskNames(), clickListener, TASK_NAME)
+                        .setCursor(adapter.getTaskNames(), this, TASK_NAME)
                         .create();
             default:
                 break;
@@ -235,10 +226,15 @@ public class TaskTimes extends ListActivity {
             }
             db.delete(RANGES_TABLE, whereClause, whereValues);
             int pos = times.indexOf(range);
-            times.remove(pos);
-            if (pos != 0 && times.get(pos - 1).getEnd() == SEP && (pos == times.size() ||
-                    times.get(pos - 1).getEnd() == SEP)) {
-                times.remove(pos - 1);
+            if (pos > -1) {
+                times.remove(pos);
+                // p-1 = sep && p = END ||
+                // p-1 = sep && p+1 = END
+                // But, by this time, p+1 is now p, because we've removed p
+                if (pos != 0 && times.get(pos - 1).getEnd() == SEP &&
+                        (pos == times.size() || times.get(pos).getEnd() == SEP)) {
+                    times.remove(pos - 1);
+                }
             }
             notifyDataSetChanged();
         }
@@ -381,7 +377,7 @@ public class TaskTimes extends ListActivity {
 
             public void setTimeRange(TimeRange t) {
                 dateRange.setText(t.toString());
-                Tasks.formatTotal(total, t.getTotal());
+                total.setText(Tasks.formatTotal(t.getTotal()));
             /* If the following is added, then the timer to update the
              * display must also be added
             if (t.getEnd() == NULL) {

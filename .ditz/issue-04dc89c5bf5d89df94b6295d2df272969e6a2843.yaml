@@ -5,8 +5,8 @@ type: :feature
 component: tt
 release: "2009.4"
 reporter: Sean Russell <ser@ser1.net>
-status: :unstarted
-disposition: 
+status: :closed
+disposition: :fixed
 creation_time: 2009-01-18 13:46:51.748786 Z
 references: []
 
@@ -27,3 +27,11 @@ log_events:
   - Sean Russell <ser@ser1.net>
   - assigned to release 2009.4 from 2009.3
   - ""
+- - 2009-03-04 14:09:43.183975 Z
+  - Sean Russell <ser@ser1.net>
+  - changed status from unstarted to in_progress
+  - ""
+- - 2009-03-04 15:04:43.177443 Z
+  - Sean Russell <ser@ser1.net>
+  - closed with disposition fixed
+  - Added to title bar
