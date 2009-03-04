@@ -273,6 +273,8 @@
           <arg value="G1"/>
           <arg value="-sdcard"/>
           <arg value="${basedir}/sdcard.img"/>
+          <arg value="-audio"/>
+          <arg value="oss"/>
       </exec>
   </target>
 

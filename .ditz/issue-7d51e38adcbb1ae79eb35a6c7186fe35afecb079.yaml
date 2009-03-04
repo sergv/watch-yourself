@@ -5,8 +5,8 @@ type: :feature
 component: tt
 release: "2009.4"
 reporter: Sean Russell <ser@ser1.net>
-status: :unstarted
-disposition: 
+status: :closed
+disposition: :fixed
 creation_time: 2009-01-07 01:31:50.875738 Z
 references: []
 
@@ -28,6 +28,10 @@ log_events:
   - Sean Russell <ser@ser1.net>
   - assigned to release 2009.4 from 2009.3
   - ""
+- - 2009-02-06 12:12:21.396327 Z
+  - Sean Russell <ser@ser1.net>
+  - changed status from unstarted to in_progress
+  - ""
 - - 2009-02-25 12:39:49.168412 Z
   - Sean Russell <ser@ser1.net>
   - commented
@@ -36,3 +40,7 @@ log_events:
   - Sean Russell <ser@ser1.net>
   - commented
   - Added the vibrate.
+- - 2009-03-04 14:02:52.696647 Z
+  - Sean Russell <ser@ser1.net>
+  - closed with disposition fixed
+  - ""

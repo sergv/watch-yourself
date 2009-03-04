@@ -44,6 +44,7 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
@@ -132,6 +133,9 @@ public class Tasks extends ListActivity {
             SET_WEEK_START_DAY = 12,  MORE = 13,  BACKUP = 14, PREFERENCES = 15;
     private boolean concurrency;
 
+    private static MediaPlayer clickPlayer;
+    private boolean playClick = false;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -167,6 +171,18 @@ public class Tasks extends ListActivity {
                 }
             };
         }
+        playClick = preferences.getBoolean(SOUND, false);
+        if (playClick && clickPlayer == null) {
+            clickPlayer = MediaPlayer.create(this, R.raw.click);
+            try {
+                clickPlayer.prepareAsync();
+            } catch (IllegalStateException illegalStateException) {
+                // ignore this.  There's nothing the user can do about it.
+                Logger.getLogger("TimeTracker").log(Level.SEVERE,
+                        "Failed to set up audio player: "
+                        +illegalStateException.getMessage());
+            }
+        }
         registerForContextMenu(getListView());
         if (adapter.tasks.size() == 0) {
             showDialog(HELP);
@@ -184,7 +200,10 @@ public class Tasks extends ListActivity {
 
     @Override
     protected void onStop() {
-        adapter.close();
+        if (adapter != null)
+            adapter.close();
+        if (clickPlayer != null)
+            clickPlayer.release();
         super.onStop();
     }
 
@@ -906,6 +925,19 @@ public class Tasks extends ListActivity {
     @Override
     protected void onListItemClick(ListView l, View v, int position, long id) {
         vibrateAgent.vibrate(100);
+        if (playClick) {
+            try {
+                //clickPlayer.prepare();
+                clickPlayer.start();
+            } catch (Exception exception) {
+                // Ignore this; it is probably because the media isn't yet ready.
+                // There's nothing the user can do about it.
+                // ignore this.  There's nothing the user can do about it.
+                Logger.getLogger("TimeTracker").log(Level.INFO,
+                        "Failed to play audio: "
+                        +exception.getMessage());
+            }
+        }
         // Stop the update.  If a task is already running and we're stopping
         // the timer, it'll stay stopped.  If a task is already running and 
         // we're switching to a new task, or if nothing is running and we're
@@ -954,7 +986,19 @@ public class Tasks extends ListActivity {
                 System.err.println("Concurrency changed to "+concurrency);
             }
             if (extras.getBoolean(SOUND)) {
-
+                playClick = preferences.getBoolean(SOUND, false);
+                if (playClick && clickPlayer == null) {
+                    clickPlayer = MediaPlayer.create(this, R.raw.click);
+                    try {
+                        clickPlayer.prepareAsync();
+                        clickPlayer.setVolume(1, 1);
+                    } catch (IllegalStateException illegalStateException) {
+                        // ignore this.  There's nothing the user can do about it.
+                        Logger.getLogger("TimeTracker").log(Level.SEVERE,
+                                "Failed to set up audio player: "
+                                +illegalStateException.getMessage());
+                    }
+                }
             }
             if (extras.getBoolean(FONTSIZE)) {
                 fontSize = preferences.getInt(FONTSIZE, 16);
