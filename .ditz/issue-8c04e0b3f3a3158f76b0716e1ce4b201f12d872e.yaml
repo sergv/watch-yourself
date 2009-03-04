@@ -7,7 +7,7 @@ desc: |-
   in half and bounding the new task.
 type: :feature
 component: tt
-release: "2009.4"
+release: Promoted
 reporter: Sean Russell <ser@ser1.net>
 status: :unstarted
 disposition: 
@@ -31,4 +31,8 @@ log_events:
 - - 2009-02-02 14:57:30.883924 Z
   - Sean Russell <ser@ser1.net>
   - assigned to release 2009.4 from 2009.3
+  - ""
+- - 2009-03-04 16:46:44.430824 Z
+  - Sean Russell <ser@ser1.net>
+  - assigned to release Promoted from 2009.4
   - ""

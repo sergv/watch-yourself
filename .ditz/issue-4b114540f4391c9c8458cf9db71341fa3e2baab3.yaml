@@ -3,7 +3,7 @@ title: Make the preferences screen font bigger
 desc: ""
 type: :feature
 component: tt
-release: "2009.4"
+release: Promoted
 reporter: Sean Russell <ser@ser1.net>
 status: :unstarted
 disposition: 
@@ -15,4 +15,8 @@ log_events:
 - - 2009-03-04 15:21:38.940969 Z
   - Sean Russell <ser@ser1.net>
   - created
+  - ""
+- - 2009-03-04 16:47:31.511367 Z
+  - Sean Russell <ser@ser1.net>
+  - assigned to release Promoted from 2009.4
   - ""

@@ -43,6 +43,7 @@
     <string name="monday">Monday</string>
     <string name="civilian">1:00 PM</string>
     <string name="military">13:00</string>
+    <string name="small_font">Small</string>
     <string name="medium_font">Medium</string>
     <string name="large_font">Large</string>
     <string name="concurrent">Tasks can run at the same time</string>
