@@ -13,7 +13,7 @@
         <item>Monday</item>
     </string-array>
     <string-array name="moreMenu">
-        <item>Change view (%s)</item>
+        <item>Change date range</item>
         <item>Export view to CSV</item>
         <item>Copy DB to SD card</item>
         <item>Preferences</item>
