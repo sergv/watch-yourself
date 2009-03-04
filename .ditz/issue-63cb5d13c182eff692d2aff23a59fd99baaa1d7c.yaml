@@ -3,7 +3,7 @@ title: On Sunday, when the start day is Monday, the report shows the following w
 desc: ""
 type: :bugfix
 component: tt
-release: Promoted
+release: "2009.4"
 reporter: Sean Russell <ser@ser1.net>
 status: :closed
 disposition: :fixed
@@ -20,3 +20,7 @@ log_events:
   - Sean Russell <ser@ser1.net>
   - closed with disposition fixed
   - More trouble caused by the Android Calendar bug
+- - 2009-03-03 09:47:54.115907 Z
+  - Sean Russell <ser@ser1.net>
+  - assigned to release 2009.4 from Promoted
+  - ""

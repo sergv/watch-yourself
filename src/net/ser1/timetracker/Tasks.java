@@ -47,6 +47,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Vibrator;
 import android.text.method.SingleLineTransformationMethod;
 import android.text.util.Linkify;
 import android.view.ContextMenu;
@@ -118,9 +119,9 @@ public class Tasks extends ListActivity {
      * The currently selected task when the context menu is invoked.
      */
     private Task selectedTask;
-    private int sYear,  sMonth,  sDay;
     private SharedPreferences preferences;
     private static int fontSize = 16;
+    private Vibrator vibrateAgent;
     /**
      * A list of menu options, including both context and options menu items 
      */
@@ -170,6 +171,7 @@ public class Tasks extends ListActivity {
         if (adapter.tasks.size() == 0) {
             showDialog(HELP);
         }
+        vibrateAgent = (Vibrator)getSystemService(VIBRATOR_SERVICE);
     }
 
     @Override
@@ -903,6 +905,7 @@ public class Tasks extends ListActivity {
 
     @Override
     protected void onListItemClick(ListView l, View v, int position, long id) {
+        vibrateAgent.vibrate(100);
         // Stop the update.  If a task is already running and we're stopping
         // the timer, it'll stay stopped.  If a task is already running and 
         // we're switching to a new task, or if nothing is running and we're

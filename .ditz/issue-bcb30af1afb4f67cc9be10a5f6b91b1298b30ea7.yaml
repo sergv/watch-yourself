@@ -3,7 +3,7 @@ title: 12/24 hour mode selection
 desc: ""
 type: :feature
 component: tt
-release: Promoted
+release: "2009.4"
 reporter: Sean Russell <ser@ser1.net>
 status: :closed
 disposition: :fixed
@@ -31,4 +31,8 @@ log_events:
 - - 2009-02-20 18:07:34.511982 Z
   - Sean Russell <ser@ser1.net>
   - closed with disposition fixed
+  - ""
+- - 2009-03-03 09:48:25.535400 Z
+  - Sean Russell <ser@ser1.net>
+  - assigned to release 2009.4 from Promoted
   - ""
