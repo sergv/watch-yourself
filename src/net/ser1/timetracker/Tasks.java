@@ -165,6 +165,7 @@ public class Tasks extends ListActivity {
                 public void run() {
                     if (currentlySelected != null) {
                         adapter.notifyDataSetChanged();
+                        setTitle();
                         Tasks.this.getListView().invalidate();
                     }
                     timer.postDelayed(this, REFRESH_MS);
@@ -260,6 +261,7 @@ public class Tasks extends ListActivity {
     }
     private AlertDialog exportSucceed;
     private String exportMessage;
+    private String baseTitle;
 
     @Override
     public boolean onMenuItemSelected(int featureId, MenuItem item) {
@@ -476,12 +478,17 @@ public class Tasks extends ListActivity {
             default: // Unknown
                 break;
         }
+        baseTitle = ttl;
+        setTitle();
+        getListView().invalidate();
+    }
+    
+    private void setTitle() {
         int total = 0;
         for (Task t : adapter.tasks) {
             total += t.getTotal();
         }
-        setTitle(ttl + " " + formatTotal(total));
-        getListView().invalidate();
+        setTitle(baseTitle + " " + formatTotal(total));
     }
 
     /**
