@@ -38,6 +38,7 @@
     <string name="font_size">Font size</string>
     <string name="concurrency">Multiple concurrently running tasks</string>
     <string name="sound">Sound</string>
+    <string name="vibrate">Vibrate</string>
     <!-- Preference values -->
     <string name="sunday">Sunday</string>
     <string name="monday">Monday</string>
@@ -50,6 +51,8 @@
     <string name="exclusive">Only one task can run at a time</string>
     <string name="sound_enabled">Sound enabled</string>
     <string name="sound_disabled">Sound disabled</string>
+    <string name="vibrate_enabled">Vibrate enabled</string>
+    <string name="vibrate_disabled">Vibrate disabled</string>
 
     <!-- About dialog strings -->
     <string name="version">Version %s</string>

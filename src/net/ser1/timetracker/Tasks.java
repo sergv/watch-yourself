@@ -85,6 +85,7 @@ public class Tasks extends ListActivity {
     protected static final String MILITARY = "military-time";
     protected static final String CONCURRENT = "concurrent-tasks";
     protected static final String SOUND = "sound-enabled";
+    protected static final String VIBRATE = "vibrate-enabled";
 
     protected static final String START_DAY = "start_day";
     protected static final String START_DATE = "start_date";
@@ -122,6 +123,10 @@ public class Tasks extends ListActivity {
     private Task selectedTask;
     private SharedPreferences preferences;
     private static int fontSize = 16;
+    private boolean concurrency;
+    private static MediaPlayer clickPlayer;
+    private boolean playClick = false;
+    private boolean vibrateClick = true;
     private Vibrator vibrateAgent;
     /**
      * A list of menu options, including both context and options menu items 
@@ -131,10 +136,6 @@ public class Tasks extends ListActivity {
             CHANGE_VIEW = 5,  SELECT_START_DATE = 6,  SELECT_END_DATE = 7,
             HELP = 8,  EXPORT_VIEW = 9,  SUCCESS_DIALOG = 10,  ERROR_DIALOG = 11,
             SET_WEEK_START_DAY = 12,  MORE = 13,  BACKUP = 14, PREFERENCES = 15;
-    private boolean concurrency;
-
-    private static MediaPlayer clickPlayer;
-    private boolean playClick = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -189,6 +190,7 @@ public class Tasks extends ListActivity {
             showDialog(HELP);
         }
         vibrateAgent = (Vibrator)getSystemService(VIBRATOR_SERVICE);
+        vibrateClick = preferences.getBoolean(VIBRATE, true);
     }
 
     @Override
@@ -934,7 +936,7 @@ public class Tasks extends ListActivity {
 
     @Override
     protected void onListItemClick(ListView l, View v, int position, long id) {
-        vibrateAgent.vibrate(100);
+        if (vibrateClick) vibrateAgent.vibrate(100);
         if (playClick) {
             try {
                 //clickPlayer.prepare();
@@ -1009,6 +1011,9 @@ public class Tasks extends ListActivity {
                                 +illegalStateException.getMessage());
                     }
                 }
+            }
+            if (extras.getBoolean(VIBRATE)) {
+                vibrateClick = preferences.getBoolean(VIBRATE, true);
             }
             if (extras.getBoolean(FONTSIZE)) {
                 fontSize = preferences.getInt(FONTSIZE, 16);

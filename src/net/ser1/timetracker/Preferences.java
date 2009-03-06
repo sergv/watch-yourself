@@ -102,6 +102,19 @@ public class Preferences extends ListActivity implements OnClickListener {
         prefs.add(pref);
 
         pref = new HashMap<String,String>();
+        pref.put(PREFERENCE, getString(R.string.vibrate));
+        final boolean vibrate = applicationPreferences.getBoolean(Tasks.VIBRATE, false);
+        final String vibrateEnabled = getString(R.string.vibrate_enabled);
+        final String vibrateDisabled = getString(R.string.vibrate_disabled);
+        pref.put(CURRENT,vibrate ? vibrateEnabled : vibrateDisabled);
+        pref.put(DISABLED, vibrate ? vibrateDisabled : vibrateEnabled);
+        pref.put(CURRENTVALUE,String.valueOf(vibrate));
+        pref.put(DISABLEDVALUE,String.valueOf(!vibrate));
+        pref.put(VALUETYPE,BOOL);
+        pref.put(PREFERENCENAME,Tasks.VIBRATE);
+        prefs.add(pref);
+
+        pref = new HashMap<String,String>();
         pref.put(PREFERENCE,getString(R.string.font_size));
         final int fontSize = applicationPreferences.getInt(Tasks.FONTSIZE,SMALL);
         updateFontPrefs(pref, fontSize);
