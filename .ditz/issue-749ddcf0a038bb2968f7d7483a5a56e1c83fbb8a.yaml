@@ -2,7 +2,7 @@
 title: Add/edit dialog needs to be in a scroll view
 desc: Currently, if the device is rotated, you can't see all of the options in the dialog.
 type: :feature
-component: tt
+component: TimeTracker
 release: "2008.3"
 reporter: Sean Russell <ser@ser1.net>
 status: :closed

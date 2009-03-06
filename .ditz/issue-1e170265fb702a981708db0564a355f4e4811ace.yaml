@@ -2,7 +2,7 @@
 title: Moving the first time appears to incorrectly remove the date
 desc: ""
 type: :bugfix
-component: tt
+component: TimeTracker
 release: "2009.3"
 reporter: Sean Russell <ser@ser1.net>
 status: :closed

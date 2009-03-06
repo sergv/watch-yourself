@@ -8,7 +8,7 @@ desc: |-
   * Last pay period
   * Select range
 type: :feature
-component: tt
+component: TimeTracker
 release: "2008.3"
 reporter: Sean Russell <ser@ser1.net>
 status: :closed

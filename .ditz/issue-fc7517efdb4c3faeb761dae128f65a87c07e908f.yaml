@@ -2,7 +2,7 @@
 title: Change view (%s) -- need to fill in %s
 desc: ""
 type: :bugfix
-component: tt
+component: TimeTracker
 release: "2009.4"
 reporter: Sean Russell <ser@ser1.net>
 status: :closed

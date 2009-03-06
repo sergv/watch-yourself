@@ -2,7 +2,7 @@
 title: Add "go to today" to report
 desc: ""
 type: :feature
-component: tt
+component: TimeTracker
 release: 
 reporter: Sean Russell <ser@ser1.net>
 status: :unstarted

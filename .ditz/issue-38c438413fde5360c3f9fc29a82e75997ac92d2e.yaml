@@ -2,7 +2,7 @@
 title: Restore DB from SD card
 desc: Be extra careful about DB versions!
 type: :feature
-component: tt
+component: TimeTracker
 release: 
 reporter: Sean Russell <ser@ser1.net>
 status: :unstarted

@@ -2,7 +2,7 @@
 title: Add ability to list all times for selected view for all tasks
 desc: ""
 type: :feature
-component: tt
+component: TimeTracker
 release: Promoted
 reporter: Sean Russell <ser@ser1.net>
 status: :unstarted

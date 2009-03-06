@@ -6,7 +6,7 @@ desc: |-
   can select a task to split, create a new task, and have the old task split
   in half and bounding the new task.
 type: :feature
-component: tt
+component: TimeTracker
 release: Promoted
 reporter: Sean Russell <ser@ser1.net>
 status: :unstarted

@@ -2,7 +2,7 @@
 title: Option to select time ranges by time + duration
 desc: ""
 type: :feature
-component: tt
+component: TimeTracker
 release: 
 reporter: Sean Russell <ser@ser1.net>
 status: :unstarted

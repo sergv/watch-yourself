@@ -2,7 +2,7 @@
 title: Reverse sort order of CSV export
 desc: ""
 type: :feature
-component: tt
+component: TimeTracker
 release: "2009.3"
 reporter: Sean Russell <ser@ser1.net>
 status: :closed

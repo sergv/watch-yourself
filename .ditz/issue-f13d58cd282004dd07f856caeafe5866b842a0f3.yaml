@@ -2,7 +2,7 @@
 title: The changes for the day of week broke the time display (on Monday)
 desc: ""
 type: :bugfix
-component: tt
+component: TimeTracker
 release: "2009.3"
 reporter: Sean Russell <ser@ser1.net>
 status: :closed

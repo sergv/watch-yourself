@@ -6,14 +6,14 @@ desc: |-
        [exec] E/AndroidRuntime(  219):    at net.ser1.timetracker.TaskTimes$TimesAdapter.deleteTimeRange(TaskTimes.java:238)
        [exec] E/AndroidRuntime(  219):    at net.ser1.timetracker.TaskTimes$ClickListener.onClick(TaskTimes.java
 type: :bugfix
-component: tt
+component: TimeTracker
 release: "2009.4"
 reporter: Sean Russell <ser@ser1.net>
 status: :closed
 disposition: :fixed
 creation_time: 2009-02-06 02:55:51.302953 Z
 references: 
-- tt-104
+- TimeTracker-104
 id: a1a6a8f2cb0aa5c0d899e61887877231275290f2
 log_events: 
 - - 2009-02-06 02:55:51.303604 Z

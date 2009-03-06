@@ -4,17 +4,17 @@ desc: |-
   This is needed for enabling/disabling click sound, for 12/24 hour display,
   and for multi-time tracking.
 type: :task
-component: tt
+component: TimeTracker
 release: "2009.4"
 reporter: Sean Russell <ser@ser1.net>
 status: :closed
 disposition: :fixed
 creation_time: 2009-02-06 02:46:14.574442 Z
 references: 
-- tt-86
-- tt-102
-- tt-76
-- tt-96
+- TimeTracker-86
+- TimeTracker-102
+- TimeTracker-76
+- TimeTracker-96
 id: a22bd17c20bc682fc45140aac4388b808f22234a
 log_events: 
 - - 2009-02-06 02:46:14.592274 Z

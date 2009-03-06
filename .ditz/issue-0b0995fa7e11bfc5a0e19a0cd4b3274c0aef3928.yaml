@@ -2,7 +2,7 @@
 title: Exception during delete dialog + rotate
 desc: The thread trace is useless; it is happening outside of the app.
 type: :bugfix
-component: tt
+component: TimeTracker
 release: "2009.3"
 reporter: Sean Russell <ser@ser1.net>
 status: :closed

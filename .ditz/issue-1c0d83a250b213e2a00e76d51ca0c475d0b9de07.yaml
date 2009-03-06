@@ -2,7 +2,7 @@
 title: Times are still f'ed up
 desc: This might still be a timezone issue.
 type: :feature
-component: tt
+component: TimeTracker
 release: "2008.4"
 reporter: Sean Russell <ser@ser1.net>
 status: :closed

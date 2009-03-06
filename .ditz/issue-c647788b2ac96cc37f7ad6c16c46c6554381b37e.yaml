@@ -2,7 +2,7 @@
 title: Crashes when "edit task" dialog is showing, and the screen is flipped
 desc: ""
 type: :bugfix
-component: tt
+component: TimeTracker
 release: "2009.2"
 reporter: Sean Russell <ser@ser1.net>
 status: :closed

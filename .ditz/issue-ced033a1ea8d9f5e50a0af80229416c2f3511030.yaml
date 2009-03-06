@@ -2,7 +2,7 @@
 title: Check that the "All" view really shows all of the times in the time display
 desc: ""
 type: :bugfix
-component: tt
+component: TimeTracker
 release: "2009.4"
 reporter: Sean Russell <ser@ser1.net>
 status: :unstarted

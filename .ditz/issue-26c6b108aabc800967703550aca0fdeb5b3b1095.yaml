@@ -2,7 +2,7 @@
 title: Transition between activities by sideways-sliding
 desc: ""
 type: :feature
-component: tt
+component: TimeTracker
 release: 
 reporter: Sean Russell <ser@ser1.net>
 status: :unstarted
