@@ -29,6 +29,8 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.Date;
+import java.util.Iterator;
+import java.util.NoSuchElementException;
 import java.util.TimerTask;
 
 import android.app.AlertDialog;
@@ -116,7 +118,7 @@ public class Tasks extends ListActivity {
      * The currently active task (the one that is currently being timed).  There
      * can be only one.
      */
-    private Task currentlySelected = null;
+    private boolean running = false;
     /**
      * The currently selected task when the context menu is invoked.
      */
@@ -164,7 +166,7 @@ public class Tasks extends ListActivity {
 
                 @Override
                 public void run() {
-                    if (currentlySelected != null) {
+                    if (running) {
                         adapter.notifyDataSetChanged();
                         setTitle();
                         Tasks.this.getListView().invalidate();
@@ -217,7 +219,7 @@ public class Tasks extends ListActivity {
         int which = preferences.getInt(VIEW_MODE, 0);
         switchView(which);
 
-        if (timer != null && currentlySelected != null) {
+        if (timer != null && running) {
             timer.post(updater);
         }
         super.onResume();
@@ -697,7 +699,7 @@ public class Tasks extends ListActivity {
         }
 
         private void markupSelectedTask(Task t) {
-            if (t.equals(currentlySelected)) {
+            if (t.isRunning()) {
                 checkMark.setVisibility(View.VISIBLE);
             } else {
                 checkMark.setVisibility(View.INVISIBLE);
@@ -821,7 +823,7 @@ public class Tasks extends ListActivity {
                 } while (c.moveToNext());
             }
             c.close();
-            currentlySelected = findCurrentlyActive();
+            running = findCurrentlyActive().hasNext();
             notifyDataSetChanged();
         }
 
@@ -848,13 +850,34 @@ public class Tasks extends ListActivity {
             return r;
         }
 
-        public Task findCurrentlyActive() {
-            for (Task cur : tasks) {
-                if (cur.getEndTime() == NULL && cur.getStartTime() != NULL) {
-                    return cur;
+        public Iterator<Task> findCurrentlyActive() {
+            return new Iterator<Task>() {
+                Iterator<Task> iter = tasks.iterator();
+                Task next = null;
+                public boolean hasNext() {
+                    if (next != null) return true;
+                    while (iter.hasNext()) {
+                        Task t = iter.next();
+                        if (t.isRunning()) {
+                            next = t;
+                            return true;
+                        }
+                    }
+                    return false;
                 }
-            }
-            return null;
+                public Task next() {
+                    if (hasNext()) {
+                        Task t = next;
+                        next = null;
+                        return t;
+                    }
+                    throw new NoSuchElementException();
+                }
+
+                public void remove() {
+                    throw new UnsupportedOperationException();
+                }                
+            };
         }
 
         protected void addTask(String taskName) {
@@ -950,28 +973,47 @@ public class Tasks extends ListActivity {
                         +exception.getMessage());
             }
         }
+
         // Stop the update.  If a task is already running and we're stopping
         // the timer, it'll stay stopped.  If a task is already running and 
         // we're switching to a new task, or if nothing is running and we're
         // starting a new timer, then it'll be restarted.
-        timer.removeCallbacks(updater);
-        // Disable previous
-        if (currentlySelected != null) {
-            currentlySelected.stop();
-            adapter.updateTask(currentlySelected);
-        }
-        // Enable current
+
         Object item = getListView().getItemAtPosition(position);
         if (item != null) {
             Task selected = (Task) item;
-            if (selected.equals(currentlySelected)) {
-                currentlySelected = null;
+            if (!concurrency) {
+                boolean startSelected = !selected.isRunning();
+                if (running) {
+                    running = false;
+                    timer.removeCallbacks(updater);
+                    // Disable currently running tasks
+                    for (Iterator<Task> iter = adapter.findCurrentlyActive();
+                         iter.hasNext();) {
+                        Task t = iter.next();
+                        t.stop();
+                        adapter.updateTask(t);
+                    }
+                }
+                if (startSelected) {
+                    selected.start();
+                    running = true;
+                    timer.post(updater);
+                }
             } else {
-                currentlySelected = selected;
-                currentlySelected.start();
-                adapter.updateTask(selected);
-                timer.post(updater);
+                if (selected.isRunning()) {
+                    selected.stop();
+                    running = adapter.findCurrentlyActive().hasNext();
+                    if (!running) timer.removeCallbacks(updater);
+                } else {
+                    selected.start();
+                    if (!running) {
+                        running = true;
+                        timer.post(updater);
+                    }
+                }
             }
+            adapter.updateTask(selected);
         }
         getListView().invalidate();
         super.onListItemClick(l, v, position, id);
@@ -982,11 +1024,9 @@ public class Tasks extends ListActivity {
         if (requestCode == PREFERENCES) {
             Bundle extras = data.getExtras();
             if (extras.getBoolean(START_DAY)) {
-                System.err.println("Start day changed to "+preferences.getInt(START_DAY, 1));
                 switchView(preferences.getInt(VIEW_MODE, 0));
             }
             if (extras.getBoolean(MILITARY)) {
-                System.err.println("Military time changed to "+preferences.getBoolean(MILITARY, true));
                 if (preferences.getBoolean(MILITARY, true)) {
                     TimeRange.FORMAT = new SimpleDateFormat("HH:mm");
                 } else {
@@ -995,7 +1035,6 @@ public class Tasks extends ListActivity {
             }
             if (extras.getBoolean(CONCURRENT)) {
                 concurrency = preferences.getBoolean(CONCURRENT, false);
-                System.err.println("Concurrency changed to "+concurrency);
             }
             if (extras.getBoolean(SOUND)) {
                 playClick = preferences.getBoolean(SOUND, false);
@@ -1017,7 +1056,6 @@ public class Tasks extends ListActivity {
             }
             if (extras.getBoolean(FONTSIZE)) {
                 fontSize = preferences.getInt(FONTSIZE, 16);
-                System.err.println("Font size changed to "+fontSize);
             }
         }
 
