@@ -3,7 +3,7 @@ title: Check that the "All" view really shows all of the times in the time displ
 desc: ""
 type: :bugfix
 component: TimeTracker
-release: "2009.4"
+release: 
 reporter: Sean Russell <ser@ser1.net>
 status: :unstarted
 disposition: 
@@ -19,4 +19,8 @@ log_events:
 - - 2009-02-02 14:57:41.823401 Z
   - Sean Russell <ser@ser1.net>
   - assigned to release 2009.4 from 2009.3
+  - ""
+- - 2009-03-07 14:13:04.116057 Z
+  - Sean Russell <ser@ser1.net>
+  - unassigned from release 2009.4
   - ""
