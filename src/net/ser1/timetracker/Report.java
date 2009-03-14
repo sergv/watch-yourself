@@ -130,6 +130,11 @@ public class Report extends Activity implements OnClickListener {
     }
     
     @Override
+    public void onStop() {
+        db.close();
+    }
+    
+    @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         super.onCreateOptionsMenu(menu);
         menu.add(0, Tasks.EXPORT_VIEW, 0, R.string.export_view)

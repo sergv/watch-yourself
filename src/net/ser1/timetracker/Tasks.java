@@ -301,7 +301,12 @@ public class Tasks extends ListActivity {
             case HELP:
                 return openAboutDialog();
             case SUCCESS_DIALOG:
-                exportSucceed = new AlertDialog.Builder(Tasks.this).setTitle(R.string.success).setIcon(android.R.drawable.stat_notify_sdcard).setMessage(exportMessage).setPositiveButton(android.R.string.ok, null).create();
+                exportSucceed = new AlertDialog.Builder(Tasks.this)
+                    .setTitle(R.string.success)
+                    .setIcon(android.R.drawable.stat_notify_sdcard)
+                    .setMessage(exportMessage)
+                    .setPositiveButton(android.R.string.ok, null)
+                    .create();
                 return exportSucceed;
             case ERROR_DIALOG:
                 return new AlertDialog.Builder(Tasks.this).setTitle(R.string.failure).setIcon(android.R.drawable.stat_notify_sdcard).setMessage(exportMessage).setPositiveButton(android.R.string.ok, null).create();

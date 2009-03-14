@@ -137,7 +137,7 @@ public class Preferences extends ListActivity implements OnClickListener {
         
         super.onCreate(savedInstanceState);
     }
-
+    
     private void updateFontPrefs(Map<String, String> pref, int fontSize) {
         final String smallFont = getString(R.string.small_font);
         final String mediumFont = getString(R.string.medium_font);
