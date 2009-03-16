@@ -132,6 +132,7 @@ public class Report extends Activity implements OnClickListener {
     @Override
     public void onStop() {
         db.close();
+        super.onStop();
     }
     
     @Override

@@ -84,8 +84,8 @@ public class TaskTimes extends ListActivity implements DialogInterface.OnClickLi
 
     @Override
     protected void onResume() {
-        getListView().invalidate();
         super.onResume();
+        getListView().invalidate();
     }
 
     @Override

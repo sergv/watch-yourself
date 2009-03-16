@@ -40,6 +40,7 @@ public class EditTime extends Activity implements OnClickListener {
 
     @Override
     protected void onResume() {
+        super.onResume();
         DatePicker startDate = (DatePicker)findViewById(R.id.start_date);
         TimePicker startTime = (TimePicker)findViewById(R.id.start_time);
         
@@ -68,8 +69,6 @@ public class EditTime extends Activity implements OnClickListener {
             endTime.setCurrentHour(ed.get(Calendar.HOUR_OF_DAY));
             endTime.setCurrentMinute(ed.get(Calendar.MINUTE));
         }
-
-        super.onResume();
     }
 
     public void onClick(View v) {
