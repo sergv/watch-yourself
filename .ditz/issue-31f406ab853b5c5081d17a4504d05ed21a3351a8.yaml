@@ -3,7 +3,7 @@ title: CSV export displays wrong file name
 desc: ""
 type: :bugfix
 component: TimeTracker
-release: 
+release: "2009.5"
 reporter: Sean Russell <ser@ser1.net>
 status: :unstarted
 disposition: 
@@ -15,4 +15,8 @@ log_events:
 - - 2009-03-13 21:57:38.689811 Z
   - Sean Russell <ser@ser1.net>
   - created
+  - ""
+- - 2009-03-14 21:01:48.240829 Z
+  - Sean Russell <ser@ser1.net>
+  - assigned to release 2009.5 from unassigned
   - ""
