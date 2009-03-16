@@ -26,6 +26,6 @@
         <item>Vibrate on click (%s)</item>
         <item>Concurrent task tracking (%s)</item>
         <item>Font size (%s)</item>
-        <item>DB location (%s)</item>
+        <!-- <item>DB location (%s)</item> -->
     </string-array>
 </resources>
