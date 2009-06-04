@@ -66,6 +66,21 @@ public class TimeRange implements Comparable<TimeRange> {
             }
         }
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (o instanceof TimeRange) {
+            TimeRange t = (TimeRange)o;
+            return t.start == start && t.end == end;
+        } else {
+            return false;
+        }
+    }
+
+    @Override
+    public int hashCode() {
+        return (int)(start + (end * 101));
+    }
     
     private static final int[] FIELDS = {
         Calendar.HOUR_OF_DAY,

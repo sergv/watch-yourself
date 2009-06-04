@@ -42,6 +42,7 @@ import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.app.ListActivity;
+import android.app.ProgressDialog;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -52,6 +53,7 @@ import android.content.pm.PackageManager.NameNotFoundException;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.media.MediaPlayer;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Vibrator;
@@ -73,6 +75,7 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.AdapterView.AdapterContextMenuInfo;
+import java.util.List;
 
 /**
  * Manages and displays a list of tasks, providing the ability to edit and
@@ -128,6 +131,7 @@ public class Tasks extends ListActivity {
     private boolean playClick = false;
     private boolean vibrateClick = true;
     private Vibrator vibrateAgent;
+    private ProgressDialog progressDialog = null;
     /**
      * A list of menu options, including both context and options menu items 
      */
@@ -135,7 +139,13 @@ public class Tasks extends ListActivity {
             EDIT_TASK = 1,  DELETE_TASK = 2,  REPORT = 3,  SHOW_TIMES = 4,
             CHANGE_VIEW = 5,  SELECT_START_DATE = 6,  SELECT_END_DATE = 7,
             HELP = 8,  EXPORT_VIEW = 9,  SUCCESS_DIALOG = 10,  ERROR_DIALOG = 11,
-            SET_WEEK_START_DAY = 12,  MORE = 13,  BACKUP = 14, PREFERENCES = 15;
+            SET_WEEK_START_DAY = 12,  MORE = 13,  BACKUP = 14, PREFERENCES = 15,
+            PROGRESS_DIALOG = 16;
+        // TODO: This could be done better...
+    private static final String dbPath = "/data/data/net.ser1.timetracker/databases/timetracker.db";
+    private static final String dbBackup = "/sdcard/timetracker.db";
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -261,7 +271,9 @@ public class Tasks extends ListActivity {
         }
         return super.onContextItemSelected(item);
     }
-    private AlertDialog exportSucceed;
+    private AlertDialog operationSucceed;
+    private AlertDialog operationFailed;
+
     private String exportMessage;
     private String baseTitle;
 
@@ -299,95 +311,117 @@ public class Tasks extends ListActivity {
             case HELP:
                 return openAboutDialog();
             case SUCCESS_DIALOG:
-                exportSucceed = new AlertDialog.Builder(Tasks.this)
+                operationSucceed = new AlertDialog.Builder(Tasks.this)
                     .setTitle(R.string.success)
                     .setIcon(android.R.drawable.stat_notify_sdcard)
                     .setMessage(exportMessage)
                     .setPositiveButton(android.R.string.ok, null)
                     .create();
-                return exportSucceed;
+                return operationSucceed;
             case ERROR_DIALOG:
-                return new AlertDialog.Builder(Tasks.this).setTitle(R.string.failure).setIcon(android.R.drawable.stat_notify_sdcard).setMessage(exportMessage).setPositiveButton(android.R.string.ok, null).create();
+                operationFailed = new AlertDialog.Builder(Tasks.this)
+                        .setTitle(R.string.failure)
+                        .setIcon(android.R.drawable.stat_notify_sdcard)
+                        .setMessage(exportMessage)
+                        .setPositiveButton(android.R.string.ok, null)
+                        .create();
+                return operationFailed;
+            case PROGRESS_DIALOG:
+                progressDialog = new ProgressDialog(this);
+                progressDialog.setMessage("Copying records...");
+                progressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
+                progressDialog.setCancelable(false);
+                return progressDialog;
             case MORE:
                 return new AlertDialog.Builder(Tasks.this).setItems(R.array.moreMenu, new DialogInterface.OnClickListener() {
 
                     public void onClick(DialogInterface dialog, int which) {
+                        String msgString;
+                        DBBackup backup;
+                        System.err.println("IN CLICK");
                         switch (which) {
                             case 0: // CHANGE_VIEW:
                                 showDialog(CHANGE_VIEW);
                                 break;
                             case 1: // EXPORT_VIEW:
                                 String fname = export();
-                                if (fname != null) {
-                                    exportMessage = getString(R.string.export_csv_success, fname);
-                                    if (exportSucceed != null) {
-                                        exportSucceed.setMessage(exportMessage);
-                                    }
-                                    showDialog(SUCCESS_DIALOG);
-                                } else {
-                                    exportMessage = getString(R.string.export_csv_fail);
-                                    showDialog(ERROR_DIALOG);
-                                }
+                                perform(fname, R.string.export_csv_success, R.string.export_csv_fail);
                                 break;
                             case 2: // COPY DB TO SD
-                                try {
-                                    copyDbToSd();
-                                    exportMessage = getString(R.string.backup_success);
-                                    if (exportSucceed != null) {
-                                        exportSucceed.setMessage(exportMessage);
+                                showDialog(Tasks.PROGRESS_DIALOG);
+                                if (new File(dbBackup).exists()) {
+                                    // Find the database
+                                    SQLiteDatabase backupDb = SQLiteDatabase.openDatabase(dbBackup, null, SQLiteDatabase.OPEN_READWRITE);
+                                    SQLiteDatabase appDb = SQLiteDatabase.openDatabase(dbPath, null, SQLiteDatabase.OPEN_READONLY);
+                                    backup = new DBBackup(Tasks.this, progressDialog);
+                                    backup.execute(appDb, backupDb);
+                                } else {
+                                    InputStream in = null;
+                                    OutputStream out = null;
+
+                                    try {
+                                        in = new BufferedInputStream(new FileInputStream(dbPath));
+                                        out = new BufferedOutputStream(new FileOutputStream(dbBackup));
+                                        for (int c = in.read(); c != -1; c = in.read()) {
+                                            out.write(c);
+                                        }
+                                    } catch (Exception ex) {
+                                        Logger.getLogger(Tasks.class.getName()).log(Level.SEVERE, null, ex);
+                                        exportMessage = ex.getLocalizedMessage();
+                                        showDialog(ERROR_DIALOG);
+                                    } finally {
+                                        try { in.close(); } catch (IOException ioe) { }
+                                        try { out.close(); } catch (IOException ioe) { }
                                     }
-                                    showDialog(SUCCESS_DIALOG);
-                                } catch (Exception ex) {
-                                    Logger.getLogger(Tasks.class.getName()).log(Level.SEVERE, null, ex);
-                                    exportMessage = ex.getLocalizedMessage();
-                                    showDialog(ERROR_DIALOG);
                                 }
                                 break;
-                            case 3: // PREFERENCES
+                            case 3: // RESTORE FROM BACKUP
+                                showDialog(Tasks.PROGRESS_DIALOG);
+                                SQLiteDatabase backupDb = SQLiteDatabase.openDatabase(dbBackup, null, SQLiteDatabase.OPEN_READONLY);
+                                SQLiteDatabase appDb = SQLiteDatabase.openDatabase(dbPath, null, SQLiteDatabase.OPEN_READWRITE);
+                                backup = new DBBackup(Tasks.this, progressDialog);
+                                backup.execute(backupDb, appDb);
+                                break;
+                            case 4: // PREFERENCES
                                 Intent intent = new Intent(Tasks.this, Preferences.class);
                                 startActivityForResult(intent,PREFERENCES);
                                 break;
-                            case 4: // HELP:
+                            case 5: // HELP:
                                 showDialog(HELP);
                                 break;
                             default:
                                 break;
                         }
                     }
+
                 }).create();
         }
         return null;
     }
 
-    // TODO: This could be done better...
-    private static final String dbPath = "/data/data/net.ser1.timetracker/databases/timetracker.db";
-    private static final String dbBackup = "/sdcard/timetracker.db";
-
-    private void copyDbToSd() throws IOException, IllegalArgumentException {
-        InputStream in = null;
-        OutputStream out = null;
-
-        try {
-            in = new BufferedInputStream(new FileInputStream(dbPath));
-            out = new BufferedOutputStream(new FileOutputStream(dbBackup));
-            for (int c = in.read(); c != -1; c = in.read()) {
-                out.write(c);
+     protected void perform(String message, int success_string, int fail_string) {
+        if (message != null) {
+            exportMessage = getString(success_string, message);
+            if (operationSucceed != null) {
+                operationSucceed.setMessage(exportMessage);
             }
-        } catch (FileNotFoundException e) {
-            throw new IllegalArgumentException(e.getMessage(), e);
-        } finally {
-            in.close();
-            out.close();
+            showDialog(SUCCESS_DIALOG);
+        } else {
+            exportMessage = getString(fail_string, message);
+            if (operationFailed != null) {
+                operationFailed.setMessage(exportMessage);
+            }
+            showDialog(ERROR_DIALOG);
         }
     }
 
     /**
-     * Creates a dialog to change the dates for which task times are shown.
+     * Creates a progressDialog to change the dates for which task times are shown.
      * Offers a short selection of pre-defined defaults, and the option to
-     * choose a range from a dialog.
+     * choose a range from a progressDialog.
      * 
      * @see arrays.xml
-     * @return the dialog to be displayed
+     * @return the progressDialog to be displayed
      */
     private Dialog openChangeViewDialog() {
         return new AlertDialog.Builder(Tasks.this).setItems(R.array.views, new DialogInterface.OnClickListener() {
@@ -494,7 +528,7 @@ public class Tasks extends ListActivity {
     }
     
     private void setTitle() {
-        int total = 0;
+        long total = 0;
         for (Task t : adapter.tasks) {
             total += t.getTotal();
         }
@@ -502,9 +536,9 @@ public class Tasks extends ListActivity {
     }
 
     /**
-     * Constructs a dialog for defining a new task.  If accepted, creates a new
-     * task.  If cancelled, closes the dialog with no affect.
-     * @return the dialog to display
+     * Constructs a progressDialog for defining a new task.  If accepted, creates a new
+     * task.  If cancelled, closes the progressDialog with no affect.
+     * @return the progressDialog to display
      */
     private Dialog openNewTaskDialog() {
         LayoutInflater factory = LayoutInflater.from(this);
@@ -522,9 +556,9 @@ public class Tasks extends ListActivity {
     }
 
     /**
-     * Constructs a dialog for editing task attributes.  If accepted, alters
-     * the task being edited.  If cancelled, dismissed the dialog with no effect.
-     * @return the dialog to display
+     * Constructs a progressDialog for editing task attributes.  If accepted, alters
+     * the task being edited.  If cancelled, dismissed the progressDialog with no effect.
+     * @return the progressDialog to display
      */
     private Dialog openEditTaskDialog() {
         if (selectedTask == null) {
@@ -547,9 +581,9 @@ public class Tasks extends ListActivity {
     }
 
     /**
-     * Constructs a dialog asking for confirmation for a delete request.  If
-     * accepted, deletes the task.  If cancelled, closes the dialog.
-     * @return the dialog to display
+     * Constructs a progressDialog asking for confirmation for a delete request.  If
+     * accepted, deletes the task.  If cancelled, closes the progressDialog.
+     * @return the progressDialog to display
      */
     private Dialog openDeleteTaskDialog() {
         if (selectedTask == null) {
@@ -568,7 +602,7 @@ public class Tasks extends ListActivity {
     final static String SDCARD = "/sdcard/";
 
     private String export() {
-        // Export, then show a dialog
+        // Export, then show a progressDialog
         String rangeName = getRangeName();
         String fname = rangeName + ".csv";
         File fout = new File(SDCARD + fname);
@@ -1059,5 +1093,13 @@ public class Tasks extends ListActivity {
         if (getListView() != null) {
             getListView().invalidate();
         }
+    }
+
+    protected void finishedCopy( DBBackup.Result result, String message ) {
+        if (result == DBBackup.Result.SUCCESS) {
+            switchView(preferences.getInt(VIEW_MODE, 0));
+            message = dbBackup;
+        }
+        perform(message, R.string.restore_success, R.string.restore_failed);
     }
 }

@@ -161,7 +161,7 @@
 
   <!-- Compile this project's .java files into .class files. -->
   <target name="compile" depends="dirs, resource-src, aidl">
-    <javac encoding="ascii" target="1.5" debug="true" extdirs=""
+    <javac encoding="utf8" target="1.5" debug="true" extdirs=""
       srcdir="."
       destdir="${outdir-classes}"
       bootclasspath="${android-jar}">
@@ -274,10 +274,10 @@
       <exec executable="${emulator}" spawn="true">
           <arg value="-skin"/>
           <arg value="G1"/>
-          <arg value="-sdcard"/>
-          <arg value="${basedir}/sdcard.img"/>
           <arg value="-audio"/>
           <arg value="oss"/>
+          <arg value="-avd"/>
+          <arg value="emulator-1.5"/>
       </exec>
   </target>
 
@@ -335,6 +335,9 @@
 			<arg value='${docsource}'/>
 		</exec>
 	</target>
+
+  <target name="-res-compile" depends="resource-src"/>
+  <target name="jar" depends="release"/>
 
   <!-- ########################################################## -->
   <!-- The import should consist of at least a target named       -->

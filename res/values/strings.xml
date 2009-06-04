@@ -99,5 +99,9 @@
     <string name="set_start_day_of_week">Set the day the week starts</string>
     <string name="more">More...</string>
     <string name="backup_success">Successfully backed up the database to the
-        memory card as timetracker.db</string>
+        memory card as %s</string>
+    <string name="backup_failed">%s</string>
+    <string name="restore_success">Successfully restored the database from the
+        backup at %s</string>
+    <string name="restore_failed">%s</string>
 </resources>

@@ -15,7 +15,8 @@
     <string-array name="moreMenu">
         <item>Change date range</item>
         <item>Export view to CSV</item>
-        <item>Copy DB to SD card</item>
+        <item>Back up to SD card</item>
+        <item>Restore from backup</item>
         <item>Preferences</item>
         <item>Help</item>
     </string-array>

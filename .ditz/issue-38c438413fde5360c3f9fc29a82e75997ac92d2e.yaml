@@ -3,10 +3,10 @@ title: Restore DB from SD card
 desc: Be extra careful about DB versions!
 type: :feature
 component: TimeTracker
-release: 
+release: "2009.4"
 reporter: Sean Russell <ser@ser1.net>
-status: :unstarted
-disposition: 
+status: :closed
+disposition: :fixed
 creation_time: 2009-02-02 04:15:32.530322 Z
 references: []
 
@@ -16,3 +16,11 @@ log_events:
   - Sean Russell <ser@ser1.net>
   - created
   - ""
+- - 2009-06-04 02:06:08.296523 Z
+  - Sean Russell <ser@ser1.net>
+  - assigned to release 2009.4 from unassigned
+  - ""
+- - 2009-06-04 02:06:55.680312 Z
+  - Sean Russell <ser@ser1.net>
+  - closed with disposition fixed
+  - Implemented for this release, as it is critical for factory resets and upgrading from free to pay.
