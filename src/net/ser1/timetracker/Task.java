@@ -88,7 +88,7 @@ public class Task implements Comparable<Task>{
     }
 
     public int compareTo(Task another) {
-        return taskName.compareTo(another.getTaskName());
+        return taskName.toUpperCase().compareTo(another.getTaskName().toUpperCase());
     }
 
     public boolean isRunning() {
