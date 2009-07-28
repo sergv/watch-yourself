@@ -828,7 +828,7 @@ public class Tasks extends ListActivity {
             tasks.clear();
 
             SQLiteDatabase db = dbHelper.getReadableDatabase();
-            Cursor c = db.query(TASK_TABLE, TASK_COLUMNS, null, null, null, null, "name");
+            Cursor c = db.query(TASK_TABLE, TASK_COLUMNS, null, null, null, null, null);
 
             Task t = null;
             if (c.moveToFirst()) {
