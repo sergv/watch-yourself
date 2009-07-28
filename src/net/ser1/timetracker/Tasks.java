@@ -854,6 +854,7 @@ public class Tasks extends ListActivity {
                 } while (c.moveToNext());
             }
             c.close();
+            Collections.sort(tasks);
             running = findCurrentlyActive().hasNext();
             notifyDataSetChanged();
         }
