@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">TimeTracker+</string>
+    <string name="app_name">TimeTracker</string>
     
     <string name="start">Start</string>
     <string name="task_name">Task name</string>
@@ -25,7 +25,7 @@
     <string name="range_error_title">Time Range Error</string>
     <string name="report_title">Report for the week %s to %s </string>
     <string name="week">Week %s</string>
-    <string name="title">TimeTracker+ (%s)</string>
+    <string name="title">TimeTracker (%s)</string>
     <string name="help">Help</string>
     <string name="export_view">Export</string>
     <string name="move_time">Assign time to other task</string>
@@ -57,9 +57,11 @@
     <!-- About dialog strings -->
     <string name="version">Version %s</string>
     <string name="author">Sean E. Russell</string>
-    <string name="purpose">TimeTracker+ helps you record the amount of time you spend on
-        activities, such as for a time sheet.  It provides ways to view, edit, and filter 
-        times, as well as reports.</string>
+    <string name="donate"><b>If you like this app, please donate and support future development! (Click here)</b></string>
+    <string name="purpose">TimeTracker helps you record the amount of time you spend on
+        activities; for example, for recording time in a time sheet at work.  It
+        provides ways to view, edit, and filter times, and provides a 
+        time sheet report as well.</string>
     <string name="usage">
     Detailed instructions are at http://trac.germane-software.com/TimeTracker\n\n
     • Create some tasks using the menu\n
@@ -82,16 +84,16 @@
     menu item to manually insert times into the time log.  Use the context menu
     for a time to delete or edit a time range.\n
     \n
-    <b>Note</b> that TimeTracker+ will not prevent you from creating times that overlap
+    <b>Note</b> that TimeTracker will not prevent you from creating times that overlap
     with times in other (or the same) task.
     </string>
     <string name="credits"><b>Credits</b>\n
     \n
-    The TimeTracker+ application icon was borrowed from
+    The TimeTracker application icon was borrowed from
     the excellent glyFX icon library by PerthWeb Pty Ltd (www.glyfx.com).
     </string>
     <string name="export_csv_success">Successfully exported CSV to memory card 
-        as %s</string>
+        as timetracker.db</string>
     <string name="export_csv_fail">Failed to export CSV.  Couldn't create the file.
         Is an SD card inserted?</string>
     <string name="success">Success</string>
@@ -99,9 +101,5 @@
     <string name="set_start_day_of_week">Set the day the week starts</string>
     <string name="more">More...</string>
     <string name="backup_success">Successfully backed up the database to the
-        memory card as %s</string>
-    <string name="backup_failed">%s</string>
-    <string name="restore_success">Successfully restored the database from the
-        backup at %s</string>
-    <string name="restore_failed">%s</string>
+        memory card as timetracker.db</string>
 </resources>

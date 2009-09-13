@@ -1,5 +1,5 @@
 /**
- * TimeTracker+ 
+ * TimeTracker 
  * ©2008, 2009 Sean Russell
  * @author Sean Russell <ser@germane-software.com>
  */

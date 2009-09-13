@@ -1,5 +1,5 @@
 <?xml version="1.0" ?>
-<project name="TimeTracker+" default="debug" xmlns:android="antlib:com.googlecode.autoandroid.ant">
+<project name="TimeTracker" default="debug" xmlns:android="antlib:com.googlecode.autoandroid.ant">
   <taskdef uri="antlib:com.googlecode.autoandroid.ant" classpath="/opt/android-ant-rc2.jar"/>
 
   <!-- The build.properties file can be created by you and is never touched
@@ -119,7 +119,7 @@
   <property name="android-jar" value="${sdk-folder}/android.jar" />
 	
 	<property name="docs" value="docs"/>
-	<property name="docsource" value="${docs}/timetracker+.rst"/>
+	<property name="docsource" value="${docs}/timetracker.rst"/>
 
   <!-- Rules -->
 
@@ -274,6 +274,8 @@
       <exec executable="${emulator}" spawn="true">
           <arg value="-skin"/>
           <arg value="G1"/>
+          <arg value="-sdcard"/>
+          <arg value="${basedir}/sdcard.img"/>
           <arg value="-audio"/>
           <arg value="oss"/>
           <arg value="-avd"/>
