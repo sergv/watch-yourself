@@ -102,4 +102,8 @@
     <string name="more">More...</string>
     <string name="backup_success">Successfully backed up the database to the
         memory card as timetracker.db</string>
+    <string name="restore_success">Successfully restored the database backup. %s
+    </string>
+    <string name="restore_failed">The database restore failed.  Please report
+    this an an error.  %s</string>
 </resources>

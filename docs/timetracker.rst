@@ -1,38 +1,30 @@
+.. sectnum::
+
 ================================
-          TimeTracker+
+          TimeTracker
 ================================
-:Version: Version 2009.4 / 2009-02-02
+:Version: Version 2009.4 / 2009-09-13
 :Author:  Sean E. Russell
 
 TimeTracker helps you record the amount of time you spend on activities; for
 example, for recording time in a time sheet at work. It provides ways to view,
 edit, and filter times, and provides a time sheet report as well.
 
+.. contents:: 
+  :depth: 3
+
 Features
 ===========================
 
-===================================================== ===== =====
-Feature                                               Free  Plus
-===================================================== ===== =====
-Tabular weekly summary report                           X     X
-Variable date range views                               X     X
-Export date range as CSV                                X     X
-Back up database to SD card                             X     X
-12/24 hour format                                             X
-Font size                                                     X
-Concurrent or exclusive time tracking                         X
-Week start-day                                          X     X
-Audio and/or vibrate on start/stop timing                     X
-===================================================== ===== =====
-
-Differences between TimeTracker and TimeTracker+
-------------------------------------------------
-
-No new features will be added to the free version of TimeTracker, although bugs
-will contiue to be fixed.  There are no other restrictions on the free version.
-
-The free vesion is less configurable, has fewer report formats, and fewer features.  
-While the database can be backed up, it can't be restored in the free version.
+- Tabular weekly summary report
+- Variable date range views
+- Export date range as CSV
+- Back up database to SD card
+- 12/24 hour format
+- Font size
+- Concurrent or exclusive time tracking
+- Week start-day
+- Audio and/or vibrate on start/stop timing
 
 Usage
 ===========================
