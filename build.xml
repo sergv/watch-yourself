@@ -2,6 +2,11 @@
 <project name="TimeTracker" default="debug" xmlns:android="antlib:com.googlecode.autoandroid.ant">
   <taskdef uri="antlib:com.googlecode.autoandroid.ant" classpath="/opt/android-ant-rc2.jar"/>
 
+    <!-- The local.properties file is created and updated by the 'android' tool.
+         It contain the path to the SDK. It should *NOT* be checked in in Version
+         Control Systems. -->
+    <property file="local.properties"/>
+
   <!-- The build.properties file can be created by you and is never touched
   by activitycreator. If you want to manually set properties, this is
   the best place to set them. -->
@@ -27,6 +32,31 @@
 
   <property name="android-tools" value="${sdk-folder}/tools" />
   <property name="android-framework" value="${android-tools}/lib/framework.aidl" />
+    <!-- Custom Android task to deal with the project target, and import the proper rules.
+         This requires ant 1.6.0 or above. -->
+    
+	<path id="android.antlibs">
+        <pathelement path="${sdk-location}/tools/lib/anttasks.jar" />
+        <pathelement path="${sdk-location}/tools/lib/sdklib.jar" />
+        <pathelement path="${sdk-location}/tools/lib/androidprefs.jar" />
+        <pathelement path="${sdk-location}/tools/lib/apkbuilder.jar" />
+        <pathelement path="${sdk-location}/tools/lib/jarutils.jar" />
+    </path>
+
+    <taskdef name="setup"
+        classname="com.android.ant.SetupTask"
+        classpathref="android.antlibs"/>
+
+    <!-- Execute the Android Setup task that will setup some properties specific to the target,
+         and import the rules files.
+         To customize the rules, copy/paste them below the task, and disable import by setting
+         the import attribute to false:
+            <setup import="false" />
+         
+         This will ensure that the properties are setup correctly but that your customized
+         targets are used.
+    -->
+    <setup />
 
   <!-- Input directories -->
   <property name="resource-dir" value="res" />
