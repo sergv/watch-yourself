@@ -1,8 +1,9 @@
 syntax: glob
 
 bin/*
+bugs/*
 .classpath
 .project
-src/net/ser1/timetracker/R.java
+gen
 *~
 nbproject/*
