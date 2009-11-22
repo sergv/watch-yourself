@@ -3,7 +3,7 @@ title: Import from Google docs
 desc: http://code.google.com/apis/documents/docs/3.0/developers_guide_protocol.html#UploadingDocs
 type: :feature
 component: TimeTracker
-release: 
+release: Promoted
 reporter: Sean Russell <ser@ser1.net>
 status: :unstarted
 disposition: 
@@ -15,4 +15,8 @@ log_events:
 - - 2009-10-03 04:06:59.232526 Z
   - Sean Russell <ser@ser1.net>
   - created
+  - ""
+- - 2009-11-22 12:35:12.702638 Z
+  - Sean Russell <ser@ser1.net>
+  - assigned to release Promoted from unassigned
   - ""

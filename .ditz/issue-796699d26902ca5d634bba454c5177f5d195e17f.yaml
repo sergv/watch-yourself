@@ -5,8 +5,8 @@ type: :feature
 component: TimeTracker
 release: 
 reporter: Sean Russell <ser@ser1.net>
-status: :unstarted
-disposition: 
+status: :closed
+disposition: :duplicate
 creation_time: 2008-11-23 02:46:20.079259 Z
 references: []
 
@@ -16,3 +16,7 @@ log_events:
   - Sean Russell <ser@ser1.net>
   - created
   - ""
+- - 2009-11-06 03:15:37.387095 Z
+  - Sean Russell <ser@ser1.net>
+  - closed with disposition duplicate
+  - Dup of {issue 4338908e4d1a37db3783452820d8c03a8f4e4f79}
