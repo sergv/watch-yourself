@@ -5,7 +5,7 @@ type: :feature
 component: TimeTracker
 release: "2009.5"
 reporter: Sean Russell <ser@ser1.net>
-status: :unstarted
+status: :in_progress
 disposition: 
 creation_time: 2009-11-22 12:36:50.186681 Z
 references: []
@@ -20,3 +20,9 @@ log_events:
   - Sean Russell <ser@ser1.net>
   - assigned to release 2009.5 from Promoted
   - ""
+- - 2010-01-09 20:28:56.703753 Z
+  - Sean Russell <ser@ser1.net>
+  - changed status from unstarted to in_progress
+  - |-
+    The fourth or fifth person requested this via email, so I'm bumping
+    the priority, and will be releasing a version with this all by itself.
