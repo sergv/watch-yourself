@@ -3,7 +3,7 @@ title: Add ability to show times in report as fractions of an hour
 desc: For SAP.  1:15 becomes 1.25.  Add rounding to nearest quarter hour (configurable?) too.
 type: :feature
 component: TimeTracker
-release: "2009.5"
+release: "2010.1"
 reporter: Sean Russell <ser@ser1.net>
 status: :unstarted
 disposition: 
@@ -27,4 +27,8 @@ log_events:
 - - 2009-11-22 12:38:11.170628 Z
   - Sean Russell <ser@ser1.net>
   - assigned to release 2009.5 from Promoted
+  - ""
+- - 2010-01-11 14:24:24.543754 Z
+  - Sean Russell <ser@ser1.net>
+  - assigned to release 2010.1 from 2009.5
   - ""

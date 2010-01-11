@@ -11,7 +11,7 @@ desc: |-
   The report should allow selecting the depth of the view
 type: :feature
 component: TimeTracker
-release: "2009.5"
+release: "2010.1"
 reporter: Sean Russell <ser@ser1.net>
 status: :in_progress
 disposition: 
@@ -39,4 +39,8 @@ log_events:
 - - 2009-11-06 03:06:44.254984 Z
   - Sean Russell <ser@ser1.net>
   - assigned to release 2009.5 from Promoted
+  - ""
+- - 2010-01-11 14:24:05.667720 Z
+  - Sean Russell <ser@ser1.net>
+  - assigned to release 2010.1 from 2009.5
   - ""

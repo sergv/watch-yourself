@@ -7,7 +7,7 @@ desc: |-
   and the "back" button action should be to save and return.
 type: :bugfix
 component: TimeTracker
-release: "2009.5"
+release: "2010.1"
 reporter: Sean Russell <ser@ser1.net>
 status: :unstarted
 disposition: 
@@ -19,4 +19,8 @@ log_events:
 - - 2009-10-03 04:08:50.924534 Z
   - Sean Russell <ser@ser1.net>
   - created
+  - ""
+- - 2010-01-11 14:24:44.515723 Z
+  - Sean Russell <ser@ser1.net>
+  - assigned to release 2010.1 from 2009.5
   - ""
