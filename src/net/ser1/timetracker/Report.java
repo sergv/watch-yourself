@@ -406,8 +406,7 @@ public class Report extends Activity implements OnClickListener {
         // the following set() is necessary to keep Android from incorrectly
         // changing the date:
         int adjustedDay = ws.get(Calendar.DAY_OF_WEEK);
-        if (adjustedDay < startDay) adjustedDay = 9 - adjustedDay;
-        ws.add(Calendar.DATE, startDay - adjustedDay);
+        ws.add(Calendar.DATE, -((7-(startDay-adjustedDay)) % 7));
         // The above code _should_ be:
         // ws.set(Calendar.DAY_OF_WEEK, startDay);
         // END ANDROID BUG WORKAROUND
@@ -432,8 +431,7 @@ public class Report extends Activity implements OnClickListener {
         // the following set() is necessary to keep Android from incorrectly
         // changing the date:
         int adjustedDay = ws.get(Calendar.DAY_OF_WEEK);
-        if (adjustedDay < startDay) adjustedDay = 9 - adjustedDay;
-        ws.add(Calendar.DATE, startDay - adjustedDay);
+        ws.add(Calendar.DATE, -((7-(startDay-adjustedDay))%7));
         // The above code _should_ be:
         // ws.set(Calendar.DAY_OF_WEEK, startDay);
         // END ANDROID BUG WORKAROUND

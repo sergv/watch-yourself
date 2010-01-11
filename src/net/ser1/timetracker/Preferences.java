@@ -11,7 +11,10 @@ import java.util.List;
 import java.util.Map;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.app.Dialog;
 import android.app.ListActivity;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -19,13 +22,15 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
+import android.text.format.DateUtils;
 
 /**
  *
  * @author ser
  */
 public class Preferences extends ListActivity implements OnClickListener {
-    public static final int LARGE = 24;
+    private static final int DAY_OF_WEEK_PREF_IDX = 0;
+	public static final int LARGE = 24;
     public static final int MEDIUM = 20;
     public static final int SMALL = 16;
     private static final String BOOL = "bool";
@@ -37,6 +42,7 @@ public class Preferences extends ListActivity implements OnClickListener {
     private static final String PREFERENCE = "preference";
     private static final String PREFERENCENAME = "preference-name";
     private static final String VALUETYPE = "value-type";
+	private static final int CHOOSE_DAY = 0;
     private SharedPreferences applicationPreferences;
     private List<Map<String,String>> prefs;
     private SimpleAdapter adapter;
@@ -50,18 +56,15 @@ public class Preferences extends ListActivity implements OnClickListener {
         setContentView(R.layout.preferences);
 
         Map<String,String> pref = new HashMap<String,String>();
+
         pref.put(PREFERENCE, getString(R.string.week_start_day));
-        final int weekStart = applicationPreferences.getInt(Tasks.START_DAY, 0) % 2;
-        final String sunday = getString(R.string.sunday);
-        final String monday = getString(R.string.monday);
-        pref.put(CURRENT, weekStart == 0 ? sunday : monday);
-        pref.put(DISABLED, weekStart == 0 ? monday : sunday);
+        final int weekStart = applicationPreferences.getInt(Tasks.START_DAY, 0) % 7;
+        pref.put(CURRENT, DateUtils.getDayOfWeekString(weekStart + 1, DateUtils.LENGTH_LONG));
         pref.put(CURRENTVALUE,String.valueOf(weekStart == 0 ? 0 : 1 ));
-        pref.put(DISABLEDVALUE,String.valueOf(weekStart == 0 ? 1 : 0 ));
         pref.put(VALUETYPE,INT);
         pref.put(PREFERENCENAME,Tasks.START_DAY);
         prefs.add(pref);
-
+        
         pref = new HashMap<String,String>();
         pref.put(PREFERENCE, getString(R.string.hour_mode));
         final boolean currentMode = applicationPreferences.getBoolean(Tasks.MILITARY, true);
@@ -165,17 +168,22 @@ public class Preferences extends ListActivity implements OnClickListener {
     public void onListItemClick(ListView l, View v, int position, long id) {
         Map<String,String> pref = prefs.get((int)id);
 
-        String current = pref.get(CURRENT);
-        String disabled = pref.get(DISABLED);
-        pref.put( CURRENT,disabled);
-        pref.put( DISABLED,current);
-        String current_value = pref.get(CURRENTVALUE);
-        String disabled_value = pref.get(DISABLEDVALUE);
-        pref.put(CURRENTVALUE,disabled_value);
-        pref.put(DISABLEDVALUE,current_value);
-        
-        if (pref.get(PREFERENCENAME).equals(Tasks.FONTSIZE)) {
-            updateFontPrefs(pref,fontMap.get(disabled));  // disabled is the new enabled!
+        if (pref.get(PREFERENCENAME).equals(Tasks.START_DAY)) {
+        	showDialog( CHOOSE_DAY );
+        } else {
+
+            String current = pref.get(CURRENT);
+            String disabled = pref.get(DISABLED);
+            pref.put( CURRENT,disabled);
+            pref.put( DISABLED,current);
+            String current_value = pref.get(CURRENTVALUE);
+            String disabled_value = pref.get(DISABLEDVALUE);
+            pref.put(CURRENTVALUE,disabled_value);
+            pref.put(DISABLEDVALUE,current_value);
+
+            if (pref.get(PREFERENCENAME).equals(Tasks.FONTSIZE)) {
+                updateFontPrefs(pref,fontMap.get(disabled));  // disabled is the new enabled!
+            }
         }
 
         adapter.notifyDataSetChanged();
@@ -206,5 +214,31 @@ public class Preferences extends ListActivity implements OnClickListener {
         getIntent().putExtra(PREFS_ACTION, PREFS_ACTION);
         setResult(Activity.RESULT_OK, returnIntent);
         finish();
+    }
+    
+    static String[] DAYS_OF_WEEK = new String[7];
+    static {
+    	for (int i=0; i<7; i++) {
+    		DAYS_OF_WEEK[i] = DateUtils.getDayOfWeekString(i+1, DateUtils.LENGTH_LONG);
+    	}
+    }
+    
+    @Override
+    protected Dialog onCreateDialog( int dialogId ) {
+    	switch (dialogId) {
+    	case CHOOSE_DAY:
+    		return new AlertDialog.Builder(this).setItems( DAYS_OF_WEEK, new DialogInterface.OnClickListener() {
+    			public void onClick( DialogInterface iface, int whichChoice ) {
+    				Map<String,String> startDay = prefs.get(DAY_OF_WEEK_PREF_IDX);
+    				startDay.put( CURRENT, DAYS_OF_WEEK[whichChoice] );
+    				startDay.put( CURRENTVALUE, String.valueOf(whichChoice) );
+    				adapter.notifyDataSetChanged();
+    				Preferences.this.getListView().invalidate();
+    			}
+    		}).create();
+    	default:
+    		break;
+    	}
+    	return null;
     }
 }
