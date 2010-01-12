@@ -1,0 +1,24 @@
+--- !ditz.rubyforge.org,2008-03-06/issue 
+title: More detailed reports
+desc: |-
+  Adam Nelson
+  Also suggested has been graphs
+type: :feature
+component: TimeTracker
+release: 
+reporter: Adam Nelson <anelsonserv@gmail.com>
+status: :unstarted
+disposition: 
+creation_time: 2010-01-12 10:46:17.839765 Z
+references: []
+
+id: 3bdb887e6e6351c3aaf4f78919ec8edf7bb91093
+log_events: 
+- - 2010-01-12 10:46:17.840383 Z
+  - Sean Russell <ser@ser1.net>
+  - created
+  - ""
+- - 2010-01-12 11:34:35.095857 Z
+  - Sean Russell <ser@ser1.net>
+  - edited reporter
+  - ""

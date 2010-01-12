@@ -4,7 +4,7 @@ desc: Suggestion by dayron perez <dayronperez15@gmail.com>
 type: :feature
 component: TimeTracker
 release: 
-reporter: Sean Russell <ser@ser1.net>
+reporter: dayron perez <dayronperez15@gmail.com>
 status: :unstarted
 disposition: 
 creation_time: 2009-04-06 11:31:08.256508 Z
@@ -15,4 +15,8 @@ log_events:
 - - 2009-04-06 11:31:08.257141 Z
   - Sean Russell <ser@ser1.net>
   - created
+  - ""
+- - 2010-01-12 10:57:43.487847 Z
+  - Sean Russell <ser@ser1.net>
+  - edited reporter
   - ""

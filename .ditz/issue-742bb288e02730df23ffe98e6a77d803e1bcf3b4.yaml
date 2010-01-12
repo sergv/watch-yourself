@@ -4,7 +4,7 @@ desc: ""
 type: :feature
 component: TimeTracker
 release: 
-reporter: Sean Russell <ser@ser1.net>
+reporter: G Kilcrease <gjkilcrease@gmail.com>
 status: :unstarted
 disposition: 
 creation_time: 2009-01-07 01:33:49.344304 Z
@@ -20,3 +20,7 @@ log_events:
   - Sean Russell <ser@ser1.net>
   - commented
   - Suggested by G Kilcrease
+- - 2010-01-12 11:00:35.451842 Z
+  - Sean Russell <ser@ser1.net>
+  - edited reporter
+  - ""

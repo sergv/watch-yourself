@@ -4,7 +4,7 @@ desc: For SAP.  1:15 becomes 1.25.  Add rounding to nearest quarter hour (config
 type: :feature
 component: TimeTracker
 release: "2010.1"
-reporter: Sean Russell <ser@ser1.net>
+reporter: Chris Kruszynski <thywolf@gmail.com>
 status: :unstarted
 disposition: 
 creation_time: 2008-11-29 03:20:41.726090 Z
