@@ -1,0 +1,18 @@
+--- !ditz.rubyforge.org,2008-03-06/issue 
+title: Not all words are translated in Russian
+desc: ""
+type: :bugfix
+component: TimeTracker
+release: "2010.1"
+reporter: Sean Russell <ser@ser1.net>
+status: :unstarted
+disposition: 
+creation_time: 2010-01-13 03:02:25.670827 Z
+references: []
+
+id: a08ef9b2505b7d4471572fec8f345ae407c76681
+log_events: 
+- - 2010-01-13 03:02:26.878728 Z
+  - Sean Russell <ser@ser1.net>
+  - created
+  - ""

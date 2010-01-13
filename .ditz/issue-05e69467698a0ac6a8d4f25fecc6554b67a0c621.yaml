@@ -5,7 +5,7 @@ type: :feature
 component: TimeTracker
 release: "2010.1"
 reporter: Chris Kruszynski <thywolf@gmail.com>
-status: :unstarted
+status: :in_progress
 disposition: 
 creation_time: 2008-11-29 03:20:41.726090 Z
 references: []
@@ -31,4 +31,8 @@ log_events:
 - - 2010-01-11 14:24:24.543754 Z
   - Sean Russell <ser@ser1.net>
   - assigned to release 2010.1 from 2009.5
+  - ""
+- - 2010-01-13 14:45:59.194939 Z
+  - Sean Russell <ser@ser1.net>
+  - changed status from unstarted to in_progress
   - ""

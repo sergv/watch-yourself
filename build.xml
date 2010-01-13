@@ -1,6 +1,6 @@
 <?xml version="1.0" ?>
 <project name="TimeTracker" default="debug" xmlns:android="antlib:com.googlecode.autoandroid.ant">
-  <taskdef uri="antlib:com.googlecode.autoandroid.ant" classpath="/opt/android-ant-rc2.jar"/>
+  <taskdef uri="antlib:com.googlecode.autoandroid.ant" classpath="/opt/android-ant-1.0-rc5.jar"/>
 
     <!-- The local.properties file is created and updated by the 'android' tool.
          It contain the path to the SDK. It should *NOT* be checked in in Version
@@ -30,17 +30,18 @@
   <!-- ************************************************************************************* -->
   <!-- No user servicable parts below. -->
 
-  <property name="android-tools" value="${sdk-folder}/tools" />
+  <property name="android-tools" value="${android-folder}/tools" />
+  <property name="sdk-tools" value="${sdk-folder}/tools" />
   <property name="android-framework" value="${android-tools}/lib/framework.aidl" />
     <!-- Custom Android task to deal with the project target, and import the proper rules.
          This requires ant 1.6.0 or above. -->
     
 	<path id="android.antlibs">
-        <pathelement path="${sdk-location}/tools/lib/anttasks.jar" />
-        <pathelement path="${sdk-location}/tools/lib/sdklib.jar" />
-        <pathelement path="${sdk-location}/tools/lib/androidprefs.jar" />
-        <pathelement path="${sdk-location}/tools/lib/apkbuilder.jar" />
-        <pathelement path="${sdk-location}/tools/lib/jarutils.jar" />
+        <pathelement path="${android-location}/tools/lib/anttasks.jar" />
+        <pathelement path="${android-location}/tools/lib/sdklib.jar" />
+        <pathelement path="${android-location}/tools/lib/androidprefs.jar" />
+        <pathelement path="${android-location}/tools/lib/apkbuilder.jar" />
+        <pathelement path="${android-location}/tools/lib/jarutils.jar" />
     </path>
 
   <!-- Input directories -->
@@ -112,16 +113,16 @@
   </condition>
 
   <!-- Tools -->
-  <condition property="aapt" value="${android-tools}/aapt.exe" else="${android-tools}/aapt" >
+  <condition property="aapt" value="${sdk-tools}/aapt.exe" else="${sdk-tools}/aapt" >
     <os family="windows"/>
   </condition>
-  <condition property="aidl" value="${android-tools}/aidl.exe" else="${android-tools}/aidl" >
+  <condition property="aidl" value="${sdk-tools}/aidl.exe" else="${sdk-tools}/aidl" >
     <os family="windows"/>
   </condition>
   <condition property="adb" value="${android-tools}/adb.exe" else="${android-tools}/adb" >
     <os family="windows"/>
   </condition>
-  <condition property="dx" value="${android-tools}/dx.bat" else="${android-tools}/dx" >
+  <condition property="dx" value="${sdk-tools}/dx.bat" else="${sdk-tools}/dx" >
     <os family="windows"/>
   </condition>
   <condition property="apk-builder" value="${android-tools}/apkbuilder.bat" else="${android-tools}/apkbuilder" >
@@ -143,6 +144,7 @@
     <echo>Creating output directories if needed...</echo>
     <mkdir dir="${outdir}" />
     <mkdir dir="${outdir-classes}" />
+    <mkdir dir="${external-libs}" />
   </target>
 
   <!-- Generate the R.java file for this project's resources. -->
