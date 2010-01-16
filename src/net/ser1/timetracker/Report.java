@@ -91,6 +91,7 @@ public class Report extends Activity implements OnClickListener {
     private DBHelper dbHelper;
     private SQLiteDatabase db;
     private int startDay;
+    private boolean decimalTime = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -111,6 +112,7 @@ public class Report extends Activity implements OnClickListener {
         String ending = TITLE_FORMAT.format(weekEnd.getTime());
         String title = getString(R.string.report_title, beginning, ending);
         setTitle( title );
+        decimalTime = getIntent().getExtras().getBoolean(Tasks.TIMEDISPLAY);
 
         createHeader( mainReport );
         
@@ -498,12 +500,11 @@ public class Report extends Activity implements OnClickListener {
         for (int i = 0; i < 7; i++) {
             int hours = (int)(dayTotals[i] / 3600000);
             int mins = (int)((dayTotals[i] - hours*3600000) / 60000);
-            String total = String.format("%02d:%02d", hours, mins);
-            totals[i].setText(total);
+            totals[i].setText(Tasks.formatTotal(decimalTime, hours, mins, 0));
         }
         int hours = (int)(dayTotals[7] / 3600000);
         int mins = (int)((dayTotals[7] - hours*3600000) / 60000);
-        totals[7].setText(String.format("%02d:%02d", hours, mins));
+        totals[7].setText(Tasks.formatTotal(decimalTime, hours, mins, 0));
     }
 
     private long[] getDays(String tid_s) {

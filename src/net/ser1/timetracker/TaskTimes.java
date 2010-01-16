@@ -55,6 +55,7 @@ public class TaskTimes extends ListActivity implements DialogInterface.OnClickLi
     private static int FONT_SIZE;
     private static final int ADD_TIME = 0,  DELETE_TIME = 2,  EDIT_TIME = 3,  MOVE_TIME = 4;
     private static final int SEP = -99;
+    private boolean decimalFormat;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,6 +66,7 @@ public class TaskTimes extends ListActivity implements DialogInterface.OnClickLi
             adapter = new TimesAdapter(this);
             setListAdapter(adapter);
         }
+        decimalFormat = preferences.getBoolean( Tasks.TIMEDISPLAY, false );
         registerForContextMenu(getListView());
         Bundle extras = getIntent().getExtras();
         if (extras.get(START) != null) {
@@ -377,7 +379,7 @@ public class TaskTimes extends ListActivity implements DialogInterface.OnClickLi
 
             public void setTimeRange(TimeRange t) {
                 dateRange.setText(t.toString());
-                total.setText(Tasks.formatTotal(t.getTotal()));
+                total.setText(Tasks.formatTotal(decimalFormat, t.getTotal()));
             /* If the following is added, then the timer to update the
              * display must also be added
             if (t.getEnd() == NULL) {

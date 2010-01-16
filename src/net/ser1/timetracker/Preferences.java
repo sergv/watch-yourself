@@ -65,69 +65,33 @@ public class Preferences extends ListActivity implements OnClickListener {
         pref.put(PREFERENCENAME,Tasks.START_DAY);
         prefs.add(pref);
         
-        pref = new HashMap<String,String>();
-        pref.put(PREFERENCE, getString(R.string.hour_mode));
-        final boolean currentMode = applicationPreferences.getBoolean(Tasks.MILITARY, true);
-        final String civilian = "1:00 pm";
-        final String military = "13:00";
-        pref.put(CURRENT, currentMode ? military : civilian);
-        pref.put(DISABLED, currentMode ? civilian : military);
-        pref.put(CURRENTVALUE, String.valueOf(currentMode));
-        pref.put(DISABLEDVALUE,String.valueOf(!currentMode));
-        pref.put(VALUETYPE,BOOL);
-        pref.put(PREFERENCENAME,Tasks.MILITARY);
-        prefs.add(pref);
+        addBooleanPreference(R.string.hour_mode, Tasks.MILITARY, 
+        		R.string.military, R.string.civilian);
 
-        pref = new HashMap<String,String>();
-        pref.put(PREFERENCE, getString(R.string.concurrency));
-        final boolean concurrency = applicationPreferences.getBoolean(Tasks.CONCURRENT, false);
-        final String concurrent = getString(R.string.concurrent);
-        final String exclusive = getString(R.string.exclusive);
-        pref.put(CURRENT, concurrency ? concurrent : exclusive);
-        pref.put(DISABLED, concurrency ? exclusive : concurrent);
-        pref.put(CURRENTVALUE,String.valueOf(concurrency));
-        pref.put(DISABLEDVALUE,String.valueOf(!concurrency));
-        pref.put(VALUETYPE,BOOL);
-        pref.put(PREFERENCENAME,Tasks.CONCURRENT);
-        prefs.add(pref);
+        addBooleanPreference(R.string.concurrency, Tasks.CONCURRENT, 
+        		R.string.concurrent, R.string.exclusive);
 
-        pref = new HashMap<String,String>();
-        pref.put(PREFERENCE, getString(R.string.sound));
-        final boolean sound = applicationPreferences.getBoolean(Tasks.SOUND, false);
-        final String soundEnabled = getString(R.string.sound_enabled);
-        final String soundDisabled = getString(R.string.sound_disabled);
-        pref.put(CURRENT,sound ? soundEnabled : soundDisabled);
-        pref.put(DISABLED, sound ? soundDisabled : soundEnabled);
-        pref.put(CURRENTVALUE,String.valueOf(sound));
-        pref.put(DISABLEDVALUE,String.valueOf(!sound));
-        pref.put(VALUETYPE,BOOL);
-        pref.put(PREFERENCENAME,Tasks.SOUND);
-        prefs.add(pref);
+        addBooleanPreference(R.string.sound, Tasks.SOUND, 
+        		R.string.sound_enabled, R.string.sound_disabled);
+        
+        addBooleanPreference(R.string.vibrate, Tasks.VIBRATE,
+                R.string.vibrate_enabled, R.string.vibrate_disabled);
 
-        pref = new HashMap<String,String>();
-        pref.put(PREFERENCE, getString(R.string.vibrate));
-        final boolean vibrate = applicationPreferences.getBoolean(Tasks.VIBRATE, false);
-        final String vibrateEnabled = getString(R.string.vibrate_enabled);
-        final String vibrateDisabled = getString(R.string.vibrate_disabled);
-        pref.put(CURRENT,vibrate ? vibrateEnabled : vibrateDisabled);
-        pref.put(DISABLED, vibrate ? vibrateDisabled : vibrateEnabled);
-        pref.put(CURRENTVALUE,String.valueOf(vibrate));
-        pref.put(DISABLEDVALUE,String.valueOf(!vibrate));
-        pref.put(VALUETYPE,BOOL);
-        pref.put(PREFERENCENAME,Tasks.VIBRATE);
-        prefs.add(pref);
-
-        pref = new HashMap<String,String>();
-        pref.put(PREFERENCE,getString(R.string.font_size));
-        final int fontSize = applicationPreferences.getInt(Tasks.FONTSIZE,SMALL);
-        updateFontPrefs(pref, fontSize);
-        pref.put(VALUETYPE,INT);
-        pref.put(PREFERENCENAME,Tasks.FONTSIZE);
-        prefs.add(pref);
-        fontMap = new HashMap<String,Integer>(3);
-        fontMap.put(getString(R.string.small_font), SMALL);
-        fontMap.put(getString(R.string.medium_font), MEDIUM);
-        fontMap.put(getString(R.string.large_font), LARGE);
+		pref = new HashMap<String, String>();
+		pref.put(PREFERENCE, getString(R.string.font_size));
+		final int fontSize = applicationPreferences.getInt(Tasks.FONTSIZE,
+				SMALL);
+		updateFontPrefs(pref, fontSize);
+		pref.put(VALUETYPE, INT);
+		pref.put(PREFERENCENAME, Tasks.FONTSIZE);
+		prefs.add(pref);
+		fontMap = new HashMap<String, Integer>(3);
+		fontMap.put(getString(R.string.small_font), SMALL);
+		fontMap.put(getString(R.string.medium_font), MEDIUM);
+		fontMap.put(getString(R.string.large_font), LARGE);
+		
+		addBooleanPreference(R.string.time_display, Tasks.TIMEDISPLAY,
+				R.string.decimal_time, R.string.standard_time);
 
         adapter = new SimpleAdapter(this,
                 prefs,
@@ -140,6 +104,24 @@ public class Preferences extends ListActivity implements OnClickListener {
         
         super.onCreate(savedInstanceState);
     }
+
+	private void addBooleanPreference(int prefName, String name,
+			int enabled, int disabled) {
+		Map<String, String> pref;
+		pref = new HashMap<String,String>();
+		String prefNameString = getString(prefName);
+        pref.put(PREFERENCE, prefNameString);
+        boolean value = applicationPreferences.getBoolean(name, false);
+        String enabledString = getString(enabled);
+        String disabledString = getString(disabled);
+        pref.put(CURRENT, value ? enabledString : disabledString );
+        pref.put(DISABLED, value ? disabledString : enabledString );
+        pref.put(CURRENTVALUE, String.valueOf(value));
+        pref.put(DISABLEDVALUE, String.valueOf(!value));
+        pref.put(VALUETYPE,BOOL);
+        pref.put(PREFERENCENAME,name);
+        prefs.add(pref);
+	}
     
     private void updateFontPrefs(Map<String, String> pref, int fontSize) {
         final String smallFont = getString(R.string.small_font);

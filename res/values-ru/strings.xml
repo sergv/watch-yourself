@@ -53,6 +53,9 @@
     <string name="sound_disabled">Звук отключен</string>
     <string name="vibrate_enabled">Вибрация включена</string>
     <string name="vibrate_disabled">Вибрация выключена</string>
+    <string name="time_display">Время отображения</string>
+    <string name="standard_time">стандартный (HH:MM)</string>
+    <string name="decimal_time">десятичной (HH.hh)</string>
 
     <!-- About dialog strings -->
     <string name="version">Версия %s</string>

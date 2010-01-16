@@ -27,6 +27,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.text.DateFormat;
+import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -97,10 +98,13 @@ public class Tasks extends ListActivity {
     protected static final String END_DATE = "end_date";
     protected static final String VIEW_MODE = "view_mode";
     protected static final String REPORT_DATE = "report_date";
+	protected static final String TIMEDISPLAY = "time_display";
+	
     /**
      * Defines how each task's time is displayed 
      */
     private static final String FORMAT = "%02d:%02d";
+    private static final String DECIMAL_FORMAT = "%02d.%02d";
     /**
      * How often to refresh the display, in milliseconds
      */
@@ -134,6 +138,8 @@ public class Tasks extends ListActivity {
     private boolean vibrateClick = true;
     private Vibrator vibrateAgent;
     private ProgressDialog progressDialog = null;
+    private boolean decimalFormat = false;
+    
     /**
      * A list of menu options, including both context and options menu items 
      */
@@ -197,6 +203,7 @@ public class Tasks extends ListActivity {
                         +illegalStateException.getMessage());
             }
         }
+        decimalFormat = preferences.getBoolean(TIMEDISPLAY, false);
         registerForContextMenu(getListView());
         if (adapter.tasks.size() == 0) {
             showDialog(HELP);
@@ -290,6 +297,7 @@ public class Tasks extends ListActivity {
                 Intent intent = new Intent(this, Report.class);
                 intent.putExtra(REPORT_DATE, System.currentTimeMillis());
                 intent.putExtra(START_DAY, preferences.getInt(START_DAY, 0) + 1);
+                intent.putExtra(TIMEDISPLAY, decimalFormat);
                 startActivity(intent);
                 break;
             default:
@@ -534,7 +542,7 @@ public class Tasks extends ListActivity {
         for (Task t : adapter.tasks) {
             total += t.getTotal();
         }
-        setTitle(baseTitle + " " + formatTotal(total));
+        setTitle(baseTitle + " " + formatTotal(decimalFormat, total));
     }
 
     /**
@@ -724,7 +732,7 @@ public class Tasks extends ListActivity {
             total.setTextSize(fontSize);
             total.setGravity(Gravity.RIGHT);
             total.setTransformationMethod(SingleLineTransformationMethod.getInstance());
-            total.setText(formatTotal(t.getTotal()));
+            total.setText(formatTotal(decimalFormat, t.getTotal()));
             addView(total, new LinearLayout.LayoutParams(
                     LayoutParams.WRAP_CONTENT, LayoutParams.FILL_PARENT, 0f));
 
@@ -736,7 +744,7 @@ public class Tasks extends ListActivity {
             taskName.setTextSize(fontSize);
             total.setTextSize(fontSize);
             taskName.setText(t.getTaskName());
-            total.setText(formatTotal(t.getTotal()));
+            total.setText(formatTotal(decimalFormat, t.getTotal()));
             markupSelectedTask(t);
         }
 
@@ -751,14 +759,25 @@ public class Tasks extends ListActivity {
     private static final long MS_H = 3600000;
     private static final long MS_M = 60000;
     private static final long MS_S = 1000;
+    private static final double D_M = 10.0 / 6.0;
+    private static final double D_S = 1.0 / 36.0;
 
-    static String formatTotal( long ttl ) {
+    static String formatTotal( boolean decimalFormat, long ttl ) {
         long hours = ttl / MS_H;
         long hours_in_ms = hours * MS_H;
         long minutes = (ttl - hours_in_ms) / MS_M;
-        long minutes_in_ms = minutes * MS_M;
+    	long minutes_in_ms = minutes * MS_M;
         long seconds = (ttl - hours_in_ms - minutes_in_ms) / MS_S;
-        return String.format(FORMAT, hours, minutes, seconds);        
+        return formatTotal( decimalFormat, hours, minutes, seconds );
+    }
+    protected static String formatTotal( boolean decimalFormat, long hours, long minutes, long seconds ) {
+        String format = FORMAT;
+        if (decimalFormat) {
+        	format = DECIMAL_FORMAT;
+        	minutes = Math.round((D_M * minutes) + (D_S * seconds));
+        	seconds = 0;
+        }
+        return String.format(format, hours, minutes, seconds);            	
     }
 
     private class TaskAdapter extends BaseAdapter {
@@ -1099,6 +1118,9 @@ public class Tasks extends ListActivity {
             }
             if (extras.getBoolean(FONTSIZE)) {
                 fontSize = preferences.getInt(FONTSIZE, 16);
+            }
+            if (extras.getBoolean(TIMEDISPLAY)) {
+            	decimalFormat = preferences.getBoolean(TIMEDISPLAY, false);
             }
         }
 

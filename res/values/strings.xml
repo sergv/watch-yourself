@@ -53,6 +53,9 @@
     <string name="sound_disabled">Sound disabled</string>
     <string name="vibrate_enabled">Vibrate enabled</string>
     <string name="vibrate_disabled">Vibrate disabled</string>
+    <string name="time_display">Time display</string>
+    <string name="standard_time">Standard (HH:MM)</string>
+    <string name="decimal_time">Decimal (HH.hh)</string>
 
     <!-- About dialog strings -->
     <string name="version">Version %s</string>
