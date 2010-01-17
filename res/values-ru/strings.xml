@@ -29,6 +29,9 @@
     <string name="help">Помощь</string>
     <string name="export_view">Экспорт</string>
     <string name="move_time">Назначить время для задачи</string>
+    <string name="edit_task">Редактирование задачи</string>
+    <string name="delete_task">Удалить задачу</string>
+    <string name="show_times">Показать раза</string>
 
     <!--    Preferences strings    -->
     <string name="preferences">Настройки</string>

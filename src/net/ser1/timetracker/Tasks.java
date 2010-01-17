@@ -255,9 +255,9 @@ public class Tasks extends ListActivity {
     public void onCreateContextMenu(ContextMenu menu, View v,
             ContextMenuInfo menuInfo) {
         menu.setHeaderTitle("Task menu");
-        menu.add(0, EDIT_TASK, 0, "Edit Task");
-        menu.add(0, DELETE_TASK, 0, "Delete Task");
-        menu.add(0, SHOW_TIMES, 0, "Show times");
+        menu.add(0, EDIT_TASK, 0, getText(R.string.edit_task));
+        menu.add(0, DELETE_TASK, 0, getText(R.string.delete_task));
+        menu.add(0, SHOW_TIMES, 0, getText(R.string.show_times));
     }
 
     @Override

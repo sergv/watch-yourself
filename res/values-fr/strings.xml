@@ -30,6 +30,9 @@
     <string name="help">Aide</string>
     <string name="export_view">Exporter</string>
     <string name="move_time">Assigner cette durée à une autre tâche</string>
+    <string name="edit_task">Modifier la tâche</string>
+    <string name="delete_task">Supprimer la tâche</string>
+    <string name="show_times">Affichage l'heure</string>
 
     <!--    Preferences strings    -->
     <string name="preferences">Préférences</string>

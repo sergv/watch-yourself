@@ -149,3 +149,12 @@ releases:
     - Sean Russell <ser@ser1.net>
     - created
     - ""
+- !ditz.rubyforge.org,2008-03-06/release 
+  name: next
+  status: :unreleased
+  release_time: 
+  log_events: 
+  - - 2010-01-16 23:22:26.111381 Z
+    - Sean Russell <ser@ser1.net>
+    - created
+    - ""

@@ -29,6 +29,9 @@
     <string name="help">Help</string>
     <string name="export_view">Export</string>
     <string name="move_time">Assign time to other task</string>
+    <string name="edit_task">Edit Task</string>
+    <string name="delete_task">Delete Task</string>
+    <string name="show_times">Show Times</string>
 
     <!--    Preferences strings    -->
     <string name="preferences">Preferences</string>

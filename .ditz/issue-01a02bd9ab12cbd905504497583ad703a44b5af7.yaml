@@ -5,7 +5,7 @@ desc: |-
   Would require a "Show all" option.
 type: :feature
 component: TimeTracker
-release: "2010.1"
+release: next
 reporter: Sean Russell <ser@ser1.net>
 status: :unstarted
 disposition: 
@@ -21,4 +21,8 @@ log_events:
 - - 2010-01-12 11:43:07.879728 Z
   - Sean Russell <ser@ser1.net>
   - assigned to release 2010.1 from unassigned
+  - ""
+- - 2010-01-16 23:22:58.867428 Z
+  - Sean Russell <ser@ser1.net>
+  - assigned to release next from 2010.1
   - ""

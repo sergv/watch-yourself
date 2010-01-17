@@ -358,6 +358,16 @@
   <target name="-res-compile" depends="resource-src"/>
   <target name="jar" depends="release"/>
 
+	<target name="check-translations">
+		<exec executable='ruby'
+			output='keys.txt'
+			logError='true'>
+			<arg value='-nle'/>
+			<arg value='print $1 if /name="(.*?)"/'/>
+			<arg value='res/values/strings.xml'/>
+		</exec> <!-- | sort > keys.txt , then diff -->
+	</target>
+	
   <!-- ########################################################## -->
   <!-- The import should consist of at least a target named       -->
   <!-- "sign" that runs a jarsigner task on the APK. It is a      -->
