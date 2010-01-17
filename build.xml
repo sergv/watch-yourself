@@ -111,6 +111,8 @@
     else="${basedir}/${out-unsigned-package}" >
     <os family="windows"/>
   </condition>
+  <property name="out-signed-package" value="${outdir}/${ant.project.name}-signed.apk"/>
+  <property name="out-aligned-package" value="${outdir}/${ant.project.name}.apk"/>
 
   <!-- Tools -->
   <condition property="aapt" value="${sdk-tools}/aapt.exe" else="${sdk-tools}/aapt" >
