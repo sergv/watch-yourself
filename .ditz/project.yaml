@@ -142,19 +142,32 @@ releases:
     - ""
 - !ditz.rubyforge.org,2008-03-06/release 
   name: "2010.2"
-  status: :unreleased
-  release_time: 
+  status: :released
+  release_time: 2010-01-18 15:06:22.995405 Z
   log_events: 
   - - 2010-01-12 11:43:20.719696 Z
     - Sean Russell <ser@ser1.net>
     - created
     - ""
+  - - 2010-01-18 15:06:22.995439 Z
+    - Sean Russell <ser@ser1.net>
+    - released
+    - Quick rollout of bug fix for decimal time error in 2010.1
 - !ditz.rubyforge.org,2008-03-06/release 
   name: next
   status: :unreleased
   release_time: 
   log_events: 
   - - 2010-01-16 23:22:26.111381 Z
+    - Sean Russell <ser@ser1.net>
+    - created
+    - ""
+- !ditz.rubyforge.org,2008-03-06/release 
+  name: "2010.3"
+  status: :unreleased
+  release_time: 
+  log_events: 
+  - - 2010-01-18 15:06:32.383401 Z
     - Sean Russell <ser@ser1.net>
     - created
     - ""
