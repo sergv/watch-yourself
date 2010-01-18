@@ -3,7 +3,7 @@
 ================================
           TimeTracker
 ================================
-:Version: Version 2010.1 / 2010-01-16
+:Version: Version 2010.2 / 2010-01-18
 :Author:  Sean E. Russell
 
 TimeTracker helps you record the amount of time you spend on activities; for

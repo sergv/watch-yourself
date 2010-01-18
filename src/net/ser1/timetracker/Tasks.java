@@ -27,7 +27,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.text.DateFormat;
-import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -55,7 +54,6 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.media.MediaPlayer;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Vibrator;
@@ -78,7 +76,6 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.AdapterView.AdapterContextMenuInfo;
-import java.util.List;
 
 /**
  * Manages and displays a list of tasks, providing the ability to edit and
@@ -346,7 +343,6 @@ public class Tasks extends ListActivity {
                 return new AlertDialog.Builder(Tasks.this).setItems(R.array.moreMenu, new DialogInterface.OnClickListener() {
 
                     public void onClick(DialogInterface dialog, int which) {
-                        String msgString;
                         DBBackup backup;
                         System.err.println("IN CLICK");
                         switch (which) {
@@ -762,22 +758,33 @@ public class Tasks extends ListActivity {
     private static final double D_M = 10.0 / 6.0;
     private static final double D_S = 1.0 / 36.0;
 
+    /*
+     * This is pretty stupid, but because Java doesn't support closures, we have
+     * to add extra overhead (more method indirection; method calls are relatively 
+     * expensive) if we want to re-use code.  Notice that a call to this method
+     * actually filters down through four methods before it returns.
+     */
     static String formatTotal( boolean decimalFormat, long ttl ) {
+    	return formatTotal( decimalFormat, FORMAT, ttl );
+    }
+    static String formatTotal( boolean decimalFormat, String format, long ttl ) {
         long hours = ttl / MS_H;
         long hours_in_ms = hours * MS_H;
         long minutes = (ttl - hours_in_ms) / MS_M;
     	long minutes_in_ms = minutes * MS_M;
         long seconds = (ttl - hours_in_ms - minutes_in_ms) / MS_S;
-        return formatTotal( decimalFormat, hours, minutes, seconds );
+        return formatTotal( decimalFormat, format, hours, minutes, seconds );    	
     }
-    protected static String formatTotal( boolean decimalFormat, long hours, long minutes, long seconds ) {
-        String format = FORMAT;
+    static String formatTotal( boolean decimalFormat, String format, long hours, long minutes, long seconds ) {
         if (decimalFormat) {
         	format = DECIMAL_FORMAT;
         	minutes = Math.round((D_M * minutes) + (D_S * seconds));
         	seconds = 0;
         }
-        return String.format(format, hours, minutes, seconds);            	
+        return String.format(format, hours, minutes, seconds);            	    	
+    }
+    static String formatTotal( boolean decimalFormat, long hours, long minutes, long seconds ) {
+    	return formatTotal(decimalFormat,FORMAT,hours,minutes,seconds);
     }
 
     private class TaskAdapter extends BaseAdapter {

@@ -84,7 +84,7 @@ public class Report extends Activity implements OnClickListener {
     private Map<Integer,TextView[]> dateViews = new TreeMap<Integer,TextView[]>();
     private static final int PAD = 2;
     private static final int RPAD = 4;
-    private static final SimpleDateFormat FORMAT = new SimpleDateFormat("HH:mm");
+    private static final String FORMAT = "HH:mm";
     private TextView weekView;
     private static final SimpleDateFormat WEEK_FORMAT = new SimpleDateFormat("w");
     private static final SimpleDateFormat TITLE_FORMAT = new SimpleDateFormat("EEE, MMM d");
@@ -96,7 +96,6 @@ public class Report extends Activity implements OnClickListener {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        FORMAT.setTimeZone(TimeZone.getTimeZone("UTC"));
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
 
         setContentView(R.layout.report);
@@ -484,13 +483,14 @@ public class Report extends Activity implements OnClickListener {
                 for (int i = 0 ; i < 7; i++) {
                     weekTotal += days[i];
                     dayTotals[i] += days[i];
-                    arryForDay[i].setText(FORMAT.format(new Date(days[i])));                        
+                    Date d = new Date(days[i]);
+                    arryForDay[i].setText(Tasks.formatTotal(decimalTime, FORMAT, d.getHours(), d.getMinutes(), d.getSeconds()));                        
                 }
                 // Set the week total.  Since this value can be more than 24 hours,
                 // we have to format it by hand:
                 long hours = weekTotal / 3600000;
                 long minutes = (weekTotal - hours*3600000) / 60000;
-                arryForDay[7].setText(String.format("%02d:%02d", hours, minutes));
+                arryForDay[7].setText(Tasks.formatTotal(decimalTime, FORMAT, weekTotal));
                 dayTotals[7] += weekTotal;
             } while (c.moveToNext());
         }
@@ -500,11 +500,11 @@ public class Report extends Activity implements OnClickListener {
         for (int i = 0; i < 7; i++) {
             int hours = (int)(dayTotals[i] / 3600000);
             int mins = (int)((dayTotals[i] - hours*3600000) / 60000);
-            totals[i].setText(Tasks.formatTotal(decimalTime, hours, mins, 0));
+            totals[i].setText(Tasks.formatTotal(decimalTime, FORMAT, hours, mins, 0));
         }
         int hours = (int)(dayTotals[7] / 3600000);
         int mins = (int)((dayTotals[7] - hours*3600000) / 60000);
-        totals[7].setText(Tasks.formatTotal(decimalTime, hours, mins, 0));
+        totals[7].setText(Tasks.formatTotal(decimalTime, FORMAT, hours, mins, 0));
     }
 
     private long[] getDays(String tid_s) {
