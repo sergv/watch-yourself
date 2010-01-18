@@ -84,7 +84,7 @@ public class Report extends Activity implements OnClickListener {
     private Map<Integer,TextView[]> dateViews = new TreeMap<Integer,TextView[]>();
     private static final int PAD = 2;
     private static final int RPAD = 4;
-    private static final String FORMAT = "HH:mm";
+    private static final String FORMAT = "%02d:%02d";
     private TextView weekView;
     private static final SimpleDateFormat WEEK_FORMAT = new SimpleDateFormat("w");
     private static final SimpleDateFormat TITLE_FORMAT = new SimpleDateFormat("EEE, MMM d");

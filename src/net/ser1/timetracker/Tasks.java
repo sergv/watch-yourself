@@ -775,6 +775,9 @@ public class Tasks extends ListActivity {
         long seconds = (ttl - hours_in_ms - minutes_in_ms) / MS_S;
         return formatTotal( decimalFormat, format, hours, minutes, seconds );    	
     }
+    static String formatTotal( boolean decimalFormat, long hours, long minutes, long seconds ) {
+    	return formatTotal(decimalFormat,FORMAT,hours,minutes,seconds);
+    }
     static String formatTotal( boolean decimalFormat, String format, long hours, long minutes, long seconds ) {
         if (decimalFormat) {
         	format = DECIMAL_FORMAT;
@@ -782,9 +785,6 @@ public class Tasks extends ListActivity {
         	seconds = 0;
         }
         return String.format(format, hours, minutes, seconds);            	    	
-    }
-    static String formatTotal( boolean decimalFormat, long hours, long minutes, long seconds ) {
-    	return formatTotal(decimalFormat,FORMAT,hours,minutes,seconds);
     }
 
     private class TaskAdapter extends BaseAdapter {
