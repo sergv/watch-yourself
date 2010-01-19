@@ -483,13 +483,10 @@ public class Report extends Activity implements OnClickListener {
                 for (int i = 0 ; i < 7; i++) {
                     weekTotal += days[i];
                     dayTotals[i] += days[i];
-                    Date d = new Date(days[i]);
-                    arryForDay[i].setText(Tasks.formatTotal(decimalTime, FORMAT, d.getHours(), d.getMinutes(), d.getSeconds()));                        
+                    arryForDay[i].setText(Tasks.formatTotal(decimalTime, FORMAT, days[i]));
                 }
                 // Set the week total.  Since this value can be more than 24 hours,
                 // we have to format it by hand:
-                long hours = weekTotal / 3600000;
-                long minutes = (weekTotal - hours*3600000) / 60000;
                 arryForDay[7].setText(Tasks.formatTotal(decimalTime, FORMAT, weekTotal));
                 dayTotals[7] += weekTotal;
             } while (c.moveToNext());
@@ -498,15 +495,22 @@ public class Report extends Activity implements OnClickListener {
         
         TextView[] totals = dateViews.get(-1);
         for (int i = 0; i < 7; i++) {
-            int hours = (int)(dayTotals[i] / 3600000);
-            int mins = (int)((dayTotals[i] - hours*3600000) / 60000);
-            totals[i].setText(Tasks.formatTotal(decimalTime, FORMAT, hours, mins, 0));
+            totals[i].setText(Tasks.formatTotal(decimalTime, FORMAT, dayTotals[i]));
         }
-        int hours = (int)(dayTotals[7] / 3600000);
-        int mins = (int)((dayTotals[7] - hours*3600000) / 60000);
-        totals[7].setText(Tasks.formatTotal(decimalTime, FORMAT, hours, mins, 0));
+        totals[7].setText(Tasks.formatTotal(decimalTime, FORMAT, dayTotals[7]));
     }
 
+    /**
+     * Fetch the times for a task within the currently set time range, by day.
+     * 
+     * @param tid_s The ID of the task for which to fetch times
+     * @return An array containinging, in each cell, the sum of the times which
+     *         fall within that day. Index 0 is the first day starting on the
+     *         currently set week.  This uses TimeRange.overlap() to make sure
+     *         that only time that actually falls on the day is included (even
+     *         if a particular time entry spans days).
+     * @see TimeRange.overlap()
+     */
     private long[] getDays(String tid_s) {
         Calendar day = Calendar.getInstance();
         day.setFirstDayOfWeek( startDay );
