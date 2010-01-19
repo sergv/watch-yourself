@@ -133,8 +133,8 @@ releases:
     - ""
 - !ditz.rubyforge.org,2008-03-06/release 
   name: "2010.1"
-  status: :unreleased
-  release_time: 
+  status: :released
+  release_time: 2010-01-17 17:00:00.000000 Z
   log_events: 
   - - 2010-01-11 14:21:53.839676 Z
     - Sean Russell <ser@ser1.net>
@@ -164,10 +164,23 @@ releases:
     - ""
 - !ditz.rubyforge.org,2008-03-06/release 
   name: "2010.3"
+  status: :released
+  release_time: 2010-01-19 12:25:47.229889 Z
+  log_events: 
+  - - 2010-01-18 15:06:32.383401 Z
+    - Sean Russell <ser@ser1.net>
+    - created
+    - ""
+  - - 2010-01-19 12:25:47.229934 Z
+    - Sean Russell <ser@ser1.net>
+    - released
+    - ""
+- !ditz.rubyforge.org,2008-03-06/release 
+  name: "2010.4"
   status: :unreleased
   release_time: 
   log_events: 
-  - - 2010-01-18 15:06:32.383401 Z
+  - - 2010-01-19 12:26:58.505180 Z
     - Sean Russell <ser@ser1.net>
     - created
     - ""
