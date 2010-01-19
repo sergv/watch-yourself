@@ -124,6 +124,12 @@
 	<property name="docsource" value="${docs}/timetracker.rst" />
 
 	<filter filtersfile="release.properties" />
+	
+	<dependset>
+		<srcfilelist dir="${basedir}" files="release.properties"/>
+		<targetfilelist dir="${docs}" files="howto.html,timetracker.rst"/>
+		<targetfilelist dir="${basedir}" files="AndroidManifest.xml"/>
+	</dependset>
 
 
 	<!-- Rules -->
