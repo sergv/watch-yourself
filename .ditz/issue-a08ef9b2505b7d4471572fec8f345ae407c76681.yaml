@@ -5,8 +5,8 @@ type: :bugfix
 component: TimeTracker
 release: "2010.4"
 reporter: Sean Russell <ser@ser1.net>
-status: :in_progress
-disposition: 
+status: :closed
+disposition: :fixed
 creation_time: 2010-01-13 03:02:25.670827 Z
 references: []
 
@@ -19,4 +19,8 @@ log_events:
 - - 2010-01-16 23:23:34.827477 Z
   - Sean Russell <ser@ser1.net>
   - changed status from unstarted to in_progress
+  - ""
+- - 2010-01-20 01:47:09.010790 Z
+  - Sean Russell <ser@ser1.net>
+  - closed with disposition fixed
   - ""
