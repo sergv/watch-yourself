@@ -26,3 +26,4 @@ log_events:
   - |-
     Can't easily fill in the %s because of using the dialog builder, so
     removed and rephrased the entry.
+trac_id: 90

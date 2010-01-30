@@ -40,3 +40,4 @@ log_events:
   - Sean Russell <ser@ser1.net>
   - closed issue with disposition fixed
   - Added the ability to filter by range, and fixed a bug in the week selection.
+trac_id: 53

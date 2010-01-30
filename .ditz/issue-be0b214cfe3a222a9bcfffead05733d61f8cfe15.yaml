@@ -26,3 +26,4 @@ log_events:
   - |-
     Need to decide whether to have the currently running task updated in this view or not.
     Currently, it isn't.  Also, does the same work need to be done for the report view?
+trac_id: 85

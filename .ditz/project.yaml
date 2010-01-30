@@ -4,6 +4,8 @@ version: "0.5"
 components: 
 - !ditz.rubyforge.org,2008-03-06/component 
   name: TimeTracker
+- !ditz.rubyforge.org,2008-03-06/component 
+  name: TimeTracker Android
 releases: 
 - !ditz.rubyforge.org,2008-03-06/release 
   name: "2008.2"
@@ -134,7 +136,7 @@ releases:
 - !ditz.rubyforge.org,2008-03-06/release 
   name: "2010.1"
   status: :released
-  release_time: 2010-01-17 17:00:00.000000 Z
+  release_time: 2010-01-17 17:00:00 Z
   log_events: 
   - - 2010-01-11 14:21:53.839676 Z
     - Sean Russell <ser@ser1.net>
