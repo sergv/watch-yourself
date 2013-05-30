@@ -8,7 +8,7 @@ import java.util.Date;
 import android.database.Cursor;
 
 public class CSVExporter {
-    private static String escape( String s ) {
+    private static String escape(String s) {
         if (s == null) return "";
         if (s.contains(",") || s.contains("\"")) {
             s = s.replaceAll("\"", "\"\"");
@@ -16,23 +16,23 @@ public class CSVExporter {
         }
         return s;
     }
-    
-    
-    public static void exportRows( OutputStream o, String[][] rows ) {
+
+
+    public static void exportRows(OutputStream o, String[][] rows) {
         PrintStream outputStream = new PrintStream(o);
         for (String[] cols : rows) {
             String prepend = "";
             for (String col : cols) {
                 outputStream.print(prepend);
                 outputStream.print(escape(col));
-                prepend = ",";                
+                prepend = ",";
             }
             outputStream.println();
-        }    
+        }
     }
-    
-    
-    public static void exportRows( OutputStream o, Cursor c ) {
+
+
+    public static void exportRows(OutputStream o, Cursor c) {
         PrintStream outputStream = new PrintStream(o);
         String prepend = "";
         String[] columnNames = c.getColumnNames();
@@ -47,18 +47,18 @@ public class CSVExporter {
             do {
                 outputStream.println();
                 prepend = "";
-                for (int i=0; i<c.getColumnCount(); i++) {
+                for (int i = 0; i < c.getColumnCount(); i++) {
                     outputStream.print(prepend);
                     String outValue;
                     if (columnNames[i].equals("start")) {
                         d.setTime(c.getLong(i));
-                        outValue = formatter.format(d);                        
+                        outValue = formatter.format(d);
                     } else if (columnNames[i].equals("end")) {
                         if (c.isNull(i)) {
                             outValue = "";
                         } else {
                             d.setTime(c.getLong(i));
-                            outValue = formatter.format(d);                        
+                            outValue = formatter.format(d);
                         }
                     } else {
                         outValue = escape(c.getString(i));

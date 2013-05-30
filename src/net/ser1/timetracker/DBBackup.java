@@ -88,26 +88,26 @@ public class DBBackup extends AsyncTask<SQLiteDatabase, Integer, Void> {
 
     @Override
     protected void onProgressUpdate(Integer... vs) {
-        switch(vs[0]) {
-            case PRIMARY:
-                if (vs[1] == 0) {
-                    progressDialog.setProgress(0);
-                } else {
-                    progressDialog.incrementProgressBy(vs[1]);
-                }
-                break;
-            case SECONDARY:
-                if (vs[1] == 0) {
-                    progressDialog.setSecondaryProgress(0);
-                } else {
-                    progressDialog.incrementSecondaryProgressBy(vs[1]);
-                }
-                break;
-            case SETMAX:
-                progressDialog.setMax(vs[1]);
-                break;
-            default:
-                break;
+        switch (vs[0]) {
+        case PRIMARY:
+            if (vs[1] == 0) {
+                progressDialog.setProgress(0);
+            } else {
+                progressDialog.incrementProgressBy(vs[1]);
+            }
+            break;
+        case SECONDARY:
+            if (vs[1] == 0) {
+                progressDialog.setSecondaryProgress(0);
+            } else {
+                progressDialog.incrementSecondaryProgressBy(vs[1]);
+            }
+            break;
+        case SETMAX:
+            progressDialog.setMax(vs[1]);
+            break;
+        default:
+            break;
         }
     }
 
@@ -120,9 +120,9 @@ public class DBBackup extends AsyncTask<SQLiteDatabase, Integer, Void> {
     private void copyTimes(SQLiteDatabase sourceDb, int sourceId, SQLiteDatabase destDb, int destId) {
         publishProgress(SECONDARY, 0);
         Cursor source = sourceDb.query(RANGES_TABLE, DBHelper.RANGE_COLUMNS,
-                DBHelper.TASK_ID + " = ?", new String[]{String.valueOf(sourceId)}, null, null, null);
+                                       DBHelper.TASK_ID + " = ?", new String[] {String.valueOf(sourceId)}, null, null, null);
         Cursor dest = destDb.query(RANGES_TABLE, DBHelper.RANGE_COLUMNS,
-                DBHelper.TASK_ID + " = ?", new String[]{String.valueOf(destId)}, null, null, null);
+                                   DBHelper.TASK_ID + " = ?", new String[] {String.valueOf(destId)}, null, null, null);
         List<TimeRange> destTimes = new ArrayList<TimeRange>();
         int step = (int)(100.0 / (dest.getCount() + source.getCount()));
         if (dest.moveToFirst()) {

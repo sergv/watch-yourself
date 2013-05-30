@@ -1,5 +1,5 @@
 /**
- * TimeTracker 
+ * TimeTracker
  * ©2008, 2009 Sean Russell
  * @author Sean Russell <ser@germane-software.com>
  */
@@ -14,8 +14,8 @@ public class TimeRange implements Comparable<TimeRange> {
     private long start;
     private long end;
     public static final long NULL = -1;
-    
-    public TimeRange( long start, long end ) {
+
+    public TimeRange(long start, long end) {
         this.start = start;
         this.end = end;
     }
@@ -35,7 +35,7 @@ public class TimeRange implements Comparable<TimeRange> {
         if (end == NULL) return System.currentTimeMillis() - start;
         return end - start;
     }
-    
+
     protected static DateFormat FORMAT = new SimpleDateFormat("HH:mm");
     public String toString() {
         Date s = new Date(start);
@@ -44,11 +44,11 @@ public class TimeRange implements Comparable<TimeRange> {
         if (end != NULL) {
             b.append(FORMAT.format(new Date(end)));
         } else {
-            b.append( "..." );
+            b.append("...");
         }
         return b.toString();
     }
-    
+
     public int compareTo(TimeRange another) {
         if (start < another.start) {
             return -1;
@@ -81,30 +81,30 @@ public class TimeRange implements Comparable<TimeRange> {
     public int hashCode() {
         return (int)(start + (end * 101));
     }
-    
+
     private static final int[] FIELDS = {
         Calendar.HOUR_OF_DAY,
         Calendar.MINUTE,
         Calendar.SECOND,
         Calendar.MILLISECOND
-      };
-    
+    };
+
     /**
      * Finds the amount of time from a range that overlaps with a day
      * @param day The day on which the time must overlap to be counted
      * @param start The range start
      * @param end The range end
-     * @return The number of milliseconds of the range that overlaps with the 
+     * @return The number of milliseconds of the range that overlaps with the
      * day
      */
-    public static long overlap( Calendar day, long start, long end ) {
+    public static long overlap(Calendar day, long start, long end) {
         for (int x : FIELDS) day.set(x, day.getMinimum(x));
         long ms_start = day.getTime().getTime();
         day.add(Calendar.DAY_OF_MONTH, 1);
         long ms_end = day.getTime().getTime();
-        
+
         if (ms_end < start || end < ms_start) return 0;
-        
+
         long off_start = ms_start > start ? ms_start : start;
         long off_end   = ms_end < end ? ms_end : end;
         long off_diff  = off_end - off_start;
