@@ -10,8 +10,11 @@ package org.yourself.watch;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+// import android.util.Log;
 
 public class DBHelper extends SQLiteOpenHelper {
+    // private static final String TAG = "DBHelper";
+
     public static final String END = "end";
     public static final String START = "start";
     public static final String TASK_ID = "task_id";
@@ -75,4 +78,16 @@ public class DBHelper extends SQLiteOpenHelper {
             arg0.execSQL("drop table temp;");
         }
     }
+
+    // @Override
+    // public SQLiteDatabase getReadableDatabase() {
+    //     Log.d(TAG, "getReadableDatabase");
+    //     return super.getReadableDatabase();
+    // }
+
+    // @Override
+    // public SQLiteDatabase getWritableDatabase() {
+    //     Log.d(TAG, "getWritableDatabase");
+    //     return super.getWritableDatabase();
+    // }
 }

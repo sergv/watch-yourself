@@ -71,9 +71,6 @@ public class Preferences extends ListActivity implements OnClickListener {
         addBooleanPreference(R.string.concurrency, Tasks.CONCURRENT,
                              R.string.concurrent, R.string.exclusive);
 
-        addBooleanPreference(R.string.sound, Tasks.SOUND,
-                             R.string.sound_enabled, R.string.sound_disabled);
-
         addBooleanPreference(R.string.vibrate, Tasks.VIBRATE,
                              R.string.vibrate_enabled, R.string.vibrate_disabled);
 

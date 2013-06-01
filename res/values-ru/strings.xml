@@ -14,6 +14,7 @@
     <string name="add_task_title">Добавить задачу</string>
     <string name="change_view_title">Изменить вид</string>
     <string name="generate_report_title">Отчёт</string>
+    <string name="refresh_menu_title">Refresh</string>
     <string name="select_range">Выбрать интервал...</string>
     <string name="done">Вернуться к задачам</string>
     <string name="add_time_title">Добавить новый временной интервал</string>

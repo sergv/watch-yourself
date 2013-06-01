@@ -14,6 +14,7 @@
     <string name="add_task_title">Add task</string>
     <string name="change_view_title">Change view</string>
     <string name="generate_report_title">Report</string>
+    <string name="refresh_menu_title">Refresh</string>
     <string name="select_range">Select range...</string>
     <string name="done">Return to tasks</string>
     <string name="add_time_title">Add a new time range</string>

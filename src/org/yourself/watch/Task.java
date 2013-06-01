@@ -39,7 +39,7 @@ public class Task implements Comparable<Task> {
         this.taskName = taskName;
     }
 
-    public long getTotal() {
+    public long getTotalTime() {
         long sum = 0;
         if (startTime != NULL && endTime == NULL) {
             sum += System.currentTimeMillis() - startTime;

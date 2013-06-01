@@ -37,8 +37,6 @@ import java.util.Date;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 import java.util.TimerTask;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
@@ -54,13 +52,13 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Vibrator;
 import android.text.method.SingleLineTransformationMethod;
 import android.text.util.Linkify;
+// import android.util.Log;
 import android.view.ContextMenu;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -89,7 +87,6 @@ public class Tasks extends ListActivity {
     protected static final String FONTSIZE = "font-size";
     protected static final String MILITARY = "military-time";
     protected static final String CONCURRENT = "concurrent-tasks";
-    protected static final String SOUND = "sound-enabled";
     protected static final String VIBRATE = "vibrate-enabled";
 
     protected static final String START_DAY = "start_day";
@@ -99,6 +96,7 @@ public class Tasks extends ListActivity {
     protected static final String REPORT_DATE = "report_date";
     protected static final String TIMEDISPLAY = "time_display";
 
+    // private static final String TAG = "Tasks";
     /**
      * Defines how each task's time is displayed
      */
@@ -108,6 +106,12 @@ public class Tasks extends ListActivity {
      * How often to refresh the display, in milliseconds
      */
     private static final int REFRESH_MS = 60000;
+
+    /**
+     * How long to wait before updating task list after resuming application
+     */
+    private static final int DELAY_BEFORE_TASK_LIST_UPDATE_AFTER_RESUME_MS = 5000;
+
     /**
      * The model for this view
      */
@@ -132,8 +136,6 @@ public class Tasks extends ListActivity {
     private SharedPreferences preferences;
     private static int fontSize = 16;
     private boolean concurrency;
-    private static MediaPlayer clickPlayer;
-    private boolean playClick = false;
     private boolean vibrateClick = true;
     private Vibrator vibrateAgent;
     private ProgressDialog progressDialog = null;
@@ -147,7 +149,7 @@ public class Tasks extends ListActivity {
                                CHANGE_VIEW = 5,  SELECT_START_DATE = 6,  SELECT_END_DATE = 7,
                                HELP = 8,  EXPORT_VIEW = 9,  SUCCESS_DIALOG = 10,  ERROR_DIALOG = 11,
                                SET_WEEK_START_DAY = 12,  MORE = 13,  BACKUP = 14, PREFERENCES = 15,
-                               PROGRESS_DIALOG = 16;
+                               PROGRESS_DIALOG = 16, REFRESH = 17;
     // TODO: This could be done better...
     private static final String dbPath = "/data/data/org.yourself.watch/databases/timetracker.db";
     private static final String dbBackup = "/sdcard/timetracker.db";
@@ -190,18 +192,6 @@ public class Tasks extends ListActivity {
                 }
             };
         }
-        playClick = preferences.getBoolean(SOUND, false);
-        if (playClick && clickPlayer == null) {
-            clickPlayer = MediaPlayer.create(this, R.raw.click);
-            try {
-                clickPlayer.prepareAsync();
-            } catch (IllegalStateException illegalStateException) {
-                // ignore this.  There's nothing the user can do about it.
-                Logger.getLogger("TimeTracker").log(Level.SEVERE,
-                                                    "Failed to set up audio player: "
-                                                    + illegalStateException.getMessage());
-            }
-        }
         decimalFormat = preferences.getBoolean(TIMEDISPLAY, false);
         registerForContextMenu(getListView());
         if (adapter.tasks.size() == 0) {
@@ -213,6 +203,7 @@ public class Tasks extends ListActivity {
 
     @Override
     protected void onPause() {
+        // Log.d(TAG, "onPause");
         super.onPause();
         if (timer != null) {
             timer.removeCallbacks(updater);
@@ -221,22 +212,23 @@ public class Tasks extends ListActivity {
 
     @Override
     protected void onStop() {
+        // Log.d(TAG, "onStop");
         if (adapter != null)
             adapter.close();
-        if (clickPlayer != null)
-            clickPlayer.release();
         super.onStop();
     }
 
     @Override
     protected void onResume() {
+        // Log.d(TAG, "onResume");
         super.onResume();
         // This is only to cause the view to reload, so that we catch
         // updates to the time list.
-        int which = preferences.getInt(VIEW_MODE, 0);
-        switchView(which);
+        // int which = preferences.getInt(VIEW_MODE, 0);
+        // switchView(which);
 
         if (timer != null && running) {
+            /* updater would refresh list view as needed */
             timer.post(updater);
         }
     }
@@ -245,7 +237,8 @@ public class Tasks extends ListActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         super.onCreateOptionsMenu(menu);
         menu.add(0, ADD_TASK, 0, R.string.add_task_title).setIcon(android.R.drawable.ic_menu_add);
-        menu.add(0, REPORT, 1, R.string.generate_report_title).setIcon(android.R.drawable.ic_menu_week);
+        /* menu.add(0, REPORT, 1, R.string.generate_report_title).setIcon(android.R.drawable.ic_menu_week); */
+        menu.add(0, REFRESH, 1, R.string.refresh_menu_title).setIcon(R.drawable.ic_menu_refresh);
         menu.add(0, MORE, 2, R.string.more).setIcon(android.R.drawable.ic_menu_more);
         return true;
     }
@@ -299,6 +292,9 @@ public class Tasks extends ListActivity {
             intent.putExtra(TIMEDISPLAY, decimalFormat);
             startActivity(intent);
             break;
+        case REFRESH:
+            switchView(preferences.getInt(VIEW_MODE, 0));
+            break;
         default:
             // Ignore the other menu items; they're context menu
             break;
@@ -346,14 +342,14 @@ public class Tasks extends ListActivity {
 
                 public void onClick(DialogInterface dialog, int which) {
                     DBBackup backup;
-                    System.err.println("IN CLICK");
+                    // Log.d(TAG, "more dialog, on click");
                     switch (which) {
                     case 0: // CHANGE_VIEW:
                         showDialog(CHANGE_VIEW);
                         break;
                     case 1: // EXPORT_VIEW:
                         String fname = export();
-                        perform(fname, R.string.export_csv_success, R.string.export_csv_fail);
+                        notifySuccessFailure(fname, R.string.export_csv_success, R.string.export_csv_fail);
                         break;
                     case 2: // COPY DB TO SD
                         showDialog(Tasks.PROGRESS_DIALOG);
@@ -374,8 +370,10 @@ public class Tasks extends ListActivity {
                                     out.write(c);
                                 }
                             } catch (Exception ex) {
-                                Logger.getLogger(Tasks.class.getName()).log(Level.SEVERE, null, ex);
                                 exportMessage = ex.getLocalizedMessage();
+                                // Log.d(TAG,
+                                //       "Exception while copying database to sdcard: "
+                                //       + exportMessage);
                                 showDialog(ERROR_DIALOG);
                             } finally {
                                 try { in.close(); } catch (IOException ioe) { }
@@ -407,7 +405,7 @@ public class Tasks extends ListActivity {
         return null;
     }
 
-    protected void perform(String message, int success_string, int fail_string) {
+    protected void notifySuccessFailure(String message, int success_string, int fail_string) {
         if (message != null) {
             exportMessage = getString(success_string, message);
             if (operationSucceed != null) {
@@ -518,10 +516,10 @@ public class Tasks extends ListActivity {
         case 5: // select range
             Calendar start = Calendar.getInstance();
             start.setTimeInMillis(preferences.getLong(START_DATE, 0));
-            System.err.println("START = " + start.getTime());
+            // Log.d(TAG, "START = " + start.getTime());
             Calendar end = Calendar.getInstance();
             end.setTimeInMillis(preferences.getLong(END_DATE, 0));
-            System.err.println("END = " + end.getTime());
+            // Log.d(TAG, "END = " + end.getTime());
             adapter.loadTasks(start, end);
             DateFormat f = DateFormat.getDateInstance(DateFormat.SHORT);
             ttl = getString(R.string.title,
@@ -538,7 +536,7 @@ public class Tasks extends ListActivity {
     private void setTitle() {
         long total = 0;
         for (Task t : adapter.tasks) {
-            total += t.getTotal();
+            total += t.getTotalTime();
         }
         setTitle(baseTitle + " " + formatTotal(decimalFormat, total));
     }
@@ -730,7 +728,7 @@ public class Tasks extends ListActivity {
             total.setTextSize(fontSize);
             total.setGravity(Gravity.RIGHT);
             total.setTransformationMethod(SingleLineTransformationMethod.getInstance());
-            total.setText(formatTotal(decimalFormat, t.getTotal()));
+            total.setText(formatTotal(decimalFormat, t.getTotalTime()));
             addView(total, new LinearLayout.LayoutParams(
                         LayoutParams.WRAP_CONTENT, LayoutParams.FILL_PARENT, 0f));
 
@@ -742,7 +740,7 @@ public class Tasks extends ListActivity {
             taskName.setTextSize(fontSize);
             total.setTextSize(fontSize);
             taskName.setText(t.getTaskName());
-            total.setText(formatTotal(decimalFormat, t.getTotal()));
+            total.setText(formatTotal(decimalFormat, t.getTotalTime()));
             markupSelectedTask(t);
         }
 
@@ -865,6 +863,7 @@ public class Tasks extends ListActivity {
          *        tasks.
          */
         private void loadTasks(String whereClause, boolean loadCurrent) {
+            // Log.d(TAG, "loadTasks, whereClause = %s, loadCurrent = %s".format(whereClause, loadCurrent));
             tasks.clear();
 
             SQLiteDatabase db = dbHelper.getReadableDatabase();
@@ -876,7 +875,10 @@ public class Tasks extends ListActivity {
                     int tid = c.getInt(0);
                     String[] tids = {String.valueOf(tid)};
                     t = new Task(c.getString(1), tid);
-                    Cursor r = db.rawQuery("SELECT SUM(end) - SUM(start) AS total FROM " + RANGES_TABLE + " WHERE " + TASK_ID + " = ? AND end NOTNULL " + whereClause, tids);
+                    Cursor r =
+                        db.rawQuery("SELECT SUM(end) - SUM(start) AS total FROM " + RANGES_TABLE +
+                                    " WHERE " + TASK_ID + " = ? AND end NOTNULL " + whereClause,
+                                    tids);
                     if (r.moveToFirst()) {
                         t.setCollapsed(r.getLong(0));
                     }
@@ -980,7 +982,10 @@ public class Tasks extends ListActivity {
                     values.put(END, t.getEndTime());
                 }
                 // If an update fails, then this is an insert
-                if (db.update(RANGES_TABLE, values, TASK_ID + " = ? AND " + START + " = ?", vals) == 0) {
+                if (db.update(RANGES_TABLE,
+                              values,
+                              TASK_ID + " = ? AND " + START + " = ?",
+                              vals) == 0) {
                     values.put(TASK_ID, t.getId());
                     db.insert(RANGES_TABLE, END, values);
                 }
@@ -1032,19 +1037,6 @@ public class Tasks extends ListActivity {
     @Override
     protected void onListItemClick(ListView l, View v, int position, long id) {
         if (vibrateClick) vibrateAgent.vibrate(100);
-        if (playClick) {
-            try {
-                //clickPlayer.prepare();
-                clickPlayer.start();
-            } catch (Exception exception) {
-                // Ignore this; it is probably because the media isn't yet ready.
-                // There's nothing the user can do about it.
-                // ignore this.  There's nothing the user can do about it.
-                Logger.getLogger("TimeTracker").log(Level.INFO,
-                                                    "Failed to play audio: "
-                                                    + exception.getMessage());
-            }
-        }
 
         // Stop the update.  If a task is already running and we're stopping
         // the timer, it'll stay stopped.  If a task is already running and
@@ -1108,21 +1100,6 @@ public class Tasks extends ListActivity {
             if (extras.getBoolean(CONCURRENT)) {
                 concurrency = preferences.getBoolean(CONCURRENT, false);
             }
-            if (extras.getBoolean(SOUND)) {
-                playClick = preferences.getBoolean(SOUND, false);
-                if (playClick && clickPlayer == null) {
-                    clickPlayer = MediaPlayer.create(this, R.raw.click);
-                    try {
-                        clickPlayer.prepareAsync();
-                        clickPlayer.setVolume(1, 1);
-                    } catch (IllegalStateException illegalStateException) {
-                        // ignore this.  There's nothing the user can do about it.
-                        Logger.getLogger("TimeTracker").log(Level.SEVERE,
-                                                            "Failed to set up audio player: "
-                                                            + illegalStateException.getMessage());
-                    }
-                }
-            }
             if (extras.getBoolean(VIBRATE)) {
                 vibrateClick = preferences.getBoolean(VIBRATE, true);
             }
@@ -1144,6 +1121,6 @@ public class Tasks extends ListActivity {
             switchView(preferences.getInt(VIEW_MODE, 0));
             message = dbBackup;
         }
-        perform(message, R.string.restore_success, R.string.restore_failed);
+        notifySuccessFailure(message, R.string.restore_success, R.string.restore_failed);
     }
 }
