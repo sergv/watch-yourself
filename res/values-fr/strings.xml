@@ -28,6 +28,7 @@
     <string name="report_title">Rapport pour la semaine %%s à %%s </string>
     <string name="week">Semaine %s</string>
     <string name="title">WatchYourself (%s)</string>
+    <string name="week_mode_title">Last week mode</string>
     <string name="help">Aide</string>
     <string name="export_view">Exporter</string>
     <string name="move_time">Assigner cette durée à une autre tâche</string>

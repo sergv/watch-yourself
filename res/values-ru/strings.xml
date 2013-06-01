@@ -26,7 +26,8 @@
     <string name="range_error_title">Ошибка Временного Интервала</string>
     <string name="report_title">Отчёт за неделю с %%s по %%s </string>
     <string name="week">Неделя %s</string>
-    <string name="title">TimeTracker (%s)</string>
+    <string name="title">WatchYourself (%s)</string>
+    <string name="week_mode_title">Last week mode</string>
     <string name="help">Помощь</string>
     <string name="export_view">Экспорт</string>
     <string name="move_time">Назначить время для задачи</string>

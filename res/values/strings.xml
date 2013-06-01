@@ -27,6 +27,7 @@
     <string name="report_title" formatted="false">Report for the week %s to %s</string>
     <string name="week">Week %s</string>
     <string name="title">WatchYourself (%s)</string>
+    <string name="week_mode_title">Last week mode (%s)</string>
     <string name="help">Help</string>
     <string name="export_view">Export</string>
     <string name="move_time">Assign time to other task</string>

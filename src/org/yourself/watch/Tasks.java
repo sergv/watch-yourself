@@ -19,6 +19,8 @@ import static org.yourself.watch.Report.weekEnd;
 import static org.yourself.watch.Report.weekStart;
 import static org.yourself.watch.TimeRange.NULL;
 
+import org.yourself.watch.CalendarUtils;
+
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.File;
@@ -37,6 +39,10 @@ import java.util.Date;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 import java.util.TimerTask;
+import java.util.TreeSet;
+import java.util.Set;
+
+import junit.framework.Assert;
 
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
@@ -194,7 +200,7 @@ public class Tasks extends ListActivity {
         }
         decimalFormat = preferences.getBoolean(TIMEDISPLAY, false);
         registerForContextMenu(getListView());
-        if (adapter.tasks.size() == 0) {
+        if (adapter.getTasks().size() == 0) {
             showDialog(HELP);
         }
         vibrateAgent = (Vibrator)getSystemService(VIBRATOR_SERVICE);
@@ -277,6 +283,7 @@ public class Tasks extends ListActivity {
 
     private String exportMessage;
     private String baseTitle;
+    private String weekModeTitle;
 
     @Override
     public boolean onMenuItemSelected(int featureId, MenuItem item) {
@@ -293,7 +300,7 @@ public class Tasks extends ListActivity {
             startActivity(intent);
             break;
         case REFRESH:
-            switchView(preferences.getInt(VIEW_MODE, 0));
+            reloadListViewTasks();
             break;
         default:
             // Ignore the other menu items; they're context menu
@@ -344,14 +351,20 @@ public class Tasks extends ListActivity {
                     DBBackup backup;
                     // Log.d(TAG, "more dialog, on click");
                     switch (which) {
-                    case 0: // CHANGE_VIEW:
+                    case 0:
+                        adapter.toggleOnlyFromWeekAgoDisplay();
+                        reloadListViewTasks();
+                        timer.removeCallbacks(updater);
+                        timer.post(updater);
+                        break;
+                    case 1: // CHANGE_VIEW:
                         showDialog(CHANGE_VIEW);
                         break;
-                    case 1: // EXPORT_VIEW:
+                    case 2: // EXPORT_VIEW:
                         String fname = export();
                         notifySuccessFailure(fname, R.string.export_csv_success, R.string.export_csv_fail);
                         break;
-                    case 2: // COPY DB TO SD
+                    case 3: // COPY DB TO SD
                         showDialog(Tasks.PROGRESS_DIALOG);
                         if (new File(dbBackup).exists()) {
                             // Find the database
@@ -381,18 +394,18 @@ public class Tasks extends ListActivity {
                             }
                         }
                         break;
-                    case 3: // RESTORE FROM BACKUP
+                    case 4: // RESTORE FROM BACKUP
                         showDialog(Tasks.PROGRESS_DIALOG);
                         SQLiteDatabase backupDb = SQLiteDatabase.openDatabase(dbBackup, null, SQLiteDatabase.OPEN_READONLY);
                         SQLiteDatabase appDb = SQLiteDatabase.openDatabase(dbPath, null, SQLiteDatabase.OPEN_READWRITE);
                         backup = new DBBackup(Tasks.this, progressDialog);
                         backup.execute(backupDb, appDb);
                         break;
-                    case 4: // PREFERENCES
+                    case 5: // PREFERENCES
                         Intent intent = new Intent(Tasks.this, Preferences.class);
                         startActivityForResult(intent, PREFERENCES);
                         break;
-                    case 5: // HELP:
+                    case 6: // HELP:
                         showDialog(HELP);
                         break;
                     default:
@@ -490,11 +503,11 @@ public class Tasks extends ListActivity {
     }
 
     private void switchView(int which) {
-        Calendar tw = Calendar.getInstance();
+        Calendar tw = getConfiguredCalendar();
         int startDay = preferences.getInt(START_DAY, 0) + 1;
-        tw.setFirstDayOfWeek(startDay);
-        String ttl = getString(R.string.title,
-                               getResources().getStringArray(R.array.views)[which]);
+        final String mode = getResources().getStringArray(R.array.views)[which];
+        String title = getString(R.string.title, mode);
+        String wmtitle = getString(R.string.week_mode_title, mode);
         switch (which) {
         case 0: // today
             adapter.loadTasks(tw);
@@ -522,23 +535,26 @@ public class Tasks extends ListActivity {
             // Log.d(TAG, "END = " + end.getTime());
             adapter.loadTasks(start, end);
             DateFormat f = DateFormat.getDateInstance(DateFormat.SHORT);
-            ttl = getString(R.string.title,
-                            f.format(start.getTime()) + " - " + f.format(end.getTime()));
+            final String timerange = f.format(start.getTime()) + " - " + f.format(end.getTime());
+            title = getString(R.string.title, timerange);
+            wmtitle = getString(R.string.week_mode_title, timerange);
             break;
         default: // Unknown
             break;
         }
-        baseTitle = ttl;
+        baseTitle = title;
+        weekModeTitle = wmtitle;
         setTitle();
         getListView().invalidate();
     }
 
     private void setTitle() {
         long total = 0;
-        for (Task t : adapter.tasks) {
+        for (Task t : adapter.getTasks()) {
             total += t.getTotalTime();
         }
-        setTitle(baseTitle + " " + formatTotal(decimalFormat, total));
+        final String title = adapter.showingOnlyFromWeekAgo() ? weekModeTitle : baseTitle;
+        setTitle(title + " " + formatTotal(decimalFormat, total));
     }
 
     /**
@@ -597,13 +613,19 @@ public class Tasks extends ListActivity {
         }
         String formattedMessage = getString(R.string.delete_task_message,
                                             selectedTask.getTaskName());
-        return new AlertDialog.Builder(Tasks.this).setTitle(R.string.delete_task_title).setIcon(android.R.drawable.stat_sys_warning).setCancelable(true).setMessage(formattedMessage).setPositiveButton(R.string.delete_ok, new DialogInterface.OnClickListener() {
-
+        DialogInterface.OnClickListener onOk = new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int whichButton) {
                 adapter.deleteTask(selectedTask);
                 Tasks.this.getListView().invalidate();
             }
-        }).setNegativeButton(android.R.string.cancel, null).create();
+        };
+        return new AlertDialog.Builder(Tasks.this)
+            .setTitle(R.string.delete_task_title)
+            .setIcon(android.R.drawable.stat_sys_warning)
+            .setCancelable(true)
+            .setMessage(formattedMessage)
+            .setPositiveButton(R.string.delete_ok, onOk)
+            .setNegativeButton(android.R.string.cancel, null).create();
     }
     final static String SDCARD = "/sdcard/";
 
@@ -787,19 +809,92 @@ public class Tasks extends ListActivity {
         return String.format(format, hours, minutes, seconds);
     }
 
+
+    private ArrayList<Task> constructWeekAgoTasks(SQLiteDatabase db, ArrayList<Task> tasks) {
+        Calendar calendar = getConfiguredCalendar();
+        /* make it lenient to allow it to wrap around */
+        calendar.setLenient(true);
+        calendar.add(Calendar.DAY_OF_YEAR, -7);
+        CalendarUtils.resetDayFields(calendar);
+        final long weekAgoStart = calendar.getTimeInMillis();
+
+        Set<Integer> weekAgoTaskIds = new TreeSet<Integer>();
+        final String query =
+            "SELECT " + TASK_ID +
+            " FROM " + RANGES_TABLE +
+            String.format(" WHERE start >= %d", weekAgoStart);
+        Cursor weekAgoTasksCursor = db.rawQuery(query, null);
+        if (weekAgoTasksCursor.moveToFirst()) {
+            ArrayList<Task> weekAgoTasks = new ArrayList<Task>();
+
+            do {
+                weekAgoTaskIds.add(new Integer(weekAgoTasksCursor.getInt(0)));
+            } while(weekAgoTasksCursor.moveToNext());
+
+            for (Task task : tasks) {
+                if (weekAgoTaskIds.contains(task.getId())) {
+                    weekAgoTasks.add(task);
+                }
+            }
+            return weekAgoTasks;
+        } else {
+            /* nothing to show: no tasks started in previous week */
+            return null;
+        }
+    }
+
     private class TaskAdapter extends BaseAdapter {
 
         private DBHelper dbHelper;
-        protected ArrayList<Task> tasks;
+        private ArrayList<Task> tasks;
         private Context savedContext;
         private long currentRangeStart;
         private long currentRangeEnd;
+
+        private boolean showOnlyFromWeekAgo;
+        private ArrayList<Task> weekAgoTasks;
 
         public TaskAdapter(Context c) {
             savedContext = c;
             dbHelper = new DBHelper(c);
             dbHelper.getWritableDatabase();
             tasks = new ArrayList<Task>();
+            showOnlyFromWeekAgo = false;
+            weekAgoTasks = null;
+        }
+
+        private void updateWeekAgoTasksIfNeeded(boolean force) {
+            updateWeekAgoTasksIfNeeded(dbHelper.getReadableDatabase(), force);
+        }
+
+        private void updateWeekAgoTasksIfNeeded(SQLiteDatabase db, boolean force) {
+            /* update if it was filled previously, which means someone actually
+               used it and would benefit from update */
+            if (showOnlyFromWeekAgo || force) {
+                weekAgoTasks = constructWeekAgoTasks(db, tasks);
+            }
+        }
+
+        public boolean showingOnlyFromWeekAgo() {
+            return showOnlyFromWeekAgo;
+        }
+
+        public void toggleOnlyFromWeekAgoDisplay() {
+            if (!showOnlyFromWeekAgo) {
+                Assert.assertTrue((weekAgoTasks == null));
+                updateWeekAgoTasksIfNeeded(true);
+                if (weekAgoTasks == null) {
+                    /* update failed, nothing to show */
+                    return;
+                }
+            } else {
+                weekAgoTasks = null;
+            }
+            showOnlyFromWeekAgo = !showOnlyFromWeekAgo;
+        }
+
+        public ArrayList<Task> getTasks() {
+            return showOnlyFromWeekAgo ? weekAgoTasks : tasks;
         }
 
         public void close() {
@@ -833,16 +928,11 @@ public class Tasks extends ListActivity {
          */
         private String[] makeWhereClause(Calendar start, Calendar end) {
             String query = "AND " + START + " < %d AND " + START + " >= %d";
-            Calendar today = Calendar.getInstance();
-            today.setFirstDayOfWeek(preferences.getInt(START_DAY, 0) + 1);
+            Calendar today = getConfiguredCalendar();
             today.set(Calendar.HOUR_OF_DAY, 12);
-            for (int field : new int[] {Calendar.HOUR_OF_DAY, Calendar.MINUTE,
-                                        Calendar.SECOND,
-                                        Calendar.MILLISECOND
-                                       }) {
-                for (Calendar d : new Calendar[] {today, start, end}) {
-                    d.set(field, d.getMinimum(field));
-                }
+            Calendar[] days = new Calendar[] {today, start, end};
+            for (Calendar d : days) {
+                CalendarUtils.resetDayFields(d);
             }
             end.add(Calendar.DAY_OF_MONTH, 1);
             currentRangeStart = start.getTimeInMillis();
@@ -867,37 +957,40 @@ public class Tasks extends ListActivity {
             tasks.clear();
 
             SQLiteDatabase db = dbHelper.getReadableDatabase();
-            Cursor c = db.query(TASK_TABLE, TASK_COLUMNS, null, null, null, null, null);
+            Cursor tasks_cursor = db.query(TASK_TABLE, TASK_COLUMNS, null, null, null, null, null);
 
-            Task t = null;
-            if (c.moveToFirst()) {
+            if (tasks_cursor.moveToFirst()) {
                 do {
-                    int tid = c.getInt(0);
-                    String[] tids = {String.valueOf(tid)};
-                    t = new Task(c.getString(1), tid);
-                    Cursor r =
-                        db.rawQuery("SELECT SUM(end) - SUM(start) AS total FROM " + RANGES_TABLE +
-                                    " WHERE " + TASK_ID + " = ? AND end NOTNULL " + whereClause,
-                                    tids);
+                    int task_id = tasks_cursor.getInt(0);
+                    String[] task_ids = {String.valueOf(task_id)};
+                    Task task = new Task(tasks_cursor.getString(1), task_id);
+
+                    final String query =
+                        "SELECT SUM(end) - SUM(start) AS total FROM " + RANGES_TABLE +
+                        " WHERE " + TASK_ID + " = ? AND end NOTNULL " + whereClause;
+
+                    Cursor r = db.rawQuery(query, task_ids);
                     if (r.moveToFirst()) {
-                        t.setCollapsed(r.getLong(0));
+                        task.setCollapsed(r.getLong(0));
                     }
                     r.close();
                     if (loadCurrent) {
                         r = db.query(RANGES_TABLE, RANGE_COLUMNS,
                                      TASK_ID + " = ? AND end ISNULL",
-                                     tids, null, null, null);
+                                     task_ids, null, null, null);
                         if (r.moveToFirst()) {
-                            t.setStartTime(r.getLong(0));
+                            task.setStartTime(r.getLong(0));
                         }
                         r.close();
                     }
-                    tasks.add(t);
-                } while (c.moveToNext());
+                    tasks.add(task);
+                } while (tasks_cursor.moveToNext());
             }
-            c.close();
+            tasks_cursor.close();
             Collections.sort(tasks);
             running = findCurrentlyActive().hasNext();
+
+            updateWeekAgoTasksIfNeeded(db, false);
             notifyDataSetChanged();
         }
 
@@ -908,11 +1001,9 @@ public class Tasks extends ListActivity {
         protected Cursor getCurrentRange() {
             String[] res = {""};
             if (currentRangeStart != -1 && currentRangeEnd != -1) {
-                Calendar start = Calendar.getInstance();
-                start.setFirstDayOfWeek(preferences.getInt(START_DAY, 0) + 1);
+                Calendar start = getConfiguredCalendar();
                 start.setTimeInMillis(currentRangeStart);
-                Calendar end = Calendar.getInstance();
-                end.setFirstDayOfWeek(preferences.getInt(START_DAY, 0) + 1);
+                Calendar end = getConfiguredCalendar();
                 end.setTimeInMillis(currentRangeEnd);
                 res = makeWhereClause(start, end);
             }
@@ -926,7 +1017,7 @@ public class Tasks extends ListActivity {
 
         public Iterator<Task> findCurrentlyActive() {
             return new Iterator<Task>() {
-                Iterator<Task> iter = tasks.iterator();
+                Iterator<Task> iter = getTasks().iterator();
                 Task next = null;
                 public boolean hasNext() {
                     if (next != null) return true;
@@ -947,7 +1038,6 @@ public class Tasks extends ListActivity {
                     }
                     throw new NoSuchElementException();
                 }
-
                 public void remove() {
                     throw new UnsupportedOperationException();
                 }
@@ -962,6 +1052,7 @@ public class Tasks extends ListActivity {
             Task t = new Task(taskName, (int) id);
             tasks.add(t);
             Collections.sort(tasks);
+            updateWeekAgoTasksIfNeeded(db, false);
             notifyDataSetChanged();
         }
 
@@ -992,6 +1083,7 @@ public class Tasks extends ListActivity {
             }
 
             Collections.sort(tasks);
+            updateWeekAgoTasksIfNeeded(db, false);
             notifyDataSetChanged();
         }
 
@@ -1001,15 +1093,17 @@ public class Tasks extends ListActivity {
             String[] id = {String.valueOf(t.getId())};
             db.delete(TASK_TABLE, "ROWID = ?", id);
             db.delete(RANGES_TABLE, TASK_ID + " = ?", id);
+            updateWeekAgoTasksIfNeeded(db, false);
             notifyDataSetChanged();
         }
 
         public int getCount() {
-            return tasks.size();
+            return getTasks().size();
         }
 
         public Object getItem(int position) {
-            return tasks.get(position);
+            ArrayList<Task> list = showOnlyFromWeekAgo ? weekAgoTasks : tasks;
+            return getTasks().get(position);
         }
 
         public long getItemId(int position) {
@@ -1088,7 +1182,7 @@ public class Tasks extends ListActivity {
         if (requestCode == PREFERENCES) {
             Bundle extras = data.getExtras();
             if (extras.getBoolean(START_DAY)) {
-                switchView(preferences.getInt(VIEW_MODE, 0));
+                reloadListViewTasks();
             }
             if (extras.getBoolean(MILITARY)) {
                 if (preferences.getBoolean(MILITARY, true)) {
@@ -1118,9 +1212,22 @@ public class Tasks extends ListActivity {
 
     protected void finishedCopy(DBBackup.Result result, String message) {
         if (result == DBBackup.Result.SUCCESS) {
-            switchView(preferences.getInt(VIEW_MODE, 0));
+            reloadListViewTasks();
             message = dbBackup;
         }
         notifySuccessFailure(message, R.string.restore_success, R.string.restore_failed);
+    }
+
+
+    private Calendar getConfiguredCalendar() {
+        Calendar tw = Calendar.getInstance();
+        tw.setFirstDayOfWeek(preferences.getInt(START_DAY, 0) + 1);
+        return tw;
+    }
+
+    private void reloadListViewTasks() {
+        // This is only to cause the view to reload, so that we catch
+        // updates to the time list.
+        switchView(preferences.getInt(VIEW_MODE, 0));
     }
 }
