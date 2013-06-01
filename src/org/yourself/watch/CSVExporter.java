@@ -1,4 +1,8 @@
-package net.ser1.timetracker;
+/**
+ * 2013 Sergey Vinokurov
+ * @author Sergey Vinokurov <serg.foo@gmail.com>
+ */
+package org.yourself.watch;
 
 import java.io.OutputStream;
 import java.io.PrintStream;

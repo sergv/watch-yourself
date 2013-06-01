@@ -2,10 +2,12 @@
  * TimeTracker
  * ©2008, 2009 Sean Russell
  * @author Sean Russell <ser@germane-software.com>
+ * 2013 Sergey Vinokurov
+ * @author Sergey Vinokurov <serg.foo@gmail.com>
  */
-package net.ser1.timetracker;
+package org.yourself.watch;
 
-import static net.ser1.timetracker.TimeRange.NULL;
+import static org.yourself.watch.TimeRange.NULL;
 
 public class Task implements Comparable<Task> {
     private String taskName;

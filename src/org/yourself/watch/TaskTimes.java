@@ -2,18 +2,20 @@
  * TimeTracker
  * ©2008, 2009 Sean Russell
  * @author Sean Russell <ser@germane-software.com>
+ * 2013 Sergey Vinokurov
+ * @author Sergey Vinokurov <serg.foo@gmail.com>
  */
-package net.ser1.timetracker;
+package org.yourself.watch;
 
-import static net.ser1.timetracker.DBHelper.END;
-import static net.ser1.timetracker.DBHelper.RANGES_TABLE;
-import static net.ser1.timetracker.DBHelper.RANGE_COLUMNS;
-import static net.ser1.timetracker.DBHelper.START;
-import static net.ser1.timetracker.DBHelper.TASK_ID;
-import static net.ser1.timetracker.EditTime.END_DATE;
-import static net.ser1.timetracker.EditTime.START_DATE;
-import static net.ser1.timetracker.TimeRange.NULL;
-import static net.ser1.timetracker.DBHelper.TASK_NAME;
+import static org.yourself.watch.DBHelper.END;
+import static org.yourself.watch.DBHelper.RANGES_TABLE;
+import static org.yourself.watch.DBHelper.RANGE_COLUMNS;
+import static org.yourself.watch.DBHelper.START;
+import static org.yourself.watch.DBHelper.TASK_ID;
+import static org.yourself.watch.EditTime.END_DATE;
+import static org.yourself.watch.EditTime.START_DATE;
+import static org.yourself.watch.TimeRange.NULL;
+import static org.yourself.watch.DBHelper.TASK_NAME;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;

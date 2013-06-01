@@ -1,8 +1,8 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
+/**
+ * 2013 Sergey Vinokurov
+ * @author Sergey Vinokurov <serg.foo@gmail.com>
  */
-package net.ser1.timetracker;
+package org.yourself.watch;
 
 import android.app.ProgressDialog;
 import android.content.ContentValues;
@@ -11,13 +11,13 @@ import android.database.sqlite.SQLiteDatabase;
 import android.os.AsyncTask;
 import java.util.ArrayList;
 import java.util.List;
-import static net.ser1.timetracker.DBHelper.TASK_TABLE;
-import static net.ser1.timetracker.DBHelper.TASK_COLUMNS;
-import static net.ser1.timetracker.DBHelper.RANGES_TABLE;
-import static net.ser1.timetracker.DBHelper.TASK_ID;
-import static net.ser1.timetracker.DBHelper.START;
-import static net.ser1.timetracker.DBHelper.END;
-import static net.ser1.timetracker.DBHelper.NAME;
+import static org.yourself.watch.DBHelper.TASK_TABLE;
+import static org.yourself.watch.DBHelper.TASK_COLUMNS;
+import static org.yourself.watch.DBHelper.RANGES_TABLE;
+import static org.yourself.watch.DBHelper.TASK_ID;
+import static org.yourself.watch.DBHelper.START;
+import static org.yourself.watch.DBHelper.END;
+import static org.yourself.watch.DBHelper.NAME;
 
 /**
  *

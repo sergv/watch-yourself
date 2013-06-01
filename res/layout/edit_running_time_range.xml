@@ -25,18 +25,18 @@
      <LinearLayout android:orientation="horizontal"
                    android:layout_width="fill_parent"
                    android:layout_height="fill_parent">
-         <Button android:id="@+id/accept" 
-             android:layout_width="fill_parent"
-             android:layout_height="wrap_content"
-             android:layout_marginLeft="40px"
-             android:layout_marginRight="40px"
-             android:text="@android:string/ok"/>
          <Button android:id="@+id/time_edit_cancel" 
              android:layout_width="fill_parent"
              android:layout_height="wrap_content"
-             android:layout_marginLeft="40px"
-             android:layout_marginRight="40px"
+             android:layout_marginLeft="@dimen/button_margin_dimension"
+             android:layout_marginRight="@dimen/button_margin_dimension"
              android:text="@android:string/cancel"/>
+         <Button android:id="@+id/accept" 
+             android:layout_width="fill_parent"
+             android:layout_height="wrap_content"
+             android:layout_marginLeft="@dimen/button_margin_dimension"
+             android:layout_marginRight="@dimen/button_margin_dimension"
+             android:text="@android:string/ok"/>
      </LinearLayout>
  </LinearLayout>
 </ScrollView>

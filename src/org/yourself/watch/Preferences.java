@@ -3,7 +3,7 @@
  * and open the template in the editor.
  */
 
-package net.ser1.timetracker;
+package org.yourself.watch;
 
 import java.util.ArrayList;
 import java.util.HashMap;

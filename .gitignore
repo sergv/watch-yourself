@@ -1,0 +1,10 @@
+local.properties
+emacs-session
+.project
+.classpath
+
+.project/**
+.settings/**
+bin/**
+gen/**
+.eclipse/**

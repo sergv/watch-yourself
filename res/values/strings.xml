@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">TimeTracker</string>
-    
+    <string name="app_name">WatchYourself</string>
+
     <string name="start">Start</string>
     <string name="task_name">Task name</string>
     <string name="add_task_ok">Add task</string>
@@ -10,7 +10,7 @@
 
     <string name="delete_ok">Delete</string>
     <string name="delete_task_title">Delete Task</string>
-    <string name="delete_task_message">Are you sure you want to delete '%s' and all of it's time records?</string>
+    <string name="delete_task_message">Are you sure you want to delete \'%s\' and all of it\'s time records?</string>
     <string name="add_task_title">Add task</string>
     <string name="change_view_title">Change view</string>
     <string name="generate_report_title">Report</string>
@@ -23,9 +23,9 @@
     <string name="end_time_label">End Time</string>
     <string name="end_not_greater_than_start">The end time must be greater than the start time</string>
     <string name="range_error_title">Time Range Error</string>
-    <string name="report_title">Report for the week %s to %s </string>
+    <string name="report_title" formatted="false">Report for the week %s to %s</string>
     <string name="week">Week %s</string>
-    <string name="title">TimeTracker (%s)</string>
+    <string name="title">WatchYourself (%s)</string>
     <string name="help">Help</string>
     <string name="export_view">Export</string>
     <string name="move_time">Assign time to other task</string>
@@ -64,9 +64,9 @@
     <string name="version">Version %s</string>
     <string name="author">Sean E. Russell</string>
     <string name="donate"><b>If you like this app, please purchase it and support future development! (Click here)</b></string>
-    <string name="purpose">TimeTracker helps you record the amount of time you spend on
+    <string name="purpose">WatchYourself timetracker helps you record the amount of time you spend on
         activities; for example, for recording time in a time sheet at work.  It
-        provides ways to view, edit, and filter times, and provides a 
+        provides ways to view, edit, and filter times, and provides a
         time sheet report as well.</string>
     <string name="usage">
     Detailed instructions are at http://trac.germane-software.com/TimeTracker\n\n
@@ -86,11 +86,11 @@
     \n
     The time log for a task is filtered on the same range that you selected for the
     main task view, so if you filtered the task view for <i>This Week</i> and you open
-    the time log, then you'll only see times for this week.  Use the <i>Add Time</i> 
+    the time log, then you\'ll only see times for this week.  Use the <i>Add Time</i>
     menu item to manually insert times into the time log.  Use the context menu
     for a time to delete or edit a time range.\n
     \n
-    <b>Note</b> that TimeTracker will not prevent you from creating times that overlap
+    <b>Note</b> that WatchYourself timetracker will not prevent you from creating times that overlap
     with times in other (or the same) task.
     </string>
     <string name="credits"><b>Credits</b>\n
@@ -98,12 +98,11 @@
     The TimeTracker application icon was borrowed from
     the excellent glyFX icon library by PerthWeb Pty Ltd (www.glyfx.com).\n
     Russian translation by Denis Gladkiy\n
-    French translation by Wilfried Kopp
+    French translation by Wilfried Kopp\n
+    Further improvement by Sergey Vinokurov
     </string>
-    <string name="export_csv_success">Successfully exported CSV to memory card 
-        as timetracker.db</string>
-    <string name="export_csv_fail">Failed to export CSV.  Couldn't create the file.
-        Is an SD card inserted?</string>
+    <string name="export_csv_success">Successfully exported CSV to memory card as %s</string>
+    <string name="export_csv_fail">Failed to export CSV.  Couldn\'t create file %s. Is an SD card inserted?</string>
     <string name="success">Success</string>
     <string name="failure">Fail</string>
     <string name="set_start_day_of_week">Set the day the week starts</string>

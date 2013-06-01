@@ -38,7 +38,7 @@
                       android:layout_width="fill_parent"/>
             <TextView android:id="@+id/credits"
                       android:text="@string/credits"
-                      android:paddingTop="10px"
+                      android:paddingTop="@dimen/textview_top_padding"
                       android:layout_height="wrap_content"
                       android:layout_width="fill_parent"/>
         </LinearLayout>
@@ -49,6 +49,6 @@
               android:layout_height="wrap_content"
               android:layout_width="wrap_content"
               android:gravity="center_horizontal"
-              android:paddingTop="10px"
+              android:paddingTop="@dimen/textview_top_padding"
               android:textColor="#22EE77"/>
 </LinearLayout>
