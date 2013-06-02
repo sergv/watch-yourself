@@ -114,11 +114,6 @@ public class Tasks extends ListActivity {
     private static final int REFRESH_MS = 60000;
 
     /**
-     * How long to wait before updating task list after resuming application
-     */
-    private static final int DELAY_BEFORE_TASK_LIST_UPDATE_AFTER_RESUME_MS = 5000;
-
-    /**
      * The model for this view
      */
     private TaskAdapter adapter;
@@ -828,7 +823,7 @@ public class Tasks extends ListActivity {
             ArrayList<Task> weekAgoTasks = new ArrayList<Task>();
 
             do {
-                weekAgoTaskIds.add(new Integer(weekAgoTasksCursor.getInt(0)));
+                weekAgoTaskIds.add(Integer.valueOf((weekAgoTasksCursor.getInt(0))));
             } while(weekAgoTasksCursor.moveToNext());
 
             for (Task task : tasks) {

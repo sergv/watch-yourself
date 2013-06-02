@@ -3,17 +3,16 @@
     android:orientation="vertical"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent">
-    
+
     <ListView android:id="@android:id/list"
               android:layout_width="fill_parent"
               android:layout_height="0dip"
               android:layout_weight="1"
               android:drawSelectorOnTop="false"/>
-    <Button android:id="@+id/doneButton" 
+    <Button android:id="@+id/doneButton"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="@dimen/button_margin_dimension"
-            android:layout_marginRight="@dimen/button_margin_dimension"
+            android:layout_margin="@dimen/button_margin"
             android:text="@string/done"/>
-    
+
 </LinearLayout>
