@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <dimen name="button_margin">10dp</dimen>
-    <dimen name="textview_top_padding">10pt</dimen>
+  <dimen name="button_margin">10dp</dimen>
+  <dimen name="textview_top_padding">10pt</dimen>
 </resources>

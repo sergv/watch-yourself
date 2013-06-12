@@ -1,18 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
-    android:layout_width="fill_parent"
-    android:layout_height="fill_parent"
-    >
- <TextView xmlns:android="http://schemas.android.com/apk/res/android"
-   android:layout_width="fill_parent"
-   android:layout_height="wrap_content"
-   android:textSize="24pt"
-   android:textStyle="italic"
-   android:text="@string/app_name"/>
- <Button android:id="@+id/startButton"
-     android:layout_width="fill_parent"
-     android:layout_height="wrap_content"
-     android:layout_margin="@dimen/button_margin"
-     android:text="@string/start"/>
+              android:orientation="vertical"
+              android:layout_width="fill_parent"
+              android:layout_height="fill_parent"
+              >
+  <TextView xmlns:android="http://schemas.android.com/apk/res/android"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:textSize="24pt"
+            android:textStyle="italic"
+            android:text="@string/app_name"/>
+  <Button android:id="@+id/startButton"
+          android:layout_width="fill_parent"
+          android:layout_height="wrap_content"
+          android:layout_margin="@dimen/button_margin"
+          android:text="@string/start"/>
 </LinearLayout>
