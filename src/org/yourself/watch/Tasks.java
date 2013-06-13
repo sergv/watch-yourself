@@ -147,10 +147,11 @@ private boolean decimalFormat = false;
  * A list of menu options, including both context and options menu items
  */
 protected static final int ADD_TASK = 0,
-                           EDIT_TASK = 1,  DELETE_TASK = 2,  REPORT = 3,  SHOW_TIMES = 4,
-                           CHANGE_VIEW = 5,  SELECT_START_DATE = 6,  SELECT_END_DATE = 7,
-                           HELP = 8,  EXPORT_VIEW = 9,  SUCCESS_DIALOG = 10,  ERROR_DIALOG = 11,
-                           SET_WEEK_START_DAY = 12,  MORE = 13,  BACKUP = 14, PREFERENCES = 15,
+                           EDIT_TASK = 1,  DELETE_TASK = 2,  REPORT = 3,
+                           SHOW_TIMES = 4, CHANGE_VIEW = 5,  SELECT_START_DATE = 6,
+                           SELECT_END_DATE = 7, HELP = 8,  EXPORT_VIEW = 9,
+                           SUCCESS_DIALOG = 10,  ERROR_DIALOG = 11, SET_WEEK_START_DAY = 12,
+                           MORE = 13,  BACKUP = 14, PREFERENCES = 15,
                            PROGRESS_DIALOG = 16, REFRESH = 17;
 // TODO: This could be done better...
 private static final String dbPath = "/data/data/org.yourself.watch/databases/timetracker.db";
@@ -246,7 +247,8 @@ public boolean onCreateOptionsMenu(Menu menu) {
 }
 
 @Override
-public void onCreateContextMenu(ContextMenu menu, View v,
+public void onCreateContextMenu(ContextMenu menu,
+                                View v,
                                 ContextMenuInfo menuInfo) {
     menu.setHeaderTitle("Task menu");
     menu.add(0, EDIT_TASK, 0, getText(R.string.edit_task));
@@ -274,6 +276,7 @@ public boolean onContextItemSelected(MenuItem item) {
     }
     return super.onContextItemSelected(item);
 }
+
 private AlertDialog operationSucceed;
 private AlertDialog operationFailed;
 
@@ -341,10 +344,9 @@ protected Dialog onCreateDialog(int id) {
         progressDialog.setCancelable(false);
         return progressDialog;
     case MORE:
-        return new AlertDialog.Builder(Tasks.this).setItems(R.array.moreMenu, new DialogInterface.OnClickListener() {
-
+        return new AlertDialog.Builder(Tasks.this)
+        .setItems(R.array.moreMenu, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int which) {
-                DBBackup backup;
                 // Log.d(TAG, "more dialog, on click");
                 switch (which) {
                 case 0:
@@ -364,9 +366,15 @@ protected Dialog onCreateDialog(int id) {
                     showDialog(Tasks.PROGRESS_DIALOG);
                     if (new File(dbBackup).exists()) {
                         // Find the database
-                        SQLiteDatabase backupDb = SQLiteDatabase.openDatabase(dbBackup, null, SQLiteDatabase.OPEN_READWRITE);
-                        SQLiteDatabase appDb = SQLiteDatabase.openDatabase(dbPath, null, SQLiteDatabase.OPEN_READONLY);
-                        backup = new DBBackup(Tasks.this, progressDialog);
+                        SQLiteDatabase backupDb =
+                            SQLiteDatabase.openDatabase(dbBackup,
+                                                        null,
+                                                        SQLiteDatabase.OPEN_READWRITE);
+                        SQLiteDatabase appDb =
+                            SQLiteDatabase.openDatabase(dbPath,
+                                                        null,
+                                                        SQLiteDatabase.OPEN_READONLY);
+                        DBBackup backup = new DBBackup(Tasks.this, progressDialog);
                         backup.execute(appDb, backupDb);
                     } else {
                         InputStream in = null;
@@ -392,9 +400,15 @@ protected Dialog onCreateDialog(int id) {
                     break;
                 case 4: // RESTORE FROM BACKUP
                     showDialog(Tasks.PROGRESS_DIALOG);
-                    SQLiteDatabase backupDb = SQLiteDatabase.openDatabase(dbBackup, null, SQLiteDatabase.OPEN_READONLY);
-                    SQLiteDatabase appDb = SQLiteDatabase.openDatabase(dbPath, null, SQLiteDatabase.OPEN_READWRITE);
-                    backup = new DBBackup(Tasks.this, progressDialog);
+                    SQLiteDatabase backupDb =
+                        SQLiteDatabase.openDatabase(dbBackup,
+                                                    null,
+                                                    SQLiteDatabase.OPEN_READONLY);
+                    SQLiteDatabase appDb =
+                        SQLiteDatabase.openDatabase(dbPath,
+                                                    null,
+                                                    SQLiteDatabase.OPEN_READWRITE);
+                    DBBackup backup = new DBBackup(Tasks.this, progressDialog);
                     backup.execute(backupDb, appDb);
                     break;
                 case 5: // PREFERENCES
@@ -439,8 +453,8 @@ protected void notifySuccessFailure(String message, int success_string, int fail
  * @return the progressDialog to be displayed
  */
 private Dialog openChangeViewDialog() {
-    return new AlertDialog.Builder(Tasks.this).setItems(R.array.views, new DialogInterface.OnClickListener() {
-
+    return new AlertDialog.Builder(Tasks.this)
+    .setItems(R.array.views, new DialogInterface.OnClickListener() {
         public void onClick(DialogInterface dialog, int which) {
             SharedPreferences.Editor ed = preferences.edit();
             ed.putInt(VIEW_MODE, which);
@@ -466,7 +480,6 @@ private Dialog openChangeViewDialog() {
 
                         new DatePickerDialog(Tasks.this,
                         new DatePickerDialog.OnDateSetListener() {
-
                             public void onDateSet(DatePicker view, int year,
                                                   int monthOfYear, int dayOfMonth) {
                                 Calendar end = Calendar.getInstance();
@@ -770,6 +783,7 @@ private class TaskView extends LinearLayout {
         }
     }
 }
+
 private static final long MS_H = 3600000;
 private static final long MS_M = 60000;
 private static final long MS_S = 1000;
@@ -1098,7 +1112,6 @@ private class TaskAdapter extends BaseAdapter {
     }
 
     public Object getItem(int position) {
-        ArrayList<Task> list = showOnlyFromWeekAgo ? weekAgoTasks : tasks;
         return getTasks().get(position);
     }
 
@@ -1136,7 +1149,19 @@ protected void onListItemClick(ListView l, View v, int position, long id) {
     Object item = getListView().getItemAtPosition(position);
     if (item != null) {
         Task selected = (Task) item;
-        if (!concurrency) {
+        if (concurrency) {
+            if (selected.isRunning()) {
+                selected.stop();
+                running = adapter.findCurrentlyActive().hasNext();
+                if (!running) timer.removeCallbacks(updater);
+            } else {
+                selected.start();
+                if (!running) {
+                    running = true;
+                    timer.post(updater);
+                }
+            }
+        } else {
             boolean startSelected = !selected.isRunning();
             if (running) {
                 running = false;
@@ -1153,18 +1178,6 @@ protected void onListItemClick(ListView l, View v, int position, long id) {
                 selected.start();
                 running = true;
                 timer.post(updater);
-            }
-        } else {
-            if (selected.isRunning()) {
-                selected.stop();
-                running = adapter.findCurrentlyActive().hasNext();
-                if (!running) timer.removeCallbacks(updater);
-            } else {
-                selected.start();
-                if (!running) {
-                    running = true;
-                    timer.post(updater);
-                }
             }
         }
         adapter.updateTask(selected);
@@ -1211,7 +1224,9 @@ protected void finishedCopy(DBBackup.Result result, String message) {
         reloadListViewTasks();
         message = dbBackup;
     }
-    notifySuccessFailure(message, R.string.restore_success, R.string.restore_failed);
+    notifySuccessFailure(message,
+                         R.string.restore_success,
+                         R.string.restore_failed);
 }
 
 
@@ -1226,7 +1241,6 @@ private void reloadListViewTasks() {
     // updates to the time list.
     switchView(preferences.getInt(VIEW_MODE, 0));
 }
+
 }
-
-
 

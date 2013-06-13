@@ -33,28 +33,47 @@ public static final int PRIMARY = 0, SECONDARY = 1, SETMAX = 2;
 private Result result;
 private String message = null;
 
+private SQLiteDatabase source;
+private SQLiteDatabase dest;
+
 public DBBackup(Tasks callback, ProgressDialog progress) {
     this.callback = callback;
     progressDialog = progress;
     progressDialog.setProgress(0);
     progressDialog.setSecondaryProgress(0);
+
+    source = null;
+    dest = null;
+}
+
+private void closeDatabases() {
+    if (source != null) {
+        source.close();
+    }
+    if (dest != null) {
+        dest.close();
+    }
 }
 
 @Override
 protected Void doInBackground(SQLiteDatabase... ss) {
-    SQLiteDatabase source = ss[0];
-    SQLiteDatabase dest = ss[1];
+    source = ss[0];
+    dest = ss[1];
 
     // Read the tasks and IDs
-    Cursor readCursor = source.query(TASK_TABLE, TASK_COLUMNS, null, null, null, null, "rowid");
+    Cursor readCursor = source.query(TASK_TABLE,
+                                     TASK_COLUMNS,
+                                     null, null, null, null, "rowid");
     List<Task> tasks = readTasks(readCursor);
 
     // Match the tasks to tasks in the existing DB, and build re-index list
-    readCursor = dest.query(TASK_TABLE, TASK_COLUMNS, null, null, null, null, "rowid");
+    readCursor = dest.query(TASK_TABLE,
+                            TASK_COLUMNS,
+                            null, null, null, null, "rowid");
     List<Task> toReorder = readTasks(readCursor);
 
     int step = (int)(100.0 / tasks.size());
-//        publishProgress(SETMAX, tasks.size());
+    publishProgress(SETMAX, tasks.size());
 
     // For each task in the backup DB, see if there's a matching task in the
     // current DB.  If there is, copy the times for the task over from the
@@ -83,28 +102,31 @@ protected Void doInBackground(SQLiteDatabase... ss) {
 @Override
 protected void onPostExecute(Void v) {
     progressDialog.dismiss();
+    closeDatabases();
     callback.finishedCopy(result, message);
 }
 
 @Override
 protected void onProgressUpdate(Integer... vs) {
-    switch (vs[0]) {
+    int update_type = vs[0];
+    int increment = vs[1];
+    switch (update_type) {
     case PRIMARY:
-        if (vs[1] == 0) {
+        if (increment == 0) {
             progressDialog.setProgress(0);
         } else {
-            progressDialog.incrementProgressBy(vs[1]);
+            progressDialog.incrementProgressBy(increment);
         }
         break;
     case SECONDARY:
-        if (vs[1] == 0) {
+        if (increment == 0) {
             progressDialog.setSecondaryProgress(0);
         } else {
-            progressDialog.incrementSecondaryProgressBy(vs[1]);
+            progressDialog.incrementSecondaryProgressBy(increment);
         }
         break;
     case SETMAX:
-        progressDialog.setMax(vs[1]);
+        progressDialog.setMax(increment);
         break;
     default:
         break;
@@ -115,14 +137,25 @@ protected void onProgressUpdate(Integer... vs) {
 protected void onCancelled() {
     cancel = true;
     progressDialog.dismiss();
+    closeDatabases();
 }
 
-private void copyTimes(SQLiteDatabase sourceDb, int sourceId, SQLiteDatabase destDb, int destId) {
+
+private void copyTimes(SQLiteDatabase sourceDb,
+                       int sourceId,
+                       SQLiteDatabase destDb,
+                       int destId) {
     publishProgress(SECONDARY, 0);
-    Cursor source = sourceDb.query(RANGES_TABLE, DBHelper.RANGE_COLUMNS,
-                                   DBHelper.TASK_ID + " = ?", new String[] {String.valueOf(sourceId)}, null, null, null);
-    Cursor dest = destDb.query(RANGES_TABLE, DBHelper.RANGE_COLUMNS,
-                               DBHelper.TASK_ID + " = ?", new String[] {String.valueOf(destId)}, null, null, null);
+    Cursor source = sourceDb.query(RANGES_TABLE,
+                                   DBHelper.RANGE_COLUMNS,
+                                   DBHelper.TASK_ID + " = ?",
+                                   new String[] {String.valueOf(sourceId)},
+                                   null, null, null);
+    Cursor dest = destDb.query(RANGES_TABLE,
+                               DBHelper.RANGE_COLUMNS,
+                               DBHelper.TASK_ID + " = ?",
+                               new String[] {String.valueOf(destId)},
+                               null, null, null);
     List<TimeRange> destTimes = new ArrayList<TimeRange>();
     int step = (int)(100.0 / (dest.getCount() + source.getCount()));
     if (dest.moveToFirst()) {
@@ -178,13 +211,5 @@ private List<Task> readTasks(Cursor readCursor) {
     readCursor.close();
     return tasks;
 }
+
 }
-
-
-
-
-
-
-
-
-
