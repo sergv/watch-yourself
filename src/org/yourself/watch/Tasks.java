@@ -575,7 +575,9 @@ private Dialog openNewTaskDialog() {
     LayoutInflater factory = LayoutInflater.from(this);
     final View textEntryView = factory.inflate(R.layout.edit_task, null);
     return new AlertDialog.Builder(Tasks.this) //.setIcon(R.drawable.alert_dialog_icon)
-    .setTitle(R.string.add_task_title).setView(textEntryView).setPositiveButton(R.string.add_task_ok, new DialogInterface.OnClickListener() {
+           .setTitle(R.string.add_task_title)
+           .setView(textEntryView)
+    .setPositiveButton(R.string.add_task_ok, new DialogInterface.OnClickListener() {
 
         public void onClick(DialogInterface dialog, int whichButton) {
             EditText textView = (EditText) textEntryView.findViewById(R.id.task_edit_name_edit);
@@ -936,8 +938,9 @@ private class TaskAdapter extends BaseAdapter {
      * @return a String pair hack, where the second item is null
      * for false, and non-null for true
      */
+    static final String query = "AND " + START + " >= %d AND " + START + " < %d";
     private String[] makeWhereClause(Calendar start, Calendar end) {
-        String query = "AND " + START + " < %d AND " + START + " >= %d";
+        // String query = "AND " + START + " < %d AND " + START + " >= %d";
         Calendar today = getConfiguredCalendar();
         today.set(Calendar.HOUR_OF_DAY, 12);
         Calendar[] days = new Calendar[] {today, start, end};
@@ -949,8 +952,10 @@ private class TaskAdapter extends BaseAdapter {
         currentRangeEnd = end.getTimeInMillis();
         boolean loadCurrentTask = today.compareTo(start) != -1 &&
                                   today.compareTo(end) != 1;
-        query = String.format(query, end.getTimeInMillis(), start.getTimeInMillis());
-        return new String[] {query, loadCurrentTask ? query : null};
+        String q = String.format(query,
+                                 start.getTimeInMillis(),
+                                 end.getTimeInMillis());
+        return new String[] {q, loadCurrentTask ? q : null};
     }
 
     /**
@@ -977,7 +982,7 @@ private class TaskAdapter extends BaseAdapter {
 
                 final String query =
                     "SELECT SUM(end) - SUM(start) AS total FROM " + RANGES_TABLE +
-                    " WHERE " + TASK_ID + " = ? AND end NOTNULL " + whereClause;
+                    " WHERE " + TASK_ID + " = ? " + whereClause + " AND end NOTNULL";
 
                 Cursor r = db.rawQuery(query, task_ids);
                 if (r.moveToFirst()) {
@@ -986,7 +991,7 @@ private class TaskAdapter extends BaseAdapter {
                 r.close();
                 if (loadCurrent) {
                     r = db.query(RANGES_TABLE, RANGE_COLUMNS,
-                                 TASK_ID + " = ? AND end ISNULL",
+                                 TASK_ID + " = ? " + whereClause + " AND end ISNULL",
                                  task_ids, null, null, null);
                     if (r.moveToFirst()) {
                         task.setStartTime(r.getLong(0));
@@ -1009,19 +1014,20 @@ private class TaskAdapter extends BaseAdapter {
      * @return
      */
     protected Cursor getCurrentRange() {
-        String[] res = {""};
+        String whereClause = "";
         if (currentRangeStart != -1 && currentRangeEnd != -1) {
             Calendar start = getConfiguredCalendar();
             start.setTimeInMillis(currentRangeStart);
             Calendar end = getConfiguredCalendar();
             end.setTimeInMillis(currentRangeEnd);
-            res = makeWhereClause(start, end);
+            whereClause = makeWhereClause(start, end)[0];
         }
         SQLiteDatabase db = dbHelper.getReadableDatabase();
-        Cursor r = db.rawQuery("SELECT t.name, r.start, r.end " +
-                               " FROM " + TASK_TABLE + " t, " + RANGES_TABLE + " r " +
-                               " WHERE r." + TASK_ID + " = t.ROWID " + res[0] +
-                               " ORDER BY t.name, r.start ASC", null);
+        Cursor r = db.rawQuery(
+            "SELECT t.name, r.start, r.end " +
+            " FROM " + TASK_TABLE + " t, " + RANGES_TABLE + " r " +
+            " WHERE r." + TASK_ID + " = t.ROWID " + whereClause +
+            " ORDER BY t.name, r.start ASC", null);
         return r;
     }
 
@@ -1188,7 +1194,7 @@ protected void onListItemClick(ListView l, View v, int position, long id) {
 
 @Override
 protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-    if (requestCode == PREFERENCES) {
+    if (requestCode == PREFERENCES && data != null) {
         Bundle extras = data.getExtras();
         if (extras.getBoolean(START_DAY)) {
             reloadListViewTasks();
@@ -1243,4 +1249,5 @@ private void reloadListViewTasks() {
 }
 
 }
+
 

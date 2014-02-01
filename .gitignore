@@ -8,3 +8,4 @@ emacs-session
 bin/**
 gen/**
 .eclipse/**
+.idea/**

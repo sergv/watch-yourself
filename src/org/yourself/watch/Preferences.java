@@ -206,7 +206,8 @@ static {
 protected Dialog onCreateDialog(int dialogId) {
     switch (dialogId) {
     case CHOOSE_DAY:
-        return new AlertDialog.Builder(this).setItems(DAYS_OF_WEEK, new DialogInterface.OnClickListener() {
+        return new AlertDialog.Builder(this)
+        .setItems(DAYS_OF_WEEK, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface iface, int whichChoice) {
                 Map<String, String> startDay = prefs.get(DAY_OF_WEEK_PREF_IDX);
                 startDay.put(CURRENT, DAYS_OF_WEEK[whichChoice]);
@@ -221,4 +222,5 @@ protected Dialog onCreateDialog(int dialogId) {
     return null;
 }
 }
+
 

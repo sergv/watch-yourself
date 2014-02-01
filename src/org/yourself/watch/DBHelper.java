@@ -22,9 +22,11 @@ public static final String[] RANGE_COLUMNS = { START, END };
 public static final String NAME = "name";
 public static final String[] TASK_COLUMNS = new String[] { "ROWID", NAME };
 public static final String TIMETRACKER_DB_NAME = "timetracker.db";
-public static final int DBVERSION = 5;
+public static final int DBVERSION = 6;
 public static final String RANGES_TABLE = "ranges";
+public static final String RANGES_TABLE_IDX = "ranges_idx";
 public static final String TASK_TABLE = "tasks";
+public static final String TASK_TABLE_IDX = "tasks_idx";
 public static final String TASK_NAME = "name";
 public static final String ID_NAME = "_id";
 
@@ -43,17 +45,29 @@ public static DBHelper getInstance() {
 
 private static final String CREATE_TASK_TABLE =
     "CREATE TABLE %s ("
-    + ID_NAME + " INTEGER PRIMARY KEY AUTOINCREMENT,"
+    + ID_NAME + " INTEGER PRIMARY KEY AUTOINCREMENT," /* indexed */
     + TASK_NAME + " TEXT COLLATE LOCALIZED NOT NULL"
     + ");";
+
+private static final String CREATE_TASK_TABLE_INDEX =
+    "CREATE UNIQUE INDEX " + TASK_TABLE_IDX + " on " + TASK_TABLE +
+    " (" + ID_NAME + ") ";
+
+private static final String CREATE_RANGES_TABLE_INDEX =
+    "CREATE UNIQUE INDEX " + RANGES_TABLE_IDX + " on " + RANGES_TABLE +
+    " (" + TASK_ID + ", " + START + ", " + END + ") ";
+
+
 @Override
 public void onCreate(SQLiteDatabase db) {
     db.execSQL(String.format(CREATE_TASK_TABLE, TASK_TABLE));
+    db.execSQL(CREATE_TASK_TABLE_INDEX);
     db.execSQL("CREATE TABLE " + RANGES_TABLE + "("
-               + TASK_ID + " INTEGER NOT NULL,"
-               + START + " INTEGER NOT NULL,"
+               + TASK_ID + " INTEGER NOT NULL," /* indexed */
+               + START + " INTEGER NOT NULL," /* indexed */
                + END + " INTEGER"
                + ");");
+    db.execSQL(CREATE_RANGES_TABLE_INDEX);
 }
 
 @Override
@@ -76,6 +90,12 @@ public void onUpgrade(SQLiteDatabase arg0, int oldVersion, int newVersion) {
         arg0.execSQL("insert into " + TASK_TABLE + "(" + ID_NAME + "," + TASK_NAME +
                      ") select " + ID_NAME + "," + TASK_NAME + " from temp;");
         arg0.execSQL("drop table temp;");
+    }
+
+    /* now database is bought up to version 5 */
+    if (oldVersion < 6) {
+        arg0.execSQL(CREATE_TASK_TABLE_INDEX);
+        arg0.execSQL(CREATE_RANGES_TABLE_INDEX);
     }
 }
 
