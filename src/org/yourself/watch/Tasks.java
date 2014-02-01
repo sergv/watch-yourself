@@ -227,8 +227,8 @@ protected void onResume() {
     super.onResume();
     // This is only to cause the view to reload, so that we catch
     // updates to the time list.
-    // int which = preferences.getInt(VIEW_MODE, 0);
-    // switchView(which);
+    int which = preferences.getInt(VIEW_MODE, 0);
+    switchView(which);
 
     if (timer != null && running) {
         /* updater would refresh list view as needed */
