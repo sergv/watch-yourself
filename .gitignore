@@ -9,3 +9,5 @@ bin/**
 gen/**
 .eclipse/**
 .idea/**
+
+project-key.clj

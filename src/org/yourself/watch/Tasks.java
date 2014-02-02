@@ -240,8 +240,6 @@ protected void onResume() {
 public boolean onCreateOptionsMenu(Menu menu) {
     super.onCreateOptionsMenu(menu);
     menu.add(0, ADD_TASK, 0, R.string.add_task_title).setIcon(android.R.drawable.ic_menu_add);
-    /* menu.add(0, REPORT, 1, R.string.generate_report_title).setIcon(android.R.drawable.ic_menu_week); */
-    menu.add(0, REFRESH, 1, R.string.refresh_menu_title).setIcon(R.drawable.ic_menu_refresh);
     menu.add(0, MORE, 2, R.string.more).setIcon(android.R.drawable.ic_menu_more);
     return true;
 }
