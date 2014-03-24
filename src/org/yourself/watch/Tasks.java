@@ -48,7 +48,10 @@ import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.app.ListActivity;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.app.ProgressDialog;
+import android.app.TaskStackBuilder;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -59,9 +62,11 @@ import android.content.pm.PackageManager.NameNotFoundException;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Vibrator;
+import android.support.v4.app.NotificationCompat;
 import android.text.method.SingleLineTransformationMethod;
 import android.text.util.Linkify;
 // import android.util.Log;
@@ -89,6 +94,8 @@ import android.widget.AdapterView.AdapterContextMenuInfo;
  * @author ser
  */
 public class Tasks extends ListActivity {
+
+public static final int CURRENT_TASK_NOTIFICATION_ID = 1;
 
 public static final String TIMETRACKERPREF = "timetracker.pref";
 protected static final String FONTSIZE = "font-size";
@@ -125,12 +132,13 @@ private Handler timer;
 /**
  * The call-back that actually updates the display.
  */
-private TimerTask updater;
+private TimerTask displayUpdater;
 /**
  * The currently active task (the one that is currently being timed).  There
  * can be only one.
  */
 private boolean running = false;
+private Task runningTask;
 /**
  * The currently selected task when the context menu is invoked.
  */
@@ -142,6 +150,7 @@ private boolean vibrateClick = true;
 private Vibrator vibrateAgent;
 private ProgressDialog progressDialog = null;
 private boolean decimalFormat = false;
+private NotificationManager notificationManager;
 
 /**
  * A list of menu options, including both context and options menu items
@@ -181,15 +190,17 @@ protected void onCreate(Bundle savedInstanceState) {
     if (timer == null) {
         timer = new Handler();
     }
-    if (updater == null) {
-        updater = new TimerTask() {
-
+    if (displayUpdater == null) {
+        displayUpdater = new TimerTask() {
             @Override
             public void run() {
                 if (running) {
                     adapter.notifyDataSetChanged();
                     setTitle();
                     Tasks.this.getListView().invalidate();
+                    startCurrentTaskNotification(runningTask);
+                } else {
+                    stopCurrentTaskNotification();
                 }
                 timer.postDelayed(this, REFRESH_MS);
             }
@@ -202,6 +213,8 @@ protected void onCreate(Bundle savedInstanceState) {
     }
     vibrateAgent = (Vibrator)getSystemService(VIBRATOR_SERVICE);
     vibrateClick = preferences.getBoolean(VIBRATE, true);
+    notificationManager =
+        (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
 }
 
 @Override
@@ -209,15 +222,16 @@ protected void onPause() {
     // Log.d(TAG, "onPause");
     super.onPause();
     if (timer != null) {
-        timer.removeCallbacks(updater);
+        timer.removeCallbacks(displayUpdater);
     }
 }
 
 @Override
 protected void onStop() {
     // Log.d(TAG, "onStop");
-    if (adapter != null)
+    if (adapter != null) {
         adapter.close();
+    }
     super.onStop();
 }
 
@@ -231,8 +245,8 @@ protected void onResume() {
     switchView(which);
 
     if (timer != null && running) {
-        /* updater would refresh list view as needed */
-        timer.post(updater);
+        /* displayUpdater would refresh list view as needed */
+        timer.post(displayUpdater);
     }
 }
 
@@ -350,8 +364,8 @@ protected Dialog onCreateDialog(int id) {
                 case 0:
                     adapter.toggleOnlyFromWeekAgoDisplay();
                     reloadListViewTasks();
-                    timer.removeCallbacks(updater);
-                    timer.post(updater);
+                    timer.removeCallbacks(displayUpdater);
+                    timer.post(displayUpdater);
                     break;
                 case 1: // CHANGE_VIEW:
                     showDialog(CHANGE_VIEW);
@@ -1001,7 +1015,9 @@ private class TaskAdapter extends BaseAdapter {
         }
         tasks_cursor.close();
         Collections.sort(tasks);
-        running = findCurrentlyActive().hasNext();
+        Iterator<Task> active = findCurrentlyActive();
+        running = active.hasNext();
+        runningTask = active.hasNext() ? active.next() : null;
 
         updateWeekAgoTasksIfNeeded(db, false);
         notifyDataSetChanged();
@@ -1022,10 +1038,10 @@ private class TaskAdapter extends BaseAdapter {
         }
         SQLiteDatabase db = dbHelper.getReadableDatabase();
         Cursor r = db.rawQuery(
-            "SELECT t.name, r.start, r.end " +
-            " FROM " + TASK_TABLE + " t, " + RANGES_TABLE + " r " +
-            " WHERE r." + TASK_ID + " = t.ROWID " + whereClause +
-            " ORDER BY t.name, r.start ASC", null);
+                       "SELECT t.name, r.start, r.end " +
+                       " FROM " + TASK_TABLE + " t, " + RANGES_TABLE + " r " +
+                       " WHERE r." + TASK_ID + " = t.ROWID " + whereClause +
+                       " ORDER BY t.name, r.start ASC", null);
         return r;
     }
 
@@ -1034,7 +1050,7 @@ private class TaskAdapter extends BaseAdapter {
             Iterator<Task> iter = getTasks().iterator();
             Task next = null;
             public boolean hasNext() {
-                if (next != null) return true;
+                if (next != null) { return true; }
                 while (iter.hasNext()) {
                     Task t = iter.next();
                     if (t.isRunning()) {
@@ -1143,7 +1159,7 @@ private class TaskAdapter extends BaseAdapter {
 
 @Override
 protected void onListItemClick(ListView l, View v, int position, long id) {
-    if (vibrateClick) vibrateAgent.vibrate(100);
+    if (vibrateClick) { vibrateAgent.vibrate(100); }
 
     // Stop the update.  If a task is already running and we're stopping
     // the timer, it'll stay stopped.  If a task is already running and
@@ -1154,22 +1170,27 @@ protected void onListItemClick(ListView l, View v, int position, long id) {
     if (item != null) {
         Task selected = (Task) item;
         if (concurrency) {
+            /* NB may be broken */
             if (selected.isRunning()) {
                 selected.stop();
                 running = adapter.findCurrentlyActive().hasNext();
-                if (!running) timer.removeCallbacks(updater);
+                if (!running) {
+                    timer.removeCallbacks(displayUpdater);
+                }
             } else {
                 selected.start();
                 if (!running) {
                     running = true;
-                    timer.post(updater);
+                    runningTask = selected;
+                    timer.post(displayUpdater);
                 }
             }
         } else {
             boolean startSelected = !selected.isRunning();
             if (running) {
                 running = false;
-                timer.removeCallbacks(updater);
+                runningTask = null;
+                timer.removeCallbacks(displayUpdater);
                 // Disable currently running tasks
                 for (Iterator<Task> iter = adapter.findCurrentlyActive();
                         iter.hasNext();) {
@@ -1181,7 +1202,8 @@ protected void onListItemClick(ListView l, View v, int position, long id) {
             if (startSelected) {
                 selected.start();
                 running = true;
-                timer.post(updater);
+                runningTask = selected;
+                timer.post(displayUpdater);
             }
         }
         adapter.updateTask(selected);
@@ -1246,6 +1268,81 @@ private void reloadListViewTasks() {
     switchView(preferences.getInt(VIEW_MODE, 0));
 }
 
+// private static class ShowNotificationTask extends AsyncTask<Void, Void, Void> {
+//     private final Tasks tasks;
+//     private final String taskName;
+//     public ShowNotificationTask(Tasks tasks,
+//                                 String taskName) {
+//         super();
+//         this.tasks    = tasks;
+//         this.taskName = taskName;
+//     }
+//
+//     @Override
+//     protected Void doInBackground(Void... params) {
+//         NotificationCompat.Builder builder =
+//             new NotificationCompat.Builder(tasks)
+//             .setSmallIcon(R.drawable.icon)
+//             .setContentTitle("Current task")
+//             .setContentText(taskName);
+//         // Creates an explicit intent for an Activity in your app
+//         Intent resultIntent = new Intent(tasks, Tasks.class);
+//         // The stack builder object will contain an artificial back stack for the
+//         // started Activity.
+//         // This ensures that navigating backward from the Activity leads out of
+//         // your application to the Home screen.
+//         TaskStackBuilder stackBuilder = TaskStackBuilder.create(tasks);
+//         // Adds the back stack for the Intent (but not the Intent itself)
+//         stackBuilder.addParentStack(Tasks.class);
+//         // Adds the Intent that starts the Activity to the top of the stack
+//         stackBuilder.addNextIntent(resultIntent);
+//         PendingIntent resultPendingIntent =
+//             stackBuilder.getPendingIntent(0,
+//                                           PendingIntent.FLAG_UPDATE_CURRENT);
+//         builder.setContentIntent(resultPendingIntent);
+//         // Builds the notification and issues it.
+//         tasks.notificationManager.notify(CURRENT_TASK_NOTIFICATION_ID, builder.build());
+//         return null;
+//     }
+// }
+
+/* fire up notification about current task */
+private void startCurrentTaskNotification(Task task) {
+    Assert.assertTrue(task != null);
+    // ShowNotificationTask notification =
+    //     new ShowNotificationTask(this,
+    //                              task.getTaskName());
+    // notification.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+    NotificationCompat.Builder builder =
+        new NotificationCompat.Builder(this)
+        .setSmallIcon(R.drawable.icon)
+        .setContentTitle("Current task")
+        .setContentText(task.getTaskName());
+      // Creates an explicit intent for an Activity in your app
+    Intent resultIntent = new Intent(this, Tasks.class);
+      // The stack builder object will contain an artificial back stack for the
+      // started Activity.
+      // This ensures that navigating backward from the Activity leads out of
+      // your application to the Home screen.
+    TaskStackBuilder stackBuilder = TaskStackBuilder.create(this);
+      // Adds the back stack for the Intent (but not the Intent itself)
+    stackBuilder.addParentStack(Tasks.class);
+      // Adds the Intent that starts the Activity to the top of the stack
+    stackBuilder.addNextIntent(resultIntent);
+    PendingIntent resultPendingIntent =
+        stackBuilder.getPendingIntent(0,
+                                      PendingIntent.FLAG_UPDATE_CURRENT);
+    builder.setContentIntent(resultPendingIntent);
+      // Builds the notification and issues it.
+    notificationManager.notify(CURRENT_TASK_NOTIFICATION_ID, builder.build());
+
 }
+
+private void stopCurrentTaskNotification() {
+    notificationManager.cancel(CURRENT_TASK_NOTIFICATION_ID);
+}
+
+}
+
 
 
