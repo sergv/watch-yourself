@@ -101,8 +101,6 @@
   Перевод на русский выполнил Денис Гладкий\n
   Перевод на французкий язык выполнил Вильфрид Копп
   </string>
-  <string name="export_csv_success">Экспорт CSV на карту памяти завершён. Файл %s</string>
-  <string name="export_csv_fail">Не удалось экспортировать в CSV. Не могу создать файл %s. Проверьте, что SD карта вставлена.</string>
   <string name="success">Успех</string>
   <string name="failure">Неудача</string>
   <string name="set_start_day_of_week">Установите день с которого начинается неделя</string>

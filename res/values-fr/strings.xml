@@ -92,8 +92,6 @@
   Tranduction en Russe par Денис Гладкий\n
   Tranduction en Français par Wilfried Kopp
   </string>
-  <string name="export_csv_success">Exporté avec succès du CSV vers la carte SD sous %s</string>
-  <string name="export_csv_fail">Erreur lors de l´exportation CSV. Impossible de créer le fichier %s. La carte SD est-elle présente ?</string>
   <string name="success">Succès</string>
   <string name="failure">Erreur</string>
   <string name="set_start_day_of_week">Définir le premier jour de la semaine</string>

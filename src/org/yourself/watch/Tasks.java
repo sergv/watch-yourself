@@ -158,7 +158,7 @@ private NotificationManager notificationManager;
 protected static final int ADD_TASK = 0,
                            EDIT_TASK = 1,  DELETE_TASK = 2,  REPORT = 3,
                            SHOW_TIMES = 4, CHANGE_VIEW = 5,  SELECT_START_DATE = 6,
-                           SELECT_END_DATE = 7, HELP = 8,  EXPORT_VIEW = 9,
+                           SELECT_END_DATE = 7, HELP = 8,
                            SUCCESS_DIALOG = 10,  ERROR_DIALOG = 11, SET_WEEK_START_DAY = 12,
                            MORE = 13,  BACKUP = 14, PREFERENCES = 15,
                            PROGRESS_DIALOG = 16, REFRESH = 17;
@@ -370,11 +370,7 @@ protected Dialog onCreateDialog(int id) {
                 case 1: // CHANGE_VIEW:
                     showDialog(CHANGE_VIEW);
                     break;
-                case 2: // EXPORT_VIEW:
-                    String fname = export();
-                    notifySuccessFailure(fname, R.string.export_csv_success, R.string.export_csv_fail);
-                    break;
-                case 3: // COPY DB TO SD
+                case 2: // COPY DB TO SD
                     showDialog(Tasks.PROGRESS_DIALOG);
                     if (new File(dbBackup).exists()) {
                         // Find the database
@@ -410,7 +406,7 @@ protected Dialog onCreateDialog(int id) {
                         }
                     }
                     break;
-                case 4: // RESTORE FROM BACKUP
+                case 3: // RESTORE FROM BACKUP
                     showDialog(Tasks.PROGRESS_DIALOG);
                     SQLiteDatabase backupDb =
                         SQLiteDatabase.openDatabase(dbBackup,
@@ -651,31 +647,6 @@ private Dialog openDeleteTaskDialog() {
            .setNegativeButton(android.R.string.cancel, null).create();
 }
 final static String SDCARD = "/sdcard/";
-
-private String export() {
-    // Export, then show a progressDialog
-    String rangeName = getRangeName();
-    String fname = rangeName + ".csv";
-    File fout = new File(SDCARD + fname);
-    // Change the file name until there's no conflict
-    int counter = 0;
-    while (fout.exists()) {
-        fname = rangeName + "_" + counter + ".csv";
-        fout = new File(SDCARD + fname);
-        counter++;
-    }
-    try {
-        OutputStream out = new FileOutputStream(fout);
-        Cursor currentRange = adapter.getCurrentRange();
-        CSVExporter.exportRows(out, currentRange);
-        currentRange.close();
-
-        return fname;
-    } catch (FileNotFoundException fnfe) {
-        fnfe.printStackTrace(System.err);
-        return null;
-    }
-}
 
 private String getRangeName() {
     if (adapter.currentRangeStart == -1) {
