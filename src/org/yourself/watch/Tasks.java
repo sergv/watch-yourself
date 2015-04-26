@@ -15,8 +15,6 @@ import static org.yourself.watch.DBHelper.START;
 import static org.yourself.watch.DBHelper.TASK_COLUMNS;
 import static org.yourself.watch.DBHelper.TASK_ID;
 import static org.yourself.watch.DBHelper.TASK_TABLE;
-import static org.yourself.watch.Report.weekEnd;
-import static org.yourself.watch.Report.weekStart;
 import static org.yourself.watch.TimeRange.NULL;
 
 import org.yourself.watch.CalendarUtils;
@@ -109,6 +107,7 @@ protected static final String END_DATE = "end_date";
 protected static final String VIEW_MODE = "view_mode";
 protected static final String REPORT_DATE = "report_date";
 protected static final String TIMEDISPLAY = "time_display";
+protected static final String SHOW_ONLY_FROM_WEEK_AGO = "show_only_from_week_ago";
 
 // private static final String TAG = "Tasks";
 /**
@@ -156,11 +155,11 @@ private NotificationManager notificationManager;
  * A list of menu options, including both context and options menu items
  */
 protected static final int ADD_TASK = 0,
-                           EDIT_TASK = 1,  DELETE_TASK = 2,  REPORT = 3,
+                           EDIT_TASK = 1,  DELETE_TASK = 2,
                            SHOW_TIMES = 4, CHANGE_VIEW = 5,  SELECT_START_DATE = 6,
                            SELECT_END_DATE = 7, HELP = 8,
                            SUCCESS_DIALOG = 10,  ERROR_DIALOG = 11, SET_WEEK_START_DAY = 12,
-                           MORE = 13,  BACKUP = 14, PREFERENCES = 15,
+                           MORE = 13, BACKUP = 14, PREFERENCES = 15,
                            PROGRESS_DIALOG = 16, REFRESH = 17;
 // TODO: This could be done better...
 private static final String dbPath = "/data/data/org.yourself.watch/databases/timetracker.db";
@@ -183,7 +182,7 @@ protected void onCreate(Bundle savedInstanceState) {
 
     int which = preferences.getInt(VIEW_MODE, 0);
     if (adapter == null) {
-        adapter = new TaskAdapter(this);
+        adapter = new TaskAdapter(this, preferences);
         setListAdapter(adapter);
         switchView(which);
     }
@@ -229,6 +228,7 @@ protected void onPause() {
 @Override
 protected void onStop() {
     // Log.d(TAG, "onStop");
+    adapter.savePrefs();
     if (adapter != null) {
         adapter.close();
     }
@@ -303,13 +303,6 @@ public boolean onMenuItemSelected(int featureId, MenuItem item) {
     case MORE:
         showDialog(item.getItemId());
         break;
-    case REPORT:
-        Intent intent = new Intent(this, Report.class);
-        intent.putExtra(REPORT_DATE, System.currentTimeMillis());
-        intent.putExtra(START_DAY, preferences.getInt(START_DAY, 0) + 1);
-        intent.putExtra(TIMEDISPLAY, decimalFormat);
-        startActivity(intent);
-        break;
     case REFRESH:
         reloadListViewTasks();
         break;
@@ -361,7 +354,7 @@ protected Dialog onCreateDialog(int id) {
             public void onClick(DialogInterface dialog, int which) {
                 // Log.d(TAG, "more dialog, on click");
                 switch (which) {
-                case 0:
+                case 0: // TOGGLE LAST WEEK MODE
                     adapter.toggleOnlyFromWeekAgoDisplay();
                     reloadListViewTasks();
                     timer.removeCallbacks(displayUpdater);
@@ -406,7 +399,8 @@ protected Dialog onCreateDialog(int id) {
                         }
                     }
                     break;
-                case 3: // RESTORE FROM BACKUP
+                // case 3: // export view to csv - skip it
+                case 4: // RESTORE FROM BACKUP
                     showDialog(Tasks.PROGRESS_DIALOG);
                     SQLiteDatabase backupDb =
                         SQLiteDatabase.openDatabase(dbBackup,
@@ -586,7 +580,7 @@ private Dialog openNewTaskDialog() {
            .setTitle(R.string.add_task_title)
            .setView(textEntryView)
     .setPositiveButton(R.string.add_task_ok, new DialogInterface.OnClickListener() {
-
+        @Override
         public void onClick(DialogInterface dialog, int whichButton) {
             EditText textView = (EditText) textEntryView.findViewById(R.id.task_edit_name_edit);
             String name = textView.getText().toString();
@@ -607,18 +601,24 @@ private Dialog openEditTaskDialog() {
     }
     LayoutInflater factory = LayoutInflater.from(this);
     final View textEntryView = factory.inflate(R.layout.edit_task, null);
-    return new AlertDialog.Builder(Tasks.this).setView(textEntryView).setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+    return new AlertDialog.Builder(Tasks.this)
+        .setView(textEntryView)
+        .setPositiveButton(
+            android.R.string.ok,
+            new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int whichButton) {
+                EditText textView = (EditText) textEntryView.findViewById(R.id.task_edit_name_edit);
+                String name = textView.getText().toString();
+                selectedTask.setTaskName(name);
 
-        public void onClick(DialogInterface dialog, int whichButton) {
-            EditText textView = (EditText) textEntryView.findViewById(R.id.task_edit_name_edit);
-            String name = textView.getText().toString();
-            selectedTask.setTaskName(name);
+                adapter.updateTask(selectedTask);
 
-            adapter.updateTask(selectedTask);
-
-            Tasks.this.getListView().invalidate();
-        }
-    }).setNegativeButton(android.R.string.cancel, null).create();
+                Tasks.this.getListView().invalidate();
+            }
+            })
+        .setNegativeButton(android.R.string.cancel, null)
+        .create();
 }
 
 /**
@@ -633,6 +633,7 @@ private Dialog openDeleteTaskDialog() {
     String formattedMessage = getString(R.string.delete_task_message,
                                         selectedTask.getTaskName());
     DialogInterface.OnClickListener onOk = new DialogInterface.OnClickListener() {
+        @Override
         public void onClick(DialogInterface dialog, int whichButton) {
             adapter.deleteTask(selectedTask);
             Tasks.this.getListView().invalidate();
@@ -677,7 +678,7 @@ private Dialog openAboutDialog() {
     TextView donate = (TextView) about.findViewById(R.id.donate);
     donate.setClickable(true);
     donate.setOnClickListener(new OnClickListener() {
-
+        @Override
         public void onClick(View v) {
             Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("http://www.germane-software.com/donate.html"));
             startActivity(intent);
@@ -821,7 +822,6 @@ private ArrayList<Task> constructWeekAgoTasks(SQLiteDatabase db, ArrayList<Task>
     Cursor weekAgoTasksCursor = db.rawQuery(query, null);
     if (weekAgoTasksCursor.moveToFirst()) {
         ArrayList<Task> weekAgoTasks = new ArrayList<Task>();
-
         do {
             weekAgoTaskIds.add(Integer.valueOf((weekAgoTasksCursor.getInt(0))));
         } while (weekAgoTasksCursor.moveToNext());
@@ -834,28 +834,33 @@ private ArrayList<Task> constructWeekAgoTasks(SQLiteDatabase db, ArrayList<Task>
         return weekAgoTasks;
     } else {
         /* nothing to show: no tasks started in previous week */
-        return null;
+        return new ArrayList<Task>();
     }
 }
 
 private class TaskAdapter extends BaseAdapter {
 
-    private DBHelper dbHelper;
+    private final DBHelper dbHelper;
     private ArrayList<Task> tasks;
-    private Context savedContext;
+    private final Context savedContext;
     private long currentRangeStart;
     private long currentRangeEnd;
 
+    private boolean prefsDirty;
+    private final SharedPreferences preferences;
     private boolean showOnlyFromWeekAgo;
     private ArrayList<Task> weekAgoTasks;
 
-    public TaskAdapter(Context c) {
-        savedContext = c;
-        dbHelper = new DBHelper(c);
+    public TaskAdapter(Context c,
+                       SharedPreferences preferences) {
+        savedContext             = c;
+        dbHelper                 = new DBHelper(c);
         dbHelper.getWritableDatabase();
-        tasks = new ArrayList<Task>();
-        showOnlyFromWeekAgo = false;
-        weekAgoTasks = null;
+        tasks                    = new ArrayList<Task>();
+        prefsDirty               = false;
+        this.preferences         = preferences;
+        this.showOnlyFromWeekAgo = preferences.getBoolean(SHOW_ONLY_FROM_WEEK_AGO, false);
+        weekAgoTasks             = new ArrayList<Task>();
     }
 
     private void updateWeekAgoTasksIfNeeded(boolean force) {
@@ -874,18 +879,31 @@ private class TaskAdapter extends BaseAdapter {
         return showOnlyFromWeekAgo;
     }
 
+    public void savePrefs() {
+        if (prefsDirty) {
+            SharedPreferences.Editor editor = preferences.edit();
+            editor.putBoolean(SHOW_ONLY_FROM_WEEK_AGO, showOnlyFromWeekAgo);
+            editor.apply();
+        }
+    }
+
+    final private boolean emptyList(List<?> list) {
+        return list == null || list.isEmpty();
+    }
+
     public void toggleOnlyFromWeekAgoDisplay() {
         if (!showOnlyFromWeekAgo) {
-            Assert.assertTrue((weekAgoTasks == null));
+            Assert.assertTrue(emptyList(weekAgoTasks));
             updateWeekAgoTasksIfNeeded(true);
-            if (weekAgoTasks == null) {
+            if (emptyList(weekAgoTasks)) {
                 /* update failed, nothing to show */
                 return;
             }
         } else {
-            weekAgoTasks = null;
+            weekAgoTasks.clear();
         }
         showOnlyFromWeekAgo = !showOnlyFromWeekAgo;
+        prefsDirty          = true;
     }
 
     public ArrayList<Task> getTasks() {
@@ -959,27 +977,37 @@ private class TaskAdapter extends BaseAdapter {
 
         if (tasks_cursor.moveToFirst()) {
             do {
-                int task_id = tasks_cursor.getInt(0);
-                String[] task_ids = {String.valueOf(task_id)};
-                Task task = new Task(tasks_cursor.getString(1), task_id);
+                int task_id       = tasks_cursor.getInt(0);
+                String[] task_ids = { String.valueOf(task_id) };
+                Task task         = new Task(tasks_cursor.getString(1), task_id);
 
                 final String query =
                     "SELECT SUM(end) - SUM(start) AS total FROM " + RANGES_TABLE +
                     " WHERE " + TASK_ID + " = ? " + whereClause + " AND end NOTNULL";
 
-                Cursor r = db.rawQuery(query, task_ids);
-                if (r.moveToFirst()) {
-                    task.setCollapsed(r.getLong(0));
+                Cursor range_cursor = db.rawQuery(query, task_ids);
+                if (range_cursor.moveToFirst()) {
+                    task.setCollapsed(range_cursor.getLong(0));
                 }
-                r.close();
+                range_cursor.close();
                 if (loadCurrent) {
-                    r = db.query(RANGES_TABLE, RANGE_COLUMNS,
-                                 TASK_ID + " = ? " + whereClause + " AND end ISNULL",
-                                 task_ids, null, null, null);
-                    if (r.moveToFirst()) {
-                        task.setStartTime(r.getLong(0));
+                    range_cursor = db.query(
+                        RANGES_TABLE, RANGE_COLUMNS,
+                        /* Ignore where clause here because there must be only
+                           one running task at any given time and we'd like
+                           to always see it, even if it's outside our
+                           where-clause time range. We want to see it so
+                           switching tasks won't leave other running tasks
+                           behind our backs.
+                        */
+                        String.format("%s = ? AND end ISNULL", TASK_ID),
+                        //String.format("%s = ? %s AND end ISNULL", TASK_ID, whereClause),
+                        // TASK_ID + " = ? " + whereClause + " AND end ISNULL",
+                        task_ids, null, null, null);
+                    if (range_cursor.moveToFirst()) {
+                        task.setStartTime(range_cursor.getLong(0));
                     }
-                    r.close();
+                    range_cursor.close();
                 }
                 tasks.add(task);
             } while (tasks_cursor.moveToNext());
@@ -1313,7 +1341,57 @@ private void stopCurrentTaskNotification() {
     notificationManager.cancel(CURRENT_TASK_NOTIFICATION_ID);
 }
 
+/**
+ * Calculates the date/time of the beginning of the week in
+ * which the supplied calendar date falls
+ * @param tw the day for which to calculate the week start
+ * @param startDay the day on which the week starts.  This must be 1-based
+ * (1 = Sunday).
+ * @return a Calendar marking the start of the week
+ */
+public static Calendar weekStart(Calendar tw, int startDay) {
+    Calendar ws = (Calendar)tw.clone();
+    ws.setFirstDayOfWeek(startDay);
+    // START ANDROID BUG WORKAROUND
+    // Android has a broken Calendar class, so the if-statement wrapping
+    // the following set() is necessary to keep Android from incorrectly
+    // changing the date:
+    int adjustedDay = ws.get(Calendar.DAY_OF_WEEK);
+    ws.add(Calendar.DATE, -((7 - (startDay - adjustedDay)) % 7));
+    // The above code _should_ be:
+    // ws.set(Calendar.DAY_OF_WEEK, startDay);
+    // END ANDROID BUG WORKAROUND
+    ws.set(Calendar.HOUR_OF_DAY, ws.getMinimum(Calendar.HOUR_OF_DAY));
+    ws.set(Calendar.MINUTE, ws.getMinimum(Calendar.MINUTE));
+    ws.set(Calendar.SECOND, ws.getMinimum(Calendar.SECOND));
+    ws.set(Calendar.MILLISECOND, ws.getMinimum(Calendar.MILLISECOND));
+    return ws;
 }
 
+/**
+ * Calculates the date/time of the end of the week in
+ * which the supplied calendar data falls
+ * @param tw the day for which to calculate the week end
+ * @return a Calendar marking the end of the week
+ */
+public static Calendar weekEnd(Calendar tw, int startDay) {
+    Calendar ws = (Calendar)tw.clone();
+    ws.setFirstDayOfWeek(startDay);
+    // START ANDROID BUG WORKAROUND
+    // Android has a broken Calendar class, so the if-statement wrapping
+    // the following set() is necessary to keep Android from incorrectly
+    // changing the date:
+    int adjustedDay = ws.get(Calendar.DAY_OF_WEEK);
+    ws.add(Calendar.DATE, -((7 - (startDay - adjustedDay)) % 7));
+    // The above code _should_ be:
+    // ws.set(Calendar.DAY_OF_WEEK, startDay);
+    // END ANDROID BUG WORKAROUND
+    ws.add(Calendar.DAY_OF_WEEK, 6);
+    ws.set(Calendar.HOUR_OF_DAY, ws.getMaximum(Calendar.HOUR_OF_DAY));
+    ws.set(Calendar.MINUTE, ws.getMaximum(Calendar.MINUTE));
+    ws.set(Calendar.SECOND, ws.getMaximum(Calendar.SECOND));
+    ws.set(Calendar.MILLISECOND, ws.getMaximum(Calendar.MILLISECOND));
+    return ws;
+}
 
-
+}

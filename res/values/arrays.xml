@@ -15,8 +15,8 @@
   <string-array name="moreMenu">
     <item>Toggle last week mode</item>
     <item>Change date range</item>
-    <item>Export view to CSV</item>
     <item>Back up to SD card</item>
+    <item>Export view to CSV</item>
     <item>Restore from backup</item>
     <item>Preferences</item>
     <item>Help</item>

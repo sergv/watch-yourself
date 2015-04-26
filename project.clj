@@ -30,7 +30,7 @@
 
   ;; :local-repo "/home/sergey/.m2/repository/"
   :repositories [["local" "file:///home/sergey/.m2/repository/"]]
-  :plugins [[lein-droid "0.2.0-preview2-enhanced"]]
+  :plugins [[lein-droid "0.2.0-preview2"]]
   ;; :dependencies [[android-utils/android-java-utils "0.2.0"]]
   :android ~(merge
              {:sdk-path "/home/sergey/projects/android/android-sdk-linux"
@@ -42,10 +42,10 @@
               :library false
               :dex-aux-opts ["--num-threads=2"]
               :gen-path "bin/gen"
-              :native-libraries-paths ["libs"]
+              ;;:native-libraries-paths ["libs"]
 
-              :min-version "10"
-              :target-version "18"}
+              :min-version "17"
+              :target-version "17"}
              key-def-info))
 
 ;; Local Variables:
